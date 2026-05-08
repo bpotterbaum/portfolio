@@ -238,7 +238,7 @@
     const regions = [
       {
         id: 'nj-midtown-direct', name: 'NJ Midtown Direct Core', type: 'ground', tier: 'Best pure commute', color: '#2e90fa',
-        polygon: [[40.80,-74.48],[40.78,-74.24],[40.62,-74.20],[40.61,-74.42]],
+        hub: { name: 'Summit Station', lat: 40.7154, lng: -74.3587, kind: 'rail' }, radiusMiles: 8,
         towns: ['Summit', 'Chatham', 'Madison', 'Millburn / Short Hills'],
         summary: 'Best office execution for Penn-area work, with strong family towns and strong public schools.',
         facts: {
@@ -256,7 +256,7 @@
       },
       {
         id: 'nassau-port-washington', name: 'North Shore Nassau / Port Washington Branch', type: 'ground', tier: 'Best commute + charm mix', color: '#7a5af8',
-        polygon: [[40.86,-73.82],[40.86,-73.60],[40.73,-73.58],[40.72,-73.80]],
+        hub: { name: 'Manhasset LIRR', lat: 40.7973, lng: -73.6993, kind: 'rail' }, radiusMiles: 7,
         towns: ['Manhasset', 'Plandome', 'Port Washington', 'Sands Point'],
         summary: 'Direct Penn access with better water-adjacent charm and stronger lifestyle upside than the NJ rail answer.',
         facts: {
@@ -274,7 +274,7 @@
       },
       {
         id: 'lower-fairfield', name: 'Lower Fairfield Coast, CT', type: 'ground', tier: 'Best premium coastal family life', color: '#f79009',
-        polygon: [[41.12,-73.73],[41.11,-73.35],[40.95,-73.34],[40.95,-73.70]],
+        hub: { name: 'Darien Station', lat: 41.0774, lng: -73.4693, kind: 'rail' }, radiusMiles: 10,
         towns: ['Darien', 'Westport', 'Greenwich'],
         summary: 'Elite family product and coastal life, with a commute tax because Grand Central is not Penn.',
         facts: {
@@ -292,7 +292,7 @@
       },
       {
         id: 'westchester-villages', name: 'Westchester Villages', type: 'ground', tier: 'Excellent but secondary for this office', color: '#f04438',
-        polygon: [[41.12,-73.95],[41.11,-73.63],[40.92,-73.64],[40.92,-73.94]],
+        hub: { name: 'Scarsdale Station', lat: 40.9898, lng: -73.8087, kind: 'rail' }, radiusMiles: 8,
         towns: ['Scarsdale', 'Bronxville', 'Rye', 'Larchmont'],
         summary: 'Excellent family towns and schools, but a worse fit for a Penn-area office than the direct-Penn regions.',
         facts: {
@@ -310,7 +310,7 @@
       },
       {
         id: 'bna-home-base', name: 'Stay in Tennessee, fly from BNA', type: 'flight', tier: 'Baseline fly-in bridge', color: '#12b76a',
-        polygon: [[36.29,-86.97],[36.29,-86.46],[35.96,-86.46],[35.96,-86.97]],
+        hub: { name: 'BNA', lat: 36.1263, lng: -86.6774, kind: 'airport' }, radiusMiles: 24,
         towns: ['College Grove / Franklin', 'BNA', 'Nashville support orbit'],
         summary: 'The control scenario. If a relocation hub is not clearly better than this, it probably should not survive.',
         facts: {
@@ -328,7 +328,7 @@
       },
       {
         id: 'boston-coast', name: 'Boston Coastal Hub', type: 'flight', tier: 'Best fly-in hub', color: '#12b76a',
-        polygon: [[42.55,-71.30],[42.55,-70.65],[42.10,-70.65],[42.10,-71.30]],
+        hub: { name: 'BOS', lat: 42.3656, lng: -71.0096, kind: 'airport' }, radiusMiles: 18,
         towns: ['Hingham', 'Cohasset', 'Marblehead', 'Manchester-by-the-Sea'],
         summary: 'One of the strongest fly-in answers if you want elite schools, real coastal life, and a dense flight corridor into NYC.',
         facts: {
@@ -346,7 +346,7 @@
       },
       {
         id: 'chesapeake-bwi', name: 'Annapolis / Chesapeake via BWI', type: 'flight', tier: 'Most practical fly-in water region', color: '#12b76a',
-        polygon: [[39.18,-76.86],[39.18,-76.28],[38.82,-76.28],[38.82,-76.86]],
+        hub: { name: 'BWI', lat: 39.1774, lng: -76.6684, kind: 'airport' }, radiusMiles: 16,
         towns: ['Annapolis', 'Severna Park', 'Arnold', 'Davidsonville'],
         summary: 'Strong family region with water, good school confidence, and practical air/rail flexibility.',
         facts: {
@@ -363,7 +363,6 @@
         chips: ['Flight', 'Bay life', 'Practical']
       }
     ];
-
     const filters = [
       { id: 'all', label: 'All' },
       { id: 'ground', label: 'Ground' },
@@ -476,21 +475,30 @@
 
       Object.entries(layers).forEach(([rid, layer]) => {
         const rr = regions.find(r => r.id === rid);
-        layer.setStyle({ weight: rid === region.id ? 3 : 1.5, fillOpacity: rid === region.id ? 0.28 : 0.18, color: rr.color, fillColor: rr.color });
+        layer.eachLayer(item => { if (item.setStyle) item.setStyle({ weight: item.getRadius ? 2 : (rid === region.id ? 3 : 1.5), fillOpacity: rid === region.id ? 0.28 : 0.18, color: rr.color, fillColor: rr.color }); });
       });
 
       if (fit) map.fitBounds(layers[region.id].getBounds(), { padding: [24,24] });
     }
 
     regions.forEach(region => {
-      const layer = L.polygon(region.polygon.map(([lat,lng]) => [lat,lng]), {
+      const layer = L.circle([region.hub.lat, region.hub.lng], {
+        radius: region.radiusMiles * 1609.34,
         color: region.color,
         fillColor: region.color,
         fillOpacity: .18,
         weight: 1.5
       }).addTo(map);
+      const marker = L.circleMarker([region.hub.lat, region.hub.lng], {
+        radius: 6,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: region.color,
+        fillOpacity: 1
+      }).addTo(map);
       layer.on('click', () => selectRegion(region.id, true));
-      layers[region.id] = layer;
+      marker.on('click', () => selectRegion(region.id, true));
+      layers[region.id] = L.featureGroup([layer, marker]);
     });
 
     document.getElementById('locateBtn').onclick = () => map.setView([40.8, -74.2], 7);
