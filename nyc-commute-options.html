@@ -2,671 +2,720 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NYC Commute Options for Brad + Emily</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NYC Family Commute Atlas</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <style>
     :root {
-      --bg: #08111c;
-      --panel: rgba(9, 18, 34, 0.9);
-      --panel-2: rgba(16, 28, 49, 0.96);
-      --text: #eef4ff;
-      --muted: #a8b6d8;
-      --border: rgba(126, 160, 224, 0.2);
-      --accent: #70d2ff;
-      --accent-2: #7df0c2;
-      --gold: #ffd37a;
-      --danger: #ff9191;
-      --shadow: 0 22px 60px rgba(0,0,0,0.38);
+      --bg: #07111d;
+      --panel: rgba(8, 16, 29, 0.9);
+      --panel-2: rgba(14, 25, 43, 0.94);
+      --border: rgba(153, 190, 255, 0.18);
+      --text: #eef5ff;
+      --muted: #a6b5d3;
+      --blue: #77d6ff;
+      --green: #86efc7;
+      --gold: #ffd77d;
+      --red: #ff9f9f;
+      --purple: #c7a6ff;
+      --shadow: 0 24px 60px rgba(0,0,0,.4);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
-    body { min-height: 100vh; overflow-x: hidden; }
-    a { color: var(--accent-2); text-decoration: none; }
+    html, body { margin: 0; height: 100%; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+    body { overflow: hidden; }
+    a { color: #8cf2d2; text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .app {
-      display: grid;
-      grid-template-columns: 390px minmax(0, 1fr);
-      min-height: 100vh;
-    }
-    .sidebar {
-      position: relative;
-      z-index: 3;
-      background: linear-gradient(180deg, rgba(6,12,25,.98), rgba(10,18,34,.95));
-      border-right: 1px solid var(--border);
-      padding: 18px 16px 120px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+    .app { position: relative; height: 100vh; height: 100dvh; width: 100vw; overflow: hidden; }
+    #map { position: absolute; inset: 0; }
+    .glass {
+      background: rgba(8,16,29,.86);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
     }
-    .map-wrap {
-      position: relative;
-      min-height: 100vh;
-      background: radial-gradient(circle at 20% 20%, rgba(112,210,255,.14), transparent 24%), linear-gradient(180deg, #0d1b31, #09111c 60%);
-    }
-    .hero, .panel, .legend, .sheet, .floating, .house-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-    .hero { padding: 18px; margin-bottom: 14px; }
-    h1, h2, h3, h4, p { margin: 0; }
-    h1 { font-size: 28px; line-height: 1.05; margin-bottom: 10px; }
-    h2 { font-size: 18px; margin-bottom: 10px; }
-    h3 { font-size: 17px; margin-bottom: 8px; }
-    p { color: var(--muted); line-height: 1.45; }
-    .chips, .filters, .quick-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .chip, .filter, .quick-links a {
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 12px;
-    }
-    .filter { cursor: pointer; }
-    .filter.active { border-color: rgba(125,240,194,.5); color: var(--accent-2); }
-    .section { margin-top: 14px; }
-    .panel { padding: 14px; margin-top: 10px; }
-    .score { color: var(--gold); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
-    .meta { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 12px; }
-    .stat { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 10px; }
-    .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
-    .stat strong { font-size: 15px; }
-    .list { display: grid; gap: 10px; margin-top: 12px; }
-    .place-card {
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: rgba(16, 28, 49, 0.88);
-      cursor: pointer;
-      transition: transform .15s ease, border-color .15s ease, background .15s ease;
-    }
-    .place-card:hover, .place-card.active {
-      transform: translateY(-1px);
-      border-color: rgba(112,210,255,.55);
-      background: rgba(18, 34, 60, 0.96);
-    }
-    .place-card h4 { font-size: 16px; margin-bottom: 6px; }
-    .eyebrow { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: .09em; margin-bottom: 6px; }
-    .tiny { color: var(--muted); font-size: 12px; }
-    .map-stage {
+    .topbar {
       position: absolute;
-      inset: 0;
-      padding: 18px 18px 160px;
-    }
-    .map-header {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      right: 18px;
-      display: flex;
-      justify-content: space-between;
+      z-index: 1000;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
       gap: 12px;
-      align-items: flex-start;
       pointer-events: none;
     }
-    .floating, .legend { pointer-events: auto; }
-    .floating { max-width: 560px; padding: 14px 16px; }
-    .legend { padding: 12px; width: 210px; }
-    .legend-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); margin-top: 8px; }
-    .swatch { width: 14px; height: 14px; border-radius: 999px; }
-    .map-box {
+    .hero, .mini-panel, .filters {
+      pointer-events: auto;
+      border-radius: 20px;
+    }
+    .hero {
+      padding: 14px 16px;
+      max-width: 760px;
+    }
+    .hero h1 { margin: 0 0 6px; font-size: 24px; line-height: 1.05; }
+    .hero p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--text);
+    }
+    .top-right { display: grid; gap: 10px; align-content: start; }
+    .mini-panel { padding: 12px 14px; min-width: 220px; }
+    .mini-panel h3 { margin: 0 0 6px; font-size: 14px; }
+    .mini-panel p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.35; }
+    .filters {
       position: absolute;
-      inset: 96px 18px 18px;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      background: #bcd6e6;
+      z-index: 1000;
+      left: 14px;
+      top: 170px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: min(820px, calc(100vw - 28px));
+      padding: 10px;
+      pointer-events: auto;
     }
-    #map {
-      width: 100%;
-      height: 100%;
-      filter: saturate(1.02) contrast(1.01);
+    .filter-btn {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      cursor: pointer;
     }
+    .filter-btn.active { border-color: rgba(119,214,255,.52); color: var(--blue); }
+    .map-legend {
+      position: absolute;
+      z-index: 1000;
+      right: 14px;
+      bottom: 260px;
+      width: 220px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      pointer-events: auto;
+    }
+    .map-legend h3 { margin: 0 0 8px; font-size: 14px; }
+    .legend-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .swatch { width: 12px; height: 12px; border-radius: 999px; }
     .sheet {
       position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      padding: 18px;
-      max-width: 720px;
-      margin-left: auto;
-      background: rgba(8, 16, 30, 0.95);
+      z-index: 1001;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 28px 28px 0 0;
+      padding: 10px 14px calc(16px + var(--safe-bottom));
+      max-height: min(76vh, 760px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
-    .sheet-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-    .sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .sheet-handle {
+      width: 54px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      margin: 0 auto 12px;
+    }
+    .sheet-head {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+    .eyebrow { color: var(--gold); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; margin-bottom: 6px; }
+    .sheet h2 { margin: 0 0 6px; font-size: 24px; line-height: 1.06; }
+    .sheet .sub { color: var(--muted); font-size: 14px; line-height: 1.4; }
+    .view-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      border-radius: 12px; padding: 10px 14px; border: 1px solid var(--border);
-      background: rgba(255,255,255,.04); color: var(--text); font-weight: 600; font-size: 13px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
     }
-    .btn.primary { background: linear-gradient(180deg, rgba(112,210,255,.22), rgba(112,210,255,.14)); border-color: rgba(112,210,255,.45); }
-    .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 14px; }
-    .detail {
-      padding: 12px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
+    .btn.primary { border-color: rgba(119,214,255,.5); background: rgba(119,214,255,.14); color: var(--blue); }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 14px;
     }
-    .detail .k { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px; }
-    .detail .v { font-size: 14px; color: var(--text); }
-    .house-box { margin-top: 14px; padding: 14px; }
-    .house-box ul { margin: 10px 0 0 18px; padding: 0; color: var(--muted); }
-    .house-box li { margin: 6px 0; }
-    .footer-note { margin-top: 16px; font-size: 12px; color: var(--muted); }
-    .mobile-toggle { display: none; }
+    .card {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 5px; }
+    .card .v { font-size: 14px; line-height: 1.35; }
+    .cluster-row {
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+      padding-bottom: 4px;
+      margin-top: 14px;
+    }
+    .cluster-card {
+      min-width: 220px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      cursor: pointer;
+    }
+    .cluster-card.active { border-color: rgba(119,214,255,.45); background: rgba(119,214,255,.08); }
+    .cluster-card h4 { margin: 0 0 5px; font-size: 16px; }
+    .cluster-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.35; }
+    .bullets { margin: 14px 0 0 18px; padding: 0; color: var(--muted); }
+    .bullets li { margin: 7px 0; line-height: 1.4; }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .link-card {
+      padding: 12px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.03);
+    }
+    .link-card h4 { margin: 0 0 6px; font-size: 14px; }
+    .link-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .list-panel {
+      position: absolute;
+      z-index: 1000;
+      left: 14px;
+      bottom: 260px;
+      width: 280px;
+      max-height: 260px;
+      overflow: auto;
+      border-radius: 18px;
+      padding: 10px;
+      pointer-events: auto;
+    }
+    .region-item {
+      padding: 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .region-item.active { background: rgba(119,214,255,.08); border-color: rgba(119,214,255,.38); }
+    .region-item + .region-item { margin-top: 8px; }
+    .region-item h4 { margin: 0 0 4px; font-size: 14px; }
+    .region-item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.3; }
     @media (max-width: 980px) {
-      .app { display: block; min-height: auto; }
-      .sidebar { display: block; position: relative; padding: 14px 14px 18px; overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
-      .sidebar.open { display: block; position: relative; inset: auto; z-index: 10; }
-      .map-wrap { min-height: auto; }
-      .map-stage { position: relative; padding: 14px 14px 18px; }
-      .map-header { position: relative; top: auto; left: auto; right: auto; flex-direction: column; align-items: stretch; margin-bottom: 12px; }
-      .floating { max-width: none; }
-      .legend { width: auto; }
-      .map-box { position: relative; inset: auto; height: 56vh; min-height: 420px; border-radius: 24px; }
-      .sheet { position: relative; left: auto; right: auto; bottom: auto; max-width: none; border-radius: 20px; margin-top: 12px; }
-      .detail-grid, .meta { grid-template-columns: 1fr 1fr; }
-      .mobile-toggle {
-        display: none;
-      }
+      .topbar { grid-template-columns: 1fr; }
+      .top-right { display: none; }
+      .filters { top: auto; bottom: 330px; left: 10px; right: 10px; max-width: none; }
+      .map-legend { display: none; }
+      .list-panel { display: none; }
+      .hero { max-width: none; }
+      .sheet { max-height: 72vh; }
     }
     @media (max-width: 640px) {
-      h1 { font-size: 24px; }
-      .detail-grid, .meta { grid-template-columns: 1fr; }
-      .sheet-top { flex-direction: column; }
+      .hero h1 { font-size: 20px; }
+      .section-grid, .links-grid { grid-template-columns: 1fr; }
+      .sheet h2 { font-size: 21px; }
+      .filters { bottom: 360px; }
     }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar" id="sidebar">
-      <section class="hero">
-        <div class="score">Family-first NYC commute explorer</div>
-        <h1>What keeps Meta money, protects family life, and avoids cramming you into the city?</h1>
-        <p>This page filters for family-friendly areas with strong schools, realistic access to <strong>380 W 33rd St, New York, NY 10001</strong>, and a lifestyle you and Emily might actually enjoy. I biased toward calm, safe, high-functioning communities and avoided “technically possible but miserable.”</p>
+    <div id="map"></div>
+
+    <div class="topbar">
+      <div class="hero glass">
+        <h1>NYC Family Commute Atlas</h1>
+        <p>Map-first decision software for a family of 5 evaluating where to live if Brad must reach <strong>380 W 33rd St</strong> three days per week. This version is intentionally region-first, not pin-first.</p>
         <div class="chips">
-          <span class="chip">3 days/week in office</span>
-          <span class="chip">Family of 5</span>
+          <span class="chip">Office is across from Penn</span>
           <span class="chip">4 bed / 3 bath target</span>
-          <span class="chip">Water access gets bonus points</span>
-          <span class="chip">Updated with live web sources</span>
+          <span class="chip">Schools are top priority</span>
+          <span class="chip">Water / lake / coast gets bonus weight</span>
+          <span class="chip">BNA baseline: ~2h15m at ~$139 one-way</span>
         </div>
-        <button class="mobile-toggle" id="closeSidebar">Close list</button>
-      </section>
-
-      <section class="section panel">
-        <h2>How to use this</h2>
-        <p>Tap a place on the map or in the list. The bottom sheet shows commute type, housing feel, school strategy, rough cost logic, and direct Zillow / Redfin launch buttons.</p>
-        <div class="filters" id="filters"></div>
-      </section>
-
-      <section class="section panel">
-        <h2>Fast take</h2>
-        <div class="list" id="summaryList"></div>
-      </section>
-
-      <section class="section panel">
-        <h2>Budget reality check</h2>
-        <p>At your current comp, the bigger risk is not raw affordability. It’s whether the commute drains enough cash and life energy that the one-year bridge stops feeling worth it.</p>
-        <div class="meta">
-          <div class="stat"><div class="label">Current comp frame</div><strong>$250k salary + ~$400k RSUs</strong></div>
-          <div class="stat"><div class="label">Likely strong replacement comp</div><strong>Maybe ~$250k cash, but often less liquidity</strong></div>
-          <div class="stat"><div class="label">What this tool is for</div><strong>Buy 6 to 18 months intelligently</strong></div>
-          <div class="stat"><div class="label">Primary stress test</div><strong>Cash cost + human cost + family quality</strong></div>
-        </div>
-      </section>
-
-      <section class="section panel">
-        <h2>Commute scenarios</h2>
-        <div class="house-box">
-          <h3>1. Stay in Tennessee, fly in</h3>
-          <ul>
-            <li>Best airport: <strong>BNA</strong>, with nonstop service into NYC airports.</li>
-            <li>Probably the best bridge if this really is a temporary 2027-era solve.</li>
-            <li>Financially plausible, emotionally expensive.</li>
-          </ul>
-        </div>
-        <div class="house-box">
-          <h3>2. East Coast family move, then train / ferry in</h3>
-          <ul>
-            <li>Best long-ish-term quality-of-life setup if you must preserve the job.</li>
-            <li>Targets calm suburbs, waterfront towns, and strong school districts.</li>
-            <li>Much less brutal than weekly flights if this goes longer than expected.</li>
-          </ul>
-        </div>
-        <div class="house-box">
-          <h3>3. Drive-only areas</h3>
-          <ul>
-            <li>There are options, but they tend to be the least elegant for Midtown.</li>
-            <li>Mostly useful if you want more space and can tolerate a rougher daily rhythm.</li>
-          </ul>
-        </div>
-      </section>
-
-      <div class="footer-note">
-        Sources used here are live web sources gathered during build, including airline schedule aggregators, ferry operators, commuter rail operators, and current suburb/community guides. Treat exact prices and schedules as planning-grade, not contract-grade, and refresh before any move.
       </div>
-    </aside>
-
-    <main class="map-wrap">
-      <div class="map-stage">
-        <div class="map-header">
-          <div class="floating">
-            <div class="score">Office anchor</div>
-            <h3>380 W 33rd St, New York, NY 10001</h3>
-            <p>That’s Penn / Hudson Yards territory, which makes direct Penn access a huge advantage and makes ferry-to-shuttle routes more viable than they would be for Downtown.</p>
-            <button class="mobile-toggle" id="openSidebar">Open area list</button>
-          </div>
-          <div class="legend">
-            <h3 style="margin-bottom:6px; font-size:15px;">Map legend</h3>
-            <div class="legend-row"><span class="swatch" style="background:#76d6ff"></span> Train / ferry sweet spot</div>
-            <div class="legend-row"><span class="swatch" style="background:#8ef2c4"></span> Flight bridge option</div>
-            <div class="legend-row"><span class="swatch" style="background:#ffd37a"></span> Drive-possible, lifestyle-dependent</div>
-            <div class="legend-row"><span class="swatch" style="background:#ff9d9d"></span> Stretch / expensive / less ideal</div>
-          </div>
+      <div class="top-right">
+        <div class="mini-panel glass">
+          <h3>How to use this</h3>
+          <p>Tap a region. The bottom sheet shows why it made the board, core family towns, school logic, commute logic, housing feel, and direct home-search links.</p>
         </div>
-
-        <div class="map-box"><div id="map"></div></div>
-
-        <section class="sheet" id="sheet">
-          <div class="sheet-top">
-            <div>
-              <div class="score" id="sheetType">Best overall</div>
-              <h2 id="sheetTitle">Loading…</h2>
-              <p id="sheetSummary">Pulling the first recommended area.</p>
-            </div>
-            <div class="tiny" id="sheetTag">Tap the map to compare</div>
-          </div>
-          <div class="detail-grid" id="detailGrid"></div>
-          <div class="house-box">
-            <h3>Why this could work</h3>
-            <ul id="whyList"></ul>
-          </div>
-          <div class="sheet-actions" id="actions"></div>
-        </section>
+        <div class="mini-panel glass">
+          <h3>Important frame</h3>
+          <p>This is for hard decisions, not inspiration. Regions stay on the map only if they could plausibly work for your family and the office reality.</p>
+        </div>
       </div>
-    </main>
+    </div>
+
+    <div class="filters glass" id="filters"></div>
+
+    <div class="list-panel glass" id="listPanel"></div>
+
+    <div class="map-legend glass">
+      <h3>Region types</h3>
+      <div class="legend-row"><span class="swatch" style="background: var(--blue);"></span> Best ground commute</div>
+      <div class="legend-row"><span class="swatch" style="background: var(--green);"></span> Best fly-in hubs</div>
+      <div class="legend-row"><span class="swatch" style="background: var(--gold);"></span> Premium family lifestyle</div>
+      <div class="legend-row"><span class="swatch" style="background: var(--purple);"></span> Water / coast emphasized</div>
+      <div class="legend-row"><span class="swatch" style="background: var(--red);"></span> Secondary / caution</div>
+    </div>
+
+    <section class="sheet glass" id="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div>
+          <div class="eyebrow" id="sheetEyebrow">Loading region</div>
+          <h2 id="sheetTitle">Loading…</h2>
+          <div class="sub" id="sheetSub">Pulling the first region.</div>
+        </div>
+        <div class="chips" id="sheetChips"></div>
+      </div>
+
+      <div class="cluster-row" id="clusterRow"></div>
+      <div class="view-actions" id="actions"></div>
+      <div class="section-grid" id="facts"></div>
+
+      <ul class="bullets" id="bullets"></ul>
+
+      <div class="links-grid" id="links"></div>
+    </section>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
-    const office = {
-      name: 'Meta NYC office',
-      lat: 40.7527,
-      lng: -73.9992
-    };
+    const office = { lat: 40.7527, lng: -73.9992, name: '380 W 33rd / Penn area' };
 
-    const places = [
+    const regions = [
       {
-        id: 'greenwich',
-        name: 'Greenwich / Cos Cob, CT',
-        type: 'train',
-        color: '#76d6ff',
-        rank: 'Best overall east-coast move candidate',
-        lat: 41.0262,
-        lng: -73.6282,
-        summary: 'Very strong schools, affluent family infrastructure, quick Metro-North access, and real coastal quality-of-life.',
-        tag: 'Water + schools + real commute',
-        commute: 'Express Metro-North to Grand Central often around 45 to 55 minutes, then subway / cab / walk to Penn area.',
-        officeTrip: 'Usually about 65 to 85 minutes door-to-door if you live near station access.',
-        housing: '$$$$, likely one of the priciest serious family options here.',
-        schoolPlan: 'Public schools are the main draw. Private school usually optional, not required.',
-        lifestyle: 'Coastal New England feel, beaches/harbor access, polished family town, very not-city.',
-        schoolCost: 'Private fallback in this region can easily be $25k+ per child annually; use only if needed.',
+        id: 'nj-midtown-direct',
+        name: 'NJ Midtown Direct Core',
+        type: 'ground',
+        tier: 'Top-tier ground commute',
+        color: '#77d6ff',
+        fill: 'rgba(119,214,255,.28)',
+        summary: 'Best pure office-execution region with real family towns and strong public schools.',
+        polygon: [[40.80,-74.48],[40.78,-74.24],[40.62,-74.20],[40.61,-74.42]],
+        clusters: ['Summit', 'Chatham', 'Madison', 'Millburn / Short Hills'],
+        schoolSignal: 'Consistently excellent public-school signal. Strong enough that private school should be optional, not assumed.',
+        commute: 'Direct Penn access is the whole story here. This is the cleanest geometry for your actual office.',
+        housing: 'Expensive but still more rational than top coastal Connecticut. Strong detached-home inventory in the broader corridor.',
+        water: 'Not special for water. This is the rational choice, not the dreamy one.',
         why: [
-          'Feels like a genuine family place, not a compromise bunker for commuters.',
-          'One of the strongest combinations of safety, schools, and calm lifestyle near NYC access.',
-          'Gets you near water, which meaningfully improves the emotional side of the move.'
+          'Probably the best answer if the job stays important and you want family life to function smoothly.',
+          'Best match between office location and rail structure.',
+          'Family logistics are easier here than in denser ferry-first options.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Greenwich,-CT/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/7657/CT/Greenwich/filter/min-beds=4,min-baths=3,property-type=house+townhouse,max-price=2000000',
-        notes: 'Expensive enough that this is only worth it if the commute arrangement lasts longer than expected or if family quality is the top priority.'
+        links: [
+          { title: 'Zillow, Summit 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Summit,-NJ/4-_beds/3-_baths/', note: 'Fast housing scan for one flagship town.' },
+          { title: 'Redfin, Chatham area family homes', url: 'https://www.redfin.com/city/3501/NJ/Chatham/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Useful for price reality.' },
+          { title: 'Niche, NJ school districts', url: 'https://www.niche.com/k12/search/best-school-districts/s/new-jersey/', note: 'School benchmarking.' },
+          { title: 'Forum chatter, NJ family commute towns', url: 'https://www.reddit.com/r/newjersey/comments/mrwfk5/best_nj_towns_to_commute_to_nyc_for_family_less/', note: 'Human signal, not just rankings.' }
+        ],
+        chips: ['Ground winner', 'Direct Penn', 'Public-school strong', 'Family-practical']
       },
       {
-        id: 'summit',
-        name: 'Summit / New Providence, NJ',
-        type: 'train',
-        color: '#76d6ff',
-        rank: 'Best pure commuter-suburb balance',
-        lat: 40.7143,
-        lng: -74.3646,
-        summary: 'Classic high-functioning family suburb with strong schools and Midtown Direct rail access.',
-        tag: 'Low-drama train answer',
-        commute: 'Midtown Direct rail commonly around 35 to 45 minutes to Penn, then short subway / cab / walk.',
-        officeTrip: 'Often around 55 to 75 minutes door-to-door if you live sensibly near the station side of town.',
-        housing: '$$$ to $$$$, but usually a little more rational than premier coastal CT.',
-        schoolPlan: 'Public schools are one of the reasons to be here. Private school likely unnecessary for many families.',
-        lifestyle: 'Tree-lined, polished, stable, family-centric. Less water magic, more execution.',
-        schoolCost: 'NJ private fallback average is materially lower than Westchester/CT elite private routes, but still expensive if needed.',
+        id: 'nassau-port-washington',
+        name: 'North Shore Nassau / Port Washington Branch',
+        type: 'ground',
+        tier: 'Top-tier ground commute + water charm',
+        color: '#c7a6ff',
+        fill: 'rgba(199,166,255,.26)',
+        summary: 'Direct Penn access with more water-adjacent charm and stronger lifestyle upside than the NJ rail answer.',
+        polygon: [[40.86,-73.82],[40.86,-73.60],[40.73,-73.58],[40.72,-73.80]],
+        clusters: ['Manhasset', 'Plandome', 'Port Washington', 'Sands Point'],
+        schoolSignal: 'Manhasset is especially strong. Port Washington is good and more attainable, but not the same academic peak.',
+        commute: 'One of the best Penn-oriented commute structures on the whole board.',
+        housing: 'Can get expensive very fast, but Port Washington may offer the most realistic entry point in this cluster.',
+        water: 'Real coastal / harbor energy, which helps this region emotionally.',
         why: [
-          'If the question is “what suburb makes NYC office life least painful?” this is one of the strongest answers.',
-          'Penn access matters a lot for your exact office location.',
-          'Strong odds Emily would see this as an actual community, not just a commute node.'
+          'If you want direct-Penn practicality without giving up all lifestyle charm, this is one of the best answers.',
+          'Water access and North Shore feel make it more emotionally appealing than some rail-perfect suburbs.',
+          'This deserves to stay near the top of the map.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Summit,-NJ/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/18711/NJ/Summit/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'This is probably the “I can endure this for a year or two” gold-standard suburb if you move.'
+        links: [
+          { title: 'Zillow, Port Washington 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Port-Washington,-NY/4-_beds/3-_baths/', note: 'Probably the best value lens in this cluster.' },
+          { title: 'Redfin, Manhasset family homes', url: 'https://www.redfin.com/city/11371/NY/Manhasset/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Shows the premium side fast.' },
+          { title: 'Niche, Nassau school districts', url: 'https://www.niche.com/k12/search/best-school-districts/c/nassau-county-ny/', note: 'School ranking layer.' },
+          { title: 'Reddit, Westchester vs Nassau for families', url: 'https://www.reddit.com/r/Westchester/comments/whlv3b/westchester_vs_long_island_nassau_for_families/', note: 'Good human comparison signal.' }
+        ],
+        chips: ['Direct Penn', 'Water upside', 'School-heavy', 'Premium but real']
       },
       {
-        id: 'manhasset',
-        name: 'Manhasset / Port Washington line, NY',
-        type: 'train',
-        color: '#76d6ff',
-        rank: 'Strong Long Island family play',
-        lat: 40.7979,
-        lng: -73.6996,
-        summary: 'Excellent schools, suburban comfort, and LIRR access straight toward Penn territory.',
-        tag: 'Family prestige + Penn line access',
-        commute: 'LIRR Port Washington branch can put you into Penn in roughly 35 to 45 minutes from nearby stations.',
-        officeTrip: 'Often around 55 to 75 minutes door-to-door depending on station parking / dropoff setup.',
-        housing: '$$$$ and often competitive.',
-        schoolPlan: 'Public schools are a main reason to pay Long Island prices here.',
-        lifestyle: 'Upscale suburb, solid family infrastructure, not especially rustic, but comfortable.',
-        schoolCost: 'Private fallback in Nassau can still be expensive, but many families target the public system on purpose.',
+        id: 'lower-fairfield',
+        name: 'Lower Fairfield Coast, CT',
+        type: 'ground',
+        tier: 'Top-tier family lifestyle, secondary commute purity',
+        color: '#ffd77d',
+        fill: 'rgba(255,215,125,.24)',
+        summary: 'Elite family product and coastal life, but the office geometry is weaker because Grand Central is not Penn.',
+        polygon: [[41.12,-73.73],[41.11,-73.35],[40.95,-73.34],[40.95,-73.70]],
+        clusters: ['Darien', 'Westport', 'Greenwich'],
+        schoolSignal: 'About as strong as it gets. Public school quality is a major reason to pay the premium.',
+        commute: 'Good enough for 2 to 3 days a week, but not as elegant as direct Penn lines.',
+        housing: 'Premium to ultra-premium. This is expensive family product.',
+        water: 'Strong coastal upside and much prettier lifestyle than the purely rational rail corridors.',
         why: [
-          'Direct Penn-oriented rail is a practical advantage for your office.',
-          'This is cleaner than trying to force a daily drive into Manhattan.',
-          'Could work well if you want suburban order without going full Connecticut.'
+          'This is what stays on the board when family quality outranks commute perfection.',
+          'Darien feels especially clean as a family answer. Westport is arguably the most complete lifestyle town.',
+          'Greenwich is powerful but often pricier and more sprawling in practice.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Manhasset,-NY/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/11371/NY/Manhasset/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'Less emotionally scenic than waterfront CT or ferry towns, but operationally strong.'
+        links: [
+          { title: 'Zillow, Darien 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Darien,-CT/4-_beds/3-_baths/', note: 'Premium coastal family stock.' },
+          { title: 'Redfin, Westport family homes', url: 'https://www.redfin.com/city/21455/CT/Westport/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Lifestyle premium in plain view.' },
+          { title: 'Forum comparison, Greenwich vs Darien vs Westport', url: 'https://www.reddit.com/r/Fairfield/comments/16toayw/new_canaan_darien_westport_school_districts_and/', note: 'Useful relocation texture.' },
+          { title: 'Private school cost, Connecticut', url: 'https://www.privateschoolreview.com/tuition-stats/connecticut', note: 'Fallback cost pressure if needed.' }
+        ],
+        chips: ['Coastal premium', 'Schools elite', 'Commute tax', 'Family-beauty winner']
       },
       {
-        id: 'weehawken',
-        name: 'Weehawken / Port Imperial, NJ',
-        type: 'ferry',
-        color: '#76d6ff',
-        rank: 'Best ferry-first option',
-        lat: 40.7696,
-        lng: -74.0204,
-        summary: 'Very fast ferry-to-shuttle access to Midtown with waterfront living, but denser and more urban-feeling than classic suburbs.',
-        tag: 'Fast water commute',
-        commute: 'NY Waterway runs frequent Port Imperial to West 39th with free shuttle connections; ferry itself is very short.',
-        officeTrip: 'Can be shockingly efficient, often around 30 to 50 minutes if home access to ferry is easy.',
-        housing: '$$$ to $$$$ depending on whether you want townhouse-ish family housing or luxury waterfront towers.',
-        schoolPlan: 'More mixed. This is a place where private school or careful micro-location work may matter more.',
-        lifestyle: 'Hudson waterfront, skyline views, less land, more density, more convenience.',
-        schoolCost: 'If public options don’t feel strong enough, private-school backup can raise total cost quickly.',
+        id: 'westchester-villages',
+        name: 'Westchester Villages',
+        type: 'ground',
+        tier: 'Secondary, excellent towns but wrong terminal',
+        color: '#ff9f9f',
+        fill: 'rgba(255,159,159,.22)',
+        summary: 'Great family towns and great schools, but Penn-area office geometry is weaker than NJ direct or Nassau direct.',
+        polygon: [[41.12,-73.95],[41.11,-73.63],[40.92,-73.64],[40.92,-73.94]],
+        clusters: ['Scarsdale', 'Bronxville', 'Rye', 'Larchmont'],
+        schoolSignal: 'Elite. School quality is not the issue here.',
+        commute: 'Grand Central orientation is the tax for your specific office.',
+        housing: 'High to very high, with good family stock but less value than many hope.',
+        water: 'Some shoreline charm in Rye/Larchmont, but mixed overall.',
         why: [
-          'The map loves this. The family question is the real filter.',
-          'Could be appealing if you want water and commute ease without living in Manhattan.',
-          'Worth including, but I would treat it as a selective fit, not the default winner.'
+          'This region is easy to love in theory and slightly wrong in practice for Farley/Penn.',
+          'Still deserves map space because the family case is real.',
+          'Could win if office cadence stays lighter than feared.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Weehawken,-NJ/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/20967/NJ/Weehawken/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'Better for commute elegance than for “kids run around and life feels spacious.”'
+        links: [
+          { title: 'Zillow, Rye 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Rye,-NY/4-_beds/3-_baths/', note: 'Good Westchester shoreline lens.' },
+          { title: 'Redfin, Scarsdale family homes', url: 'https://www.redfin.com/city/17669/NY/Scarsdale/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Shows the school-premium market.' },
+          { title: 'Niche, Westchester school districts', url: 'https://www.niche.com/k12/search/best-school-districts/c/westchester-county-ny/', note: 'School proof layer.' },
+          { title: 'Reddit, Westchester vs Fairfield', url: 'https://www.reddit.com/r/Westchester/comments/16tokm7/westchester_or_fairfield_for_a_young_family/', note: 'Useful comparative chatter.' }
+        ],
+        chips: ['Great schools', 'Secondary fit', 'Grand Central tax', 'Still worth seeing']
       },
       {
-        id: 'atlantic-highlands',
-        name: 'Atlantic Highlands / Highlands, NJ',
-        type: 'ferry',
-        color: '#76d6ff',
-        rank: 'Most emotionally appealing ferry town',
-        lat: 40.4073,
-        lng: -74.0343,
-        summary: 'Waterfront small-town feel with Seastreak ferry access, more charm and coastal energy than standard commuter suburbs.',
-        tag: 'Best water-life fantasy that still commutes',
-        commute: 'Seastreak ferry to East 35th plus local transfer; ferry schedules and shuttle legs matter more than train towns.',
-        officeTrip: 'Usually lands near the outer edge of your target, often around 80 to 95 minutes door-to-door depending on the last leg.',
-        housing: '$$$, often more approachable than premier CT while still delivering real water access.',
-        schoolPlan: 'Public-school quality needs more neighborhood-level checking; private fallback may matter more than in Summit/Greenwich.',
-        lifestyle: 'Coastal, outdoorsy, family-friendly, emotionally much sweeter than a generic suburb.',
-        schoolCost: 'Budget for possible private-school backup if exact district fit is not strong enough.',
+        id: 'monmouth-ferry',
+        name: 'Monmouth Ferry Towns',
+        type: 'ground',
+        tier: 'Secondary, lifestyle-first water choice',
+        color: '#c7a6ff',
+        fill: 'rgba(199,166,255,.22)',
+        summary: 'One of the best water-lifestyle regions on the board, but ferry-to-East-35th is not as clean as it sounds for Penn-area office life.',
+        polygon: [[40.46,-74.11],[40.45,-73.93],[40.33,-73.93],[40.33,-74.12]],
+        clusters: ['Rumson', 'Fair Haven', 'Atlantic Highlands', 'Highlands'],
+        schoolSignal: 'Strong in specific pockets like Rumson-Fair Haven, but less uniformly dominant than the top rail corridors.',
+        commute: 'This is a multi-leg commute. Beautiful, but not frictionless.',
+        housing: 'Expensive in the best pockets, especially the stronger school towns.',
+        water: 'This is the water-lifestyle case for staying near NYC.',
         why: [
-          'This is the most likely place to make the whole sacrifice feel less bleak.',
-          'A genuine near-water life could matter a lot for Emily and the kids.',
-          'The tradeoff is commute consistency versus the clean rail suburbs.'
+          'The map needs at least one real “this life could feel sweet” shoreline option.',
+          'Much more emotionally compelling than generic suburbia.',
+          'Still not my lead answer for relentless Penn-office execution.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Atlantic-Highlands,-NJ/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/675/NJ/Atlantic-Highlands/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'A heart-over-spreadsheet option that is still real enough to study.'
+        links: [
+          { title: 'Zillow, Rumson 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Rumson,-NJ/4-_beds/3-_baths/', note: 'Premium shoreline family stock.' },
+          { title: 'Redfin, Atlantic Highlands homes', url: 'https://www.redfin.com/city/675/NJ/Atlantic-Highlands/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Better lifestyle/value contrast.' },
+          { title: 'Seastreak NYC commute', url: 'https://seastreak.com/ferry-routes-and-schedules/between-new-jersey-and-new-york-city/', note: 'Operational reality check.' },
+          { title: 'Forum signal, ferry-family towns', url: 'https://propertyclub.nyc/article/best-commuter-towns-in-nj-to-nyc', note: 'Lifestyle and family commentary.' }
+        ],
+        chips: ['Water-first', 'Ferry commute', 'Secondary pick', 'Lifestyle strong']
       },
       {
-        id: 'philadelphia',
-        name: 'Philadelphia Main Line / 30th St strategy',
-        type: 'train',
-        color: '#ff9d9d',
-        rank: 'Interesting but probably too grindy for family move',
-        lat: 39.9526,
-        lng: -75.1652,
-        summary: 'Could use Amtrak into NYC, but this starts to feel like a professional hack rather than a graceful family setup.',
-        tag: 'Possible, not elegant',
-        commute: 'Amtrak from 30th Street to New York Penn is viable, especially Acela, but it’s not really suburb-easy.',
-        officeTrip: 'Can work a few times per week, but the total pattern starts getting more executive-commuter than family-normal.',
-        housing: '$$ to $$$ depending on exact Main Line choice.',
-        schoolPlan: 'Some strong public and private routes, but this becomes its own separate metro decision.',
-        lifestyle: 'Could be good in a vacuum, but likely not the cleanest answer to this specific problem.',
-        schoolCost: 'Private-school choices here can also rise fast if you lean elite.',
-        why: [
-          'Included because some people try this with Amtrak and make it work.',
-          'I do not think this is your leading answer unless other NYC-adjacent markets fail the family test.',
-          'Worth seeing on the board so you can consciously reject or revisit it.'
-        ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Philadelphia,-PA/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/15502/PA/Philadelphia/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'Better as a creative backup than a first-choice move.'
-      },
-      {
-        id: 'bna-flight',
-        name: 'Stay on the farm, fly from BNA',
+        id: 'bna-home-base',
+        name: 'Stay in Tennessee, fly from BNA',
         type: 'flight',
-        color: '#8ef2c4',
-        rank: 'Best short-term bridge if you do not move yet',
-        lat: 36.1263,
-        lng: -86.6774,
-        summary: 'Probably the best immediate move if this really buys time while you search for the next role.',
-        tag: 'Most realistic no-move bridge',
-        commute: 'BNA has nonstop service to LGA/JFK/EWR. The office week becomes flights + hotel + airport transfers, not a daily local commute.',
-        officeTrip: 'Best pattern is likely Monday morning flight, hotel Monday and Tuesday night, office Monday-Tuesday-Wednesday, return Wednesday evening.',
-        housing: 'No new housing cost if you keep Tennessee as home base.',
-        schoolPlan: 'No disruption to family schools or farm life in the short term.',
-        lifestyle: 'Brutal on your body, best on family continuity.',
-        schoolCost: 'No new school-cost shock if you stay put.',
+        tier: 'Baseline fly-in bridge',
+        color: '#86efc7',
+        fill: 'rgba(134,239,199,.26)',
+        summary: 'The baseline against which every fly-in hub should be judged. If a relocation hub is not clearly better than this, it probably should not survive.',
+        polygon: [[36.29,-86.97],[36.29,-86.46],[35.96,-86.46],[35.96,-86.97]],
+        clusters: ['College Grove / Franklin farm', 'BNA', 'Nashville support orbit'],
+        schoolSignal: 'No forced disruption to the family if the commute is truly temporary.',
+        commute: 'Current live planning baseline is about 2h15m and around $139 one-way on good BNA nonstop patterns.',
+        housing: 'No new housing spend if you keep the farm as home base.',
+        water: 'Not a water play. This stays because it may still beat mediocre relocation hubs.',
         why: [
-          'If this is truly a one-year bridge, this may be smarter than rushing into the wrong move.',
-          'Protects the family from a hasty relocation while preserving the Meta compensation stream.',
-          'The real question is whether your mind and body can absorb the weekly travel.'
+          'This should remain on the map as the control scenario.',
+          'It protects family continuity while preserving current comp.',
+          'The pain here is human, not just financial.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Nashville,-TN/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/13418/TN/Nashville/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'Financially viable, spiritually the hardest.'
+        links: [
+          { title: 'Google Flights, BNA to NYC', url: 'https://www.google.com/travel/flights/flights-from-nashville-to-new-york.html?gl=US&hl=en-US', note: 'Flight baseline.' },
+          { title: 'FlightConnections, BNA-LGA', url: 'https://www.flightconnections.com/flights-from-bna-to-lga', note: 'Schedule density.' },
+          { title: 'Hotel search near Penn', url: 'https://www.google.com/travel/hotels/New%20York%20Penn%20Station', note: 'For Monday/Tuesday overnight planning.' },
+          { title: 'Budget runway note', url: 'https://bradpotterbaum.com/nyc-commute-options.html', note: 'This tool should eventually compare BNA directly against relocation hubs.' }
+        ],
+        chips: ['Control scenario', 'No move', 'Comp-preserving', 'Physically hard']
       },
       {
-        id: 'westchester-drive',
-        name: 'Rye / Scarsdale / Westchester drive-or-mixed',
-        type: 'drive',
-        color: '#ffd37a',
-        rank: 'Drive-possible but not my first recommendation',
-        lat: 40.9807,
-        lng: -73.6837,
-        summary: 'Phenomenal family areas, but if you lean on driving rather than rail, you will feel it.',
-        tag: 'Amazing family towns, wrong commute mode',
-        commute: 'Driving can theoretically fit the time window some days, but Midtown traffic volatility is exactly the problem.',
-        officeTrip: 'Much better if treated as train-adjacent, not true drive-first.',
-        housing: '$$$$.',
-        schoolPlan: 'Public schools are a core strength, private school usually optional, not mandatory.',
-        lifestyle: 'Arguably some of the best family life near NYC if money allows.',
-        schoolCost: 'Private fallback in Westchester is expensive if used.',
+        id: 'boston-coast',
+        name: 'Boston Coastal Hub',
+        type: 'flight',
+        tier: 'Top-tier fly-in hub',
+        color: '#86efc7',
+        fill: 'rgba(134,239,199,.24)',
+        summary: 'One of the strongest fly-in answers if you want elite schools, real coastal life, and a dense flight corridor into NYC.',
+        polygon: [[42.55,-71.30],[42.55,-70.65],[42.10,-70.65],[42.10,-71.30]],
+        clusters: ['Hingham', 'Cohasset', 'Marblehead', 'Manchester-by-the-Sea'],
+        schoolSignal: 'Very strong public-school environment, with private backup if ever desired.',
+        commute: 'This is a true business-travel corridor, not a fringe airport gamble.',
+        housing: 'Expensive, but the quality is real.',
+        water: 'Big coastal upside. This is one of the prettiest serious fly-in families answers.',
         why: [
-          'This belongs on the map because the family case is strong.',
-          'But your own instincts are right: train is better than trying to hero-ball Manhattan driving three days a week.',
-          'Think of this as a rail suburb, not a car suburb.'
+          'Probably one of the best combinations of family quality, school confidence, and travel redundancy.',
+          'Feels like a real place to live, not just a commute hack.',
+          'A genuine contender, not a novelty.'
         ],
-        zillow: 'https://www.zillow.com/homes/for_rent/Rye,-NY/4-_beds/3-_baths/',
-        redfin: 'https://www.redfin.com/city/16538/NY/Rye/filter/min-beds=4,min-baths=3,property-type=house+townhouse',
-        notes: 'The town quality is real. The car-first angle is the weak link.'
+        links: [
+          { title: 'Zillow, Hingham 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Hingham,-MA/4-_beds/3-_baths/', note: 'South Shore family stock.' },
+          { title: 'Redfin, Marblehead homes', url: 'https://www.redfin.com/city/11138/MA/Marblehead/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'North Shore coastal lens.' },
+          { title: 'Boston school/family ranking', url: 'https://www.niche.com/places-to-live/search/best-suburbs-for-families/m/boston-metro-area/', note: 'Family ranking layer.' },
+          { title: 'Boston to NYC airport transfer guide', url: 'https://www.blade.com/transportation-to-manhattan-from-local-airports', note: 'Ground leg thinking for flights.' }
+        ],
+        chips: ['Fly-in winner', 'Coastal strong', 'Schools strong', 'Premium but real']
+      },
+      {
+        id: 'chesapeake-bwi',
+        name: 'Annapolis / Chesapeake via BWI',
+        type: 'flight',
+        tier: 'Top-tier fly-in hub',
+        color: '#86efc7',
+        fill: 'rgba(134,239,199,.22)',
+        summary: 'Strong family region with water, decent school confidence, and practical air/rail flexibility.',
+        polygon: [[39.18,-76.86],[39.18,-76.28],[38.82,-76.28],[38.82,-76.86]],
+        clusters: ['Annapolis', 'Severna Park', 'Arnold', 'Davidsonville'],
+        schoolSignal: 'Good to very good family-school signal, especially in the stronger suburban pockets.',
+        commute: 'More resilient than pure small-airport fly-in strategies because the whole corridor is transportation-rich.',
+        housing: 'Varies, but generally more flexible than the top coastal Northeast premium pockets.',
+        water: 'Big Chesapeake upside.',
+        why: [
+          'This is one of the best “real life could be good here” fly-in answers.',
+          'Not as glamorous as coastal New England, but very practical.',
+          'Worth serious map space.'
+        ],
+        links: [
+          { title: 'Zillow, Severna Park 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Severna-Park,-MD/4-_beds/3-_baths/', note: 'Family-market lens.' },
+          { title: 'Redfin, Annapolis homes', url: 'https://www.redfin.com/city/806/MD/Annapolis/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Water lifestyle view.' },
+          { title: 'Niche, best places for families near Baltimore', url: 'https://www.niche.com/places-to-live/search/best-suburbs-for-families/m/baltimore-metro-area/', note: 'Family benchmark.' },
+          { title: 'Private school cost, Maryland context', url: 'https://www.privateschoolreview.com/tuition-stats/maryland', note: 'Fallback cost layer.' }
+        ],
+        chips: ['Fly-in strong', 'Bay life', 'Practical', 'Underrated']
+      },
+      {
+        id: 'jax-ponte-vedra',
+        name: 'Jacksonville Beaches / Ponte Vedra',
+        type: 'flight',
+        tier: 'Top-tier fly-in hub',
+        color: '#86efc7',
+        fill: 'rgba(134,239,199,.22)',
+        summary: 'One of the strongest coastal family fly-in plays with better school confidence than many people expect.',
+        polygon: [[30.49,-81.75],[30.49,-81.23],[29.97,-81.23],[29.97,-81.75]],
+        clusters: ['Ponte Vedra Beach', 'Nocatee', 'St. Johns', 'Atlantic Beach'],
+        schoolSignal: 'Very strong for Florida, especially in the favored family pockets.',
+        commute: 'Real nonstop hub logic. More viable than looser leisure-market coastal ideas.',
+        housing: 'Still expensive in the best family pockets, but not absurd for what it offers.',
+        water: 'Excellent beach and Intracoastal upside.',
+        why: [
+          'Could be one of the best “family likes life there” fly-in moves.',
+          'Feels much more real than random airport-adjacent sunbelt sprawl.',
+          'Should stay high on the fly-in board.'
+        ],
+        links: [
+          { title: 'Zillow, Ponte Vedra Beach 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Ponte-Vedra-Beach,-FL/4-_beds/3-_baths/', note: 'Premium school/coast lens.' },
+          { title: 'Redfin, Nocatee area homes', url: 'https://www.redfin.com/city/31728/FL/Nocatee/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Modern family-stock feel.' },
+          { title: 'Niche, St. Johns County families', url: 'https://www.niche.com/places-to-live/search/best-places-for-families/c/st-johns-county-fl/', note: 'Family signal.' },
+          { title: 'Visit Ponte Vedra', url: 'https://www.visitpontevedra.com/', note: 'Lifestyle context.' }
+        ],
+        chips: ['Fly-in strong', 'Beach life', 'School-friendly', 'Worth serious consideration']
+      },
+      {
+        id: 'portland-maine',
+        name: 'Portland, Maine Coast',
+        type: 'flight',
+        tier: 'Top-tier beauty, slightly more fragile ops',
+        color: '#ffd77d',
+        fill: 'rgba(255,215,125,.20)',
+        summary: 'One of the most emotionally attractive family fly-in options, with real coast, strong schools, and smaller-airport fragility.',
+        polygon: [[43.83,-70.55],[43.83,-69.95],[43.45,-69.95],[43.45,-70.55]],
+        clusters: ['Falmouth', 'Yarmouth', 'Cape Elizabeth', 'Cumberland'],
+        schoolSignal: 'Strong family-school signal in the best towns.',
+        commute: 'Works, but has less route redundancy than BOS and other bigger hubs.',
+        housing: 'Expensive, but often still easier to emotionally justify because the place is so appealing.',
+        water: 'Major coast quality-of-life upside.',
+        why: [
+          'This is one of the best “we might actually love living there” fly-in ideas.',
+          'If beauty and family joy matter a lot, this should not be cut lightly.',
+          'Operationally just a bit more delicate than the biggest hubs.'
+        ],
+        links: [
+          { title: 'Zillow, Cape Elizabeth 4+ bed / 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Cape-Elizabeth,-ME/4-_beds/3-_baths/', note: 'Premium coastal family stock.' },
+          { title: 'Redfin, Falmouth homes', url: 'https://www.redfin.com/city/6383/ME/Falmouth/filter/min-beds=4,min-baths=3,property-type=house+townhouse', note: 'Good Maine family lens.' },
+          { title: 'Niche, Portland area families', url: 'https://www.niche.com/places-to-live/search/best-places-for-families/m/portland-me-area/', note: 'Family signal.' },
+          { title: 'Maine relocation/family towns', url: 'https://www.elevatemaine.com/blog/Moving-to-Maine-in-2026--Everything-You-Need-to-Know-Before-You-Relocate', note: 'Lifestyle context.' }
+        ],
+        chips: ['Beautiful', 'Coastal strong', 'Smaller hub', 'Family-attractive']
       }
     ];
 
-    const scenarioCosts = {
-      flight: {
-        airfare: '$1.4k to $2.8k/mo planning range if booked reasonably, sometimes better with points and discipline',
-        hotel: '$1.6k to $3.4k/mo planning range for 2 nights x ~4 weeks in decent commuter hotels',
-        ground: '$300 to $900/mo depending on airport transfers, parking, and local rides',
-        total: '$3.3k to $7.1k/mo rough working range before meals and sanity tax'
-      },
-      move: {
-        rent: '$5k to $9k+/mo is realistic for a good 4BR / 3BA target in stronger commuter family markets',
-        publicSchool: 'Could save a fortune if you pick the district well',
-        privateSchool: 'If needed, 3 kids can become a six-figure annual decision fast',
-        total: 'A good public-school suburb beats “cheaper rent + private school” more often than it first appears'
-      }
-    };
-
-    const map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([40.82, -73.95], 8);
+    const map = L.map('map', { zoomControl: true }).setView([40.8, -74.2], 7);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const officeMarker = L.circleMarker([office.lat, office.lng], {
+    L.circleMarker([office.lat, office.lng], {
       radius: 8,
       color: '#ffffff',
       weight: 2,
-      fillColor: '#70d2ff',
-      fillOpacity: 0.95
-    }).addTo(map).bindTooltip('Meta office, Penn area', { permanent: false, direction: 'top' });
+      fillColor: '#77d6ff',
+      fillOpacity: 1
+    }).addTo(map).bindTooltip('380 W 33rd / Penn area');
 
-    const markers = {};
-    const summaryList = document.getElementById('summaryList');
-    const filtersEl = document.getElementById('filters');
-    const detailGrid = document.getElementById('detailGrid');
-    const whyList = document.getElementById('whyList');
-    const actions = document.getElementById('actions');
-    const sheetTitle = document.getElementById('sheetTitle');
-    const sheetSummary = document.getElementById('sheetSummary');
-    const sheetType = document.getElementById('sheetType');
-    const sheetTag = document.getElementById('sheetTag');
-    const sidebar = document.getElementById('sidebar');
-
-    const filterDefs = [
-      { id: 'all', label: 'All options' },
-      { id: 'train', label: 'Train / ferry' },
-      { id: 'flight', label: 'Flight bridge' },
-      { id: 'drive', label: 'Car weighted' }
+    const filters = [
+      { id: 'all', label: 'All regions' },
+      { id: 'ground', label: 'Ground commute regions' },
+      { id: 'flight', label: 'Fly-in hub regions' },
+      { id: 'top', label: 'Top-tier only' },
+      { id: 'water', label: 'Water / coast weighted' }
     ];
 
     let activeFilter = 'all';
-    let activeId = null;
+    let activeRegion = null;
+    const regionLayers = {};
 
-    function buildFilters() {
-      filterDefs.forEach(f => {
+    const filtersEl = document.getElementById('filters');
+    const listPanel = document.getElementById('listPanel');
+    const sheetEyebrow = document.getElementById('sheetEyebrow');
+    const sheetTitle = document.getElementById('sheetTitle');
+    const sheetSub = document.getElementById('sheetSub');
+    const sheetChips = document.getElementById('sheetChips');
+    const clusterRow = document.getElementById('clusterRow');
+    const actions = document.getElementById('actions');
+    const facts = document.getElementById('facts');
+    const bullets = document.getElementById('bullets');
+    const links = document.getElementById('links');
+
+    function visibleRegions() {
+      return regions.filter(region => {
+        if (activeFilter === 'all') return true;
+        if (activeFilter === 'ground') return region.type === 'ground';
+        if (activeFilter === 'flight') return region.type === 'flight';
+        if (activeFilter === 'top') return /Top-tier/.test(region.tier);
+        if (activeFilter === 'water') return /water|coast|beach|bay/i.test(region.water + ' ' + region.summary + ' ' + region.name);
+        return true;
+      });
+    }
+
+    function renderFilters() {
+      filtersEl.innerHTML = '';
+      filters.forEach(f => {
         const btn = document.createElement('button');
-        btn.className = 'filter' + (f.id === 'all' ? ' active' : '');
+        btn.className = 'filter-btn' + (activeFilter === f.id ? ' active' : '');
         btn.textContent = f.label;
         btn.onclick = () => {
           activeFilter = f.id;
-          document.querySelectorAll('.filter').forEach(el => el.classList.remove('active'));
-          btn.classList.add('active');
-          renderCards();
+          renderFilters();
+          renderRegionList();
+          updateMapVisibility();
+          const visible = visibleRegions();
+          if (!visible.find(r => r.id === activeRegion?.id)) selectRegion(visible[0]?.id);
         };
         filtersEl.appendChild(btn);
       });
     }
 
-    function filteredPlaces() {
-      if (activeFilter === 'all') return places;
-      if (activeFilter === 'train') return places.filter(p => p.type === 'train' || p.type === 'ferry');
-      return places.filter(p => p.type === activeFilter);
-    }
-
-    function typeLabel(type) {
-      if (type === 'train') return 'Train-first';
-      if (type === 'ferry') return 'Ferry-first';
-      if (type === 'flight') return 'Flight bridge';
-      return 'Drive / mixed';
-    }
-
-    function renderCards() {
-      const list = filteredPlaces();
-      summaryList.innerHTML = '';
-      list.forEach(place => {
-        const card = document.createElement('div');
-        card.className = 'place-card' + (place.id === activeId ? ' active' : '');
-        card.innerHTML = `
-          <div class="eyebrow">${place.rank}</div>
-          <h4>${place.name}</h4>
-          <p class="tiny">${place.summary}</p>
-          <div class="chips" style="margin-top:10px;">
-            <span class="chip">${typeLabel(place.type)}</span>
-            <span class="chip">${place.tag}</span>
-          </div>
-        `;
-        card.onclick = () => selectPlace(place.id, true);
-        summaryList.appendChild(card);
-      });
-
-      Object.values(markers).forEach(({ marker, place }) => {
-        const visible = list.some(p => p.id === place.id);
-        if (visible) marker.addTo(map); else marker.remove();
+    function renderRegionList() {
+      listPanel.innerHTML = visibleRegions().map(region => `
+        <div class="region-item ${activeRegion && activeRegion.id === region.id ? 'active' : ''}" data-id="${region.id}">
+          <h4>${region.name}</h4>
+          <p>${region.summary}</p>
+        </div>
+      `).join('');
+      listPanel.querySelectorAll('.region-item').forEach(item => {
+        item.onclick = () => selectRegion(item.dataset.id, true);
       });
     }
 
-    function selectPlace(id, pan = false) {
-      const place = places.find(p => p.id === id);
-      if (!place) return;
-      activeId = id;
-      renderCards();
+    function updateMapVisibility() {
+      const visible = new Set(visibleRegions().map(r => r.id));
+      Object.entries(regionLayers).forEach(([id, layer]) => {
+        if (visible.has(id)) layer.addTo(map); else layer.remove();
+      });
+    }
 
-      sheetType.textContent = place.rank;
-      sheetTitle.textContent = place.name;
-      sheetSummary.textContent = place.summary;
-      sheetTag.textContent = place.tag;
-      detailGrid.innerHTML = `
-        <div class="detail"><div class="k">Commute mode</div><div class="v">${typeLabel(place.type)}</div></div>
-        <div class="detail"><div class="k">Commute reality</div><div class="v">${place.commute}</div></div>
-        <div class="detail"><div class="k">Office day feel</div><div class="v">${place.officeTrip}</div></div>
-        <div class="detail"><div class="k">Housing signal</div><div class="v">${place.housing}</div></div>
-        <div class="detail"><div class="k">School strategy</div><div class="v">${place.schoolPlan}</div></div>
-        <div class="detail"><div class="k">Lifestyle note</div><div class="v">${place.lifestyle}</div></div>
-      `;
-      whyList.innerHTML = place.why.map(item => `<li>${item}</li>`).join('') + `<li><strong>Private school angle:</strong> ${place.schoolCost}</li><li><strong>Watch-out:</strong> ${place.notes}</li>`;
+    function selectRegion(id, fit = false) {
+      const region = regions.find(r => r.id === id);
+      if (!region) return;
+      activeRegion = region;
+      renderRegionList();
+
+      sheetEyebrow.textContent = region.tier;
+      sheetTitle.textContent = region.name;
+      sheetSub.textContent = region.summary;
+      sheetChips.innerHTML = region.chips.map(chip => `<span class="chip">${chip}</span>`).join('');
+      clusterRow.innerHTML = region.clusters.map(c => `<div class="cluster-card ${c === region.clusters[0] ? 'active' : ''}"><h4>${c}</h4><p>Core town to inspect inside this region.</p></div>`).join('');
       actions.innerHTML = `
-        <a class="btn primary" href="${place.zillow}" target="_blank" rel="noopener">Search Zillow</a>
-        <a class="btn" href="${place.redfin}" target="_blank" rel="noopener">Search Redfin</a>
-        <a class="btn" href="https://www.google.com/search?q=${encodeURIComponent(place.name + ' commute to Penn Station') }" target="_blank" rel="noopener">Search commute notes</a>
+        <a class="btn primary" href="https://www.google.com/search?q=${encodeURIComponent(region.name + ' family friendly schools homes')}" target="_blank" rel="noopener">Search region deep dive</a>
+        <a class="btn" href="${region.links[0].url}" target="_blank" rel="noopener">Open housing search</a>
+        <a class="btn" href="https://www.google.com/search?q=${encodeURIComponent(region.name + ' commute to 380 W 33rd New York') }" target="_blank" rel="noopener">Commute search</a>
       `;
+      facts.innerHTML = `
+        <div class="card"><div class="k">Family / school signal</div><div class="v">${region.schoolSignal}</div></div>
+        <div class="card"><div class="k">Commute logic</div><div class="v">${region.commute}</div></div>
+        <div class="card"><div class="k">Housing feel</div><div class="v">${region.housing}</div></div>
+        <div class="card"><div class="k">Water / lifestyle angle</div><div class="v">${region.water}</div></div>
+      `;
+      bullets.innerHTML = region.why.map(item => `<li>${item}</li>`).join('');
+      links.innerHTML = region.links.map(link => `
+        <div class="link-card">
+          <h4><a href="${link.url}" target="_blank" rel="noopener">${link.title}</a></h4>
+          <p>${link.note}</p>
+        </div>
+      `).join('');
 
-      Object.values(markers).forEach(({ marker, place: p }) => {
-        marker.setStyle({ radius: p.id === id ? 12 : 8, weight: p.id === id ? 3 : 1.5, fillOpacity: p.id === id ? 1 : 0.85 });
+      Object.entries(regionLayers).forEach(([rid, layer]) => {
+        const r = regions.find(x => x.id === rid);
+        layer.setStyle({
+          weight: rid === region.id ? 3 : 1.5,
+          fillOpacity: rid === region.id ? 0.34 : 0.22,
+          color: r.color
+        });
       });
 
-      if (pan) {
-        map.flyTo([place.lat, place.lng], place.type === 'flight' ? 5 : 10, { duration: 0.5 });
+      if (fit) {
+        regionLayers[region.id].bringToFront();
+        map.fitBounds(regionLayers[region.id].getBounds(), { padding: [30, 30] });
       }
     }
 
-    places.forEach(place => {
-      const marker = L.circleMarker([place.lat, place.lng], {
-        radius: 8,
-        color: '#ffffff',
+    regions.forEach(region => {
+      const layer = L.polygon(region.polygon.map(([lat,lng]) => [lat,lng]), {
+        color: region.color,
         weight: 1.5,
-        fillColor: place.color,
-        fillOpacity: 0.85
+        fillColor: region.color,
+        fillOpacity: 0.22
       }).addTo(map);
-      marker.on('click', () => selectPlace(place.id));
-      marker.bindTooltip(`<strong>${place.name}</strong><br>${place.rank}`, { direction: 'top' });
-      markers[place.id] = { marker, place };
+      layer.on('click', () => selectRegion(region.id, true));
+      layer.bindTooltip(`<strong>${region.name}</strong><br>${region.tier}`, { sticky: true });
+      regionLayers[region.id] = layer;
     });
 
-    const officeToBna = L.polyline([[office.lat, office.lng], [36.1263, -86.6774]], {
-      color: '#8ef2c4',
-      weight: 2,
-      opacity: 0.35,
-      dashArray: '8 8'
-    }).addTo(map);
-
-    buildFilters();
-    renderCards();
-    selectPlace('bna-flight');
-
-    document.getElementById('openSidebar').onclick = () => sidebar.classList.add('open');
-    document.getElementById('closeSidebar').onclick = () => sidebar.classList.remove('open');
-
-    console.log('Scenario planning ranges', scenarioCosts);
+    renderFilters();
+    renderRegionList();
+    selectRegion('nj-midtown-direct', true);
   </script>
 </body>
 </html>
