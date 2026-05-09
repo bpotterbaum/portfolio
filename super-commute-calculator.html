@@ -3,536 +3,659 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Super Commute Calculator</title>
+  <title>Meta Super Commute Decision Tool</title>
   <style>
     :root {
       --bg: #f5f5f7;
-      --card: #ffffff;
-      --text: #111827;
-      --sub: #6b7280;
-      --line: #e5e7eb;
-      --accent: #111827;
-      --good: #127a45;
-      --warn: #b45309;
-      --bad: #b42318;
-      --blue: #2563eb;
+      --card: rgba(255,255,255,.88);
+      --text: #111111;
+      --sub: #6e6e73;
+      --line: rgba(17,17,17,.08);
+      --accent: #0a84ff;
+      --good: #14804a;
+      --warn: #b26a00;
+      --bad: #c62828;
+      --soft-good: #ecf8f0;
+      --soft-warn: #fff7e8;
+      --soft-bad: #fff1f0;
     }
+
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at top, rgba(10,132,255,.09), transparent 30%),
+        var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
     }
+
+    body { padding: 24px 16px 64px; }
+
     .page {
-      max-width: 1320px;
+      max-width: 1160px;
       margin: 0 auto;
-      padding: 24px 16px 56px;
     }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+
     .back {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: var(--accent);
       text-decoration: none;
-      color: var(--blue);
-      font-weight: 600;
       font-size: 14px;
+      font-weight: 600;
     }
-    h1 {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 44px);
-      line-height: 1.05;
-      letter-spacing: -.03em;
-    }
-    .lede {
-      margin: 10px 0 0;
-      max-width: 880px;
-      color: var(--sub);
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    .hero-card,
-    .card {
+
+    .hero,
+    .card,
+    .option {
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: 0 8px 24px rgba(17,24,39,.05);
+      border-radius: 28px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.05);
     }
-    .hero-card {
-      padding: 22px;
+
+    .hero {
+      padding: 32px;
       margin-bottom: 18px;
     }
-    .hero-grid,
-    .grid {
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--sub);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: .98;
+      letter-spacing: -.045em;
+      max-width: 860px;
+    }
+
+    .lede {
+      margin: 16px 0 0;
+      max-width: 760px;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--sub);
+    }
+
+    .hero-summary {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .big-number {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fff, #f7f7f8);
+      border: 1px solid var(--line);
+    }
+
+    .big-number .label,
+    .mini .label,
+    .item .label,
+    .assumption label,
+    .formula-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      color: var(--sub);
+    }
+
+    .big-number .value {
+      margin-top: 10px;
+      font-size: clamp(42px, 8vw, 72px);
+      line-height: .95;
+      letter-spacing: -.055em;
+      font-weight: 700;
+    }
+
+    .big-number .subcopy {
+      margin-top: 8px;
+      font-size: 15px;
+      color: var(--sub);
+    }
+
+    .hero-stack {
       display: grid;
       gap: 16px;
     }
-    .hero-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-top: 18px;
-    }
-    .stat {
-      padding: 16px;
-      background: #fafafa;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-    }
-    .label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--sub);
-      margin-bottom: 8px;
-    }
-    .value {
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: -.03em;
-    }
-    .tiny {
-      color: var(--sub);
-      font-size: 12px;
-      line-height: 1.45;
-      margin-top: 6px;
-    }
-    .grid {
-      grid-template-columns: 390px minmax(0, 1fr);
-      align-items: start;
-    }
-    .card {
+
+    .mini {
       padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: #fafafa;
     }
-    .section-title {
-      font-size: 18px;
+
+    .mini .value {
+      margin-top: 8px;
+      font-size: 32px;
+      line-height: 1;
       font-weight: 700;
-      margin: 0 0 4px;
+      letter-spacing: -.04em;
     }
-    .section-sub {
+
+    .mini .note {
+      margin-top: 6px;
       color: var(--sub);
       font-size: 13px;
       line-height: 1.45;
-      margin: 0 0 18px;
     }
-    .field-grid {
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card { padding: 22px; }
+
+    .section-title {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -.03em;
+    }
+
+    .section-sub {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .assumptions {
       display: grid;
       gap: 12px;
+      margin-top: 18px;
     }
-    .field {
+
+    .assumption {
       display: grid;
       gap: 6px;
     }
-    .field label {
-      font-size: 12px;
-      color: var(--sub);
-      font-weight: 600;
-    }
-    .field input,
-    .field select {
+
+    .assumption input {
       width: 100%;
+      padding: 12px 14px;
+      border-radius: 16px;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 11px 12px;
-      font-size: 15px;
       background: #fff;
+      font-size: 16px;
       color: var(--text);
     }
-    .inline-2,
-    .inline-3 {
-      display: grid;
-      gap: 12px;
-    }
-    .inline-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .inline-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .scenario-list {
-      display: grid;
-      gap: 14px;
-    }
-    .scenario {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px;
-      background: #fff;
-    }
-    .scenario-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .scenario-name {
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .pill {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: #fff;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: #374151;
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .summary-item {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px;
-      background: #fafafa;
-    }
-    .summary-item .k {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      color: var(--sub);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .summary-item .v {
-      font-size: 21px;
-      font-weight: 700;
-      letter-spacing: -.03em;
-    }
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .detail-row {
-      border-top: 1px dashed var(--line);
-      padding-top: 10px;
-      margin-top: 10px;
-      display: grid;
-      gap: 8px;
-    }
-    .kv {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 13px;
-    }
-    .kv .k { color: var(--sub); }
-    .score-good { color: var(--good); }
-    .score-warn { color: var(--warn); }
-    .score-bad { color: var(--bad); }
-    .notes {
-      margin-top: 18px;
+
+    .helper {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
       color: var(--sub);
       font-size: 13px;
       line-height: 1.5;
     }
-    @media (max-width: 1040px) {
-      .grid,
-      .hero-grid,
-      .summary-grid,
-      .detail-grid,
-      .inline-3 { grid-template-columns: 1fr; }
-      .inline-2 { grid-template-columns: 1fr 1fr; }
+
+    .story {
+      display: grid;
+      gap: 16px;
     }
+
+    .question {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.7);
+    }
+
+    .question h3 {
+      margin: 0 0 14px;
+      font-size: 14px;
+      letter-spacing: -.01em;
+      color: var(--sub);
+      font-weight: 600;
+    }
+
+    .answer {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.02;
+      letter-spacing: -.05em;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .answer.good { color: var(--good); }
+    .answer.warn { color: var(--warn); }
+    .answer.bad { color: var(--bad); }
+
+    .explain {
+      color: var(--sub);
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 58ch;
+    }
+
+    .formula {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .item {
+      padding: 14px;
+      border-radius: 18px;
+      background: #fafafa;
+      border: 1px solid var(--line);
+    }
+
+    .item .value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -.035em;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .option {
+      padding: 22px;
+    }
+
+    .option h4 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: -.03em;
+    }
+
+    .option p {
+      margin: 10px 0 0;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .option .headline {
+      margin-top: 18px;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -.05em;
+      line-height: 1;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .chip.good { color: var(--good); background: var(--soft-good); }
+    .chip.warn { color: var(--warn); background: var(--soft-warn); }
+    .chip.bad { color: var(--bad); background: var(--soft-bad); }
+
+    .bullets {
+      margin: 16px 0 0;
+      padding-left: 18px;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .foot {
+      margin-top: 18px;
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 980px) {
+      .layout,
+      .hero-summary,
+      .comparison-grid,
+      .formula {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 720px) {
-      .page { padding: 16px 12px 42px; }
-      .inline-2 { grid-template-columns: 1fr; }
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .value { font-size: 26px; }
-      .summary-item .v { font-size: 18px; }
+      body { padding: 14px 12px 40px; }
+      .hero,
+      .card,
+      .option,
+      .question { padding: 18px; border-radius: 22px; }
+      .lede { font-size: 16px; }
+      .mini .value { font-size: 28px; }
+      .option .headline { font-size: 30px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="topbar">
-      <a class="back" href="/nyc-commute-options.html">← Back to commute board</a>
-    </div>
+    <a class="back" href="/nyc-commute-options.html">← Back to commute board</a>
 
-    <div class="hero-card">
-      <h1>Super Commute Calculator</h1>
+    <section class="hero">
+      <div class="eyebrow">One-year decision tool</div>
+      <h1>Is one more year at Meta worth the super commute?</h1>
       <p class="lede">
-        Model one more year at Meta against the real cost of super commuting, driving, flying in, or moving the family.
-        This is meant to answer a brutal question, is the extra RSU upside still worth it after commute cost, housing cost, vehicle cost, and time drag.
+        Start with the extra equity you keep by staying. Then subtract the cash cost, housing cost, and time drain of making the commute work. The goal is simple: see what is left over.
       </p>
-      <div class="hero-grid" id="heroStats"></div>
+      <div class="hero-summary">
+        <div class="big-number">
+          <div class="label">What you keep by staying at Meta for one more year</div>
+          <div class="value" id="metaKeepValue">$0</div>
+          <div class="subcopy" id="metaKeepNote">Annual RSU vest plus base salary.</div>
+        </div>
+        <div class="hero-stack">
+          <div class="mini">
+            <div class="label">Extra equity at stake</div>
+            <div class="value" id="equityValue">$0</div>
+            <div class="note">This is the main thing a lower-equity job gives up.</div>
+          </div>
+          <div class="mini">
+            <div class="label">Your current paycheck baseline</div>
+            <div class="value" id="salaryValue">$0</div>
+            <div class="note">Useful context, but the decision usually swings on the RSU delta.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="card">
+        <h2 class="section-title">Edit the few assumptions that matter</h2>
+        <p class="section-sub">Everything below is yearly unless noted. Keep this brutally simple.</p>
+
+        <div class="assumptions">
+          <div class="assumption">
+            <label for="baseSalary">Meta base salary</label>
+            <input id="baseSalary" type="number" value="255000" />
+          </div>
+          <div class="assumption">
+            <label for="rsuQuarterly">RSU vest per quarter</label>
+            <input id="rsuQuarterly" type="number" value="100000" />
+          </div>
+          <div class="assumption">
+            <label for="weeksPerYear">Weeks per year you do this</label>
+            <input id="weeksPerYear" type="number" value="52" />
+          </div>
+          <div class="assumption">
+            <label for="hourValue">What one hour of your life is worth</label>
+            <input id="hourValue" type="number" value="150" />
+          </div>
+          <div class="assumption">
+            <label for="flightOneWay">Flight cost, one way</label>
+            <input id="flightOneWay" type="number" value="150" />
+          </div>
+          <div class="assumption">
+            <label for="hotelNight">Hotel cost per night</label>
+            <input id="hotelNight" type="number" value="200" />
+          </div>
+          <div class="assumption">
+            <label for="drivePerMile">Driving cost per mile</label>
+            <input id="drivePerMile" type="number" step="0.01" value="0.35" />
+          </div>
+          <div class="assumption">
+            <label for="teslaAnnual">Annual vehicle cost</label>
+            <input id="teslaAnnual" type="number" value="18000" />
+          </div>
+          <div class="assumption">
+            <label for="nycRentMonth">Monthly rent if you move the family</label>
+            <input id="nycRentMonth" type="number" value="10500" />
+          </div>
+          <div class="assumption">
+            <label for="officeCoveredPerWeek">Weekly office-covered offset</label>
+            <input id="officeCoveredPerWeek" type="number" value="0" />
+          </div>
+        </div>
+
+        <div class="helper">
+          Default assumptions keep the original intent: $255k salary, $100k quarterly RSU vest, cheap flights, two hotel nights, expensive relocation rent, and a meaningful value on time.
+        </div>
+      </aside>
+
+      <main class="story">
+        <section class="question">
+          <h3>1. What do I keep by staying at Meta?</h3>
+          <div class="answer" id="q1Answer">$0</div>
+          <div class="explain" id="q1Explain"></div>
+        </section>
+
+        <section class="question">
+          <h3>2. What does the commute cost me in one year?</h3>
+          <div class="answer" id="q2Answer">$0</div>
+          <div class="explain" id="q2Explain"></div>
+          <div class="formula" id="q2Formula"></div>
+        </section>
+
+        <section class="question">
+          <h3>3. What is left over after the super commute?</h3>
+          <div class="answer" id="q3Answer">$0</div>
+          <div class="explain" id="q3Explain"></div>
+        </section>
+
+        <section class="question">
+          <h3>4. How does that compare to other paths?</h3>
+          <div class="comparison-grid" id="comparisonGrid"></div>
+        </section>
+      </main>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <h2 class="section-title">Inputs</h2>
-        <p class="section-sub">Editable assumptions for one year. Start with your current Meta reality, then tune the scenarios.</p>
-
-        <div class="field-grid">
-          <div class="inline-2">
-            <div class="field">
-              <label for="baseSalary">Base salary, yearly</label>
-              <input id="baseSalary" type="number" value="255000" />
-            </div>
-            <div class="field">
-              <label for="rsuQuarterly">RSU vest per quarter</label>
-              <input id="rsuQuarterly" type="number" value="100000" />
-            </div>
-          </div>
-
-          <div class="inline-2">
-            <div class="field">
-              <label for="paycheckBiweekly">Biweekly paycheck</label>
-              <input id="paycheckBiweekly" type="number" value="7000" />
-            </div>
-            <div class="field">
-              <label for="estimatedTakeHome">Estimated current annual take-home</label>
-              <input id="estimatedTakeHome" type="number" value="840000" />
-            </div>
-          </div>
-
-          <div class="inline-3">
-            <div class="field">
-              <label for="weeksPerYear">Weeks worked per year</label>
-              <input id="weeksPerYear" type="number" value="52" />
-            </div>
-            <div class="field">
-              <label for="officeDaysPerWeek">Office days per week</label>
-              <input id="officeDaysPerWeek" type="number" value="3" />
-            </div>
-            <div class="field">
-              <label for="hourValue">Personal value of time, per hour</label>
-              <input id="hourValue" type="number" value="150" />
-            </div>
-          </div>
-
-          <div class="inline-3">
-            <div class="field">
-              <label for="flightOneWay">Flight cost, one way</label>
-              <input id="flightOneWay" type="number" value="150" />
-            </div>
-            <div class="field">
-              <label for="hotelNight">Hotel cost, per night</label>
-              <input id="hotelNight" type="number" value="200" />
-            </div>
-            <div class="field">
-              <label for="officeCoveredPerWeek">Office-covered weekly food / local transit offset</label>
-              <input id="officeCoveredPerWeek" type="number" value="0" />
-            </div>
-          </div>
-
-          <div class="inline-3">
-            <div class="field">
-              <label for="teslaAnnual">Annual vehicle cost</label>
-              <input id="teslaAnnual" type="number" value="18000" />
-            </div>
-            <div class="field">
-              <label for="drivePerMile">Drive operating cost, per mile</label>
-              <input id="drivePerMile" type="number" value="0.35" step="0.01" />
-            </div>
-            <div class="field">
-              <label for="nycRentMonth">Monthly rent if family relocates</label>
-              <input id="nycRentMonth" type="number" value="10500" />
-            </div>
-          </div>
-        </div>
-
-        <div class="notes">
-          Current framing baked in from your note: $255k salary, $100k RSU per quarter, flights around $150 one way, hotels around $200/night, and family-move rent around $10k to $11k/month. We can keep sharpening later.
-        </div>
-      </div>
-
-      <div class="card">
-        <h2 class="section-title">Scenario comparison</h2>
-        <p class="section-sub">These are first-pass decision lenses, not tax-perfect accounting. The point is to compare big tradeoffs clearly.</p>
-        <div class="scenario-list" id="scenarioList"></div>
-      </div>
+    <div class="foot">
+      This is a decision lens, not tax software. The point is to make the tradeoff obvious in under 30 seconds: retained Meta upside minus the real burden of commuting, moving, or walking away from equity.
     </div>
   </div>
 
   <script>
-    const fmtMoney = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
-    const fmtMoney1 = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 1 }).format(n || 0);
-    const fmtHours = n => `${(n || 0).toFixed(0)}h`;
+    const money = n => new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(n || 0);
 
-    const heroStats = document.getElementById('heroStats');
-    const scenarioList = document.getElementById('scenarioList');
+    const hours = n => `${Math.round(n || 0)}h`;
+
+    const $ = id => document.getElementById(id);
 
     const inputs = {
-      baseSalary: document.getElementById('baseSalary'),
-      rsuQuarterly: document.getElementById('rsuQuarterly'),
-      paycheckBiweekly: document.getElementById('paycheckBiweekly'),
-      estimatedTakeHome: document.getElementById('estimatedTakeHome'),
-      weeksPerYear: document.getElementById('weeksPerYear'),
-      officeDaysPerWeek: document.getElementById('officeDaysPerWeek'),
-      hourValue: document.getElementById('hourValue'),
-      flightOneWay: document.getElementById('flightOneWay'),
-      hotelNight: document.getElementById('hotelNight'),
-      officeCoveredPerWeek: document.getElementById('officeCoveredPerWeek'),
-      teslaAnnual: document.getElementById('teslaAnnual'),
-      drivePerMile: document.getElementById('drivePerMile'),
-      nycRentMonth: document.getElementById('nycRentMonth')
+      baseSalary: $('baseSalary'),
+      rsuQuarterly: $('rsuQuarterly'),
+      weeksPerYear: $('weeksPerYear'),
+      hourValue: $('hourValue'),
+      flightOneWay: $('flightOneWay'),
+      hotelNight: $('hotelNight'),
+      drivePerMile: $('drivePerMile'),
+      teslaAnnual: $('teslaAnnual'),
+      nycRentMonth: $('nycRentMonth'),
+      officeCoveredPerWeek: $('officeCoveredPerWeek')
     };
 
-    const scenarios = [
-      {
-        id: 'baseline',
-        name: 'Stay at Meta, fly in 3 days/week',
-        lane: 'Flight',
-        assumptions: vals => {
-          const weeklyTravel = (vals.flightOneWay * 2) + (vals.hotelNight * 2) - vals.officeCoveredPerWeek;
-          const annualTravel = weeklyTravel * vals.weeksPerYear;
-          const weeklyHours = 11;
-          return {
-            annualCommuteCost: annualTravel,
-            annualHousingCost: 0,
-            annualVehicleCost: 0,
-            annualTimeHours: weeklyHours * vals.weeksPerYear,
-            note: 'Most direct RSU-preserving super commute baseline.'
-          };
-        }
-      },
-      {
-        id: 'drive3',
-        name: 'Drive long distance 3 days/week',
-        lane: 'Drive',
-        assumptions: vals => {
-          const weeklyMiles = 720;
-          const annualDrive = (weeklyMiles * vals.drivePerMile * vals.weeksPerYear);
-          const annualVehicle = vals.teslaAnnual;
-          const weeklyHours = 18;
-          return {
-            annualCommuteCost: annualDrive,
-            annualHousingCost: 0,
-            annualVehicleCost: annualVehicle,
-            annualTimeHours: weeklyHours * vals.weeksPerYear,
-            note: 'Useful for CT/NJ-style long-drive scenarios, but time drag gets ugly fast.'
-          };
-        }
-      },
-      {
-        id: 'movefamily',
-        name: 'Move family near commute zone',
-        lane: 'Relocate',
-        assumptions: vals => {
-          const annualRent = vals.nycRentMonth * 12;
-          const weeklyHours = 6;
-          return {
-            annualCommuteCost: 2500,
-            annualHousingCost: annualRent,
-            annualVehicleCost: 0,
-            annualTimeHours: weeklyHours * vals.weeksPerYear,
-            note: 'Much lower commute pain, but massive housing burn.'
-          };
-        }
-      },
-      {
-        id: 'newjob',
-        name: 'Take new job, lose most RSU upside',
-        lane: 'Comp tradeoff',
-        assumptions: vals => {
-          const annualLostRsu = vals.rsuQuarterly * 4;
-          const weeklyHours = 4;
-          return {
-            annualCommuteCost: 0,
-            annualHousingCost: 0,
-            annualVehicleCost: 0,
-            annualTimeHours: weeklyHours * vals.weeksPerYear,
-            annualRsuLossOverride: annualLostRsu,
-            note: 'Potentially saner lifestyle, but this is the scenario where the Meta equity edge disappears.'
-          };
-        }
-      }
-    ];
+    function values() {
+      return Object.fromEntries(
+        Object.entries(inputs).map(([key, el]) => [key, Number(el.value || 0)])
+      );
+    }
 
-    function getVals() {
-      return Object.fromEntries(Object.entries(inputs).map(([k, el]) => [k, Number(el.value || 0)]));
+    function commuteOptions(v) {
+      const annualRsu = v.rsuQuarterly * 4;
+      const flightDirect = ((v.flightOneWay * 2) + (v.hotelNight * 2) - v.officeCoveredPerWeek) * v.weeksPerYear;
+      const flightHours = 11 * v.weeksPerYear;
+      const flightTime = flightHours * v.hourValue;
+      const flightTotal = flightDirect + flightTime;
+
+      const driveDirect = (720 * v.drivePerMile * v.weeksPerYear) + v.teslaAnnual;
+      const driveHours = 18 * v.weeksPerYear;
+      const driveTime = driveHours * v.hourValue;
+      const driveTotal = driveDirect + driveTime;
+
+      const moveDirect = (v.nycRentMonth * 12) + 2500;
+      const moveHours = 6 * v.weeksPerYear;
+      const moveTime = moveHours * v.hourValue;
+      const moveTotal = moveDirect + moveTime;
+
+      const lowerEquityLoss = annualRsu;
+      const lowerEquityTime = 4 * v.weeksPerYear * v.hourValue;
+      const lowerEquityTotal = lowerEquityLoss + lowerEquityTime;
+
+      return {
+        annualRsu,
+        flight: {
+          name: 'Fly in 3 days a week',
+          total: flightTotal,
+          direct: flightDirect,
+          time: flightTime,
+          hours: flightHours,
+          leftover: annualRsu - flightTotal,
+          note: 'Keeps the equity, but buys it with airports and hotel nights.'
+        },
+        drive: {
+          name: 'Drive long distance',
+          total: driveTotal,
+          direct: driveDirect,
+          time: driveTime,
+          hours: driveHours,
+          leftover: annualRsu - driveTotal,
+          note: 'Looks cheaper on paper until the hours eat the benefit.'
+        },
+        move: {
+          name: 'Move the family',
+          total: moveTotal,
+          direct: moveDirect,
+          time: moveTime,
+          hours: moveHours,
+          leftover: annualRsu - moveTotal,
+          note: 'Almost no commute pain, but rent becomes the new problem.'
+        },
+        lowerEquity: {
+          name: 'Take a lower-equity job',
+          total: lowerEquityTotal,
+          direct: lowerEquityLoss,
+          time: lowerEquityTime,
+          hours: 4 * v.weeksPerYear,
+          leftover: 0 - lowerEquityTime,
+          note: 'You avoid the commute, but you give up the entire RSU year.'
+        }
+      };
+    }
+
+    function tone(value) {
+      if (value >= 200000) return 'good';
+      if (value >= 75000) return 'warn';
+      return 'bad';
     }
 
     function render() {
-      const vals = getVals();
-      const annualRsu = vals.rsuQuarterly * 4;
-      const annualComp = vals.baseSalary + annualRsu;
-      const currentTakeHome = vals.estimatedTakeHome || ((vals.paycheckBiweekly * 26) + annualRsu * 0.65);
+      const v = values();
+      const annualRsu = v.rsuQuarterly * 4;
+      const annualComp = v.baseSalary + annualRsu;
+      const options = commuteOptions(v);
+      const primary = options.flight;
 
-      heroStats.innerHTML = [
-        { label: 'Meta salary', value: fmtMoney(vals.baseSalary), tiny: 'Current annual base' },
-        { label: 'Annual RSU vest', value: fmtMoney(annualRsu), tiny: `${fmtMoney(vals.rsuQuarterly)} per quarter` },
-        { label: 'Pre-tax total comp', value: fmtMoney(annualComp), tiny: 'Base plus annual RSU vest' },
-        { label: 'Take-home framing', value: fmtMoney(currentTakeHome), tiny: 'Editable estimate for decision-making' }
-      ].map(stat => `
-        <div class="stat">
-          <div class="label">${stat.label}</div>
-          <div class="value">${stat.value}</div>
-          <div class="tiny">${stat.tiny}</div>
+      $('metaKeepValue').textContent = money(annualComp);
+      $('metaKeepNote').textContent = `${money(v.baseSalary)} salary plus ${money(annualRsu)} RSU vest.`;
+      $('equityValue').textContent = money(annualRsu);
+      $('salaryValue').textContent = money(v.baseSalary);
+
+      $('q1Answer').textContent = money(annualRsu);
+      $('q1Answer').className = 'answer';
+      $('q1Explain').textContent = `The one-year decision mostly turns on the ${money(annualRsu)} of RSU you keep by staying. Base salary exists either way, but this is the extra upside that is easiest to lose.`;
+
+      $('q2Answer').textContent = money(primary.total);
+      $('q2Answer').className = `answer ${tone(primary.leftover)}`;
+      $('q2Explain').textContent = `Flying in 3 days a week costs about ${money(primary.direct)} in cash plus ${money(primary.time)} in time value, or ${hours(primary.hours)} over the year.`;
+      $('q2Formula').innerHTML = [
+        ['Cash travel', money(primary.direct)],
+        ['Time cost', money(primary.time)],
+        ['Total one-year burden', money(primary.total)]
+      ].map(([label, value]) => `
+        <div class="item">
+          <div class="label">${label}</div>
+          <div class="value">${value}</div>
         </div>
       `).join('');
 
-      scenarioList.innerHTML = scenarios.map(scenario => {
-        const a = scenario.assumptions(vals);
-        const annualTimeValue = a.annualTimeHours * vals.hourValue;
-        const annualDirectCost = a.annualCommuteCost + a.annualHousingCost + a.annualVehicleCost;
-        const annualRsuLoss = a.annualRsuLossOverride ?? 0;
-        const allInBurn = annualDirectCost + annualTimeValue + annualRsuLoss;
-        const netMetaEdge = annualRsu - (annualDirectCost + annualTimeValue);
-        const scoreClass = netMetaEdge > 250000 ? 'score-good' : netMetaEdge > 100000 ? 'score-warn' : 'score-bad';
-        const quarterlyBurn = allInBurn / 4;
-        const monthlyBurn = allInBurn / 12;
+      $('q3Answer').textContent = money(primary.leftover);
+      $('q3Answer').className = `answer ${tone(primary.leftover)}`;
+      $('q3Explain').textContent = `${money(annualRsu)} of retained RSU minus ${money(primary.total)} of commute burden leaves about ${money(primary.leftover)} of real one-year upside. That is the core answer.`;
 
-        return `
-          <div class="scenario">
-            <div class="scenario-head">
-              <div>
-                <div class="scenario-name">${scenario.name}</div>
-                <div class="tiny">${a.note}</div>
-              </div>
-              <div class="pill">${scenario.lane}</div>
-            </div>
+      const cards = [
+        {
+          title: options.flight.name,
+          headline: `${money(options.flight.leftover)} left`,
+          tone: tone(options.flight.leftover),
+          body: options.flight.note,
+          bullets: [
+            `${money(options.flight.direct)} direct travel cost`,
+            `${money(options.flight.time)} time cost`,
+            `${hours(options.flight.hours)} lost to the commute`
+          ]
+        },
+        {
+          title: options.drive.name,
+          headline: `${money(options.drive.leftover)} left`,
+          tone: tone(options.drive.leftover),
+          body: options.drive.note,
+          bullets: [
+            `${money(options.drive.direct)} driving and car cost`,
+            `${money(options.drive.time)} time cost`,
+            `${money(options.flight.leftover - options.drive.leftover)} worse than flying in`
+          ]
+        },
+        {
+          title: options.move.name,
+          headline: `${money(options.move.leftover)} left`,
+          tone: tone(options.move.leftover),
+          body: options.move.note,
+          bullets: [
+            `${money(options.move.direct)} housing and local cost`,
+            `${money(options.move.time)} time cost`,
+            `${money(options.flight.leftover - options.move.leftover)} worse than flying in`
+          ]
+        },
+        {
+          title: options.lowerEquity.name,
+          headline: `${money(options.lowerEquity.total)} given up`,
+          tone: 'bad',
+          body: options.lowerEquity.note,
+          bullets: [
+            `${money(annualRsu)} lost RSU upside`,
+            `${money(options.lowerEquity.time)} small time drag still assumed`,
+            `${money(primary.leftover)} better to stay and fly, if these assumptions hold`
+          ]
+        }
+      ];
 
-            <div class="summary-grid">
-              <div class="summary-item">
-                <div class="k">Annual direct cost</div>
-                <div class="v">${fmtMoney(annualDirectCost)}</div>
-              </div>
-              <div class="summary-item">
-                <div class="k">Annual time cost</div>
-                <div class="v">${fmtMoney(annualTimeValue)}</div>
-              </div>
-              <div class="summary-item">
-                <div class="k">Quarterly burn</div>
-                <div class="v">${fmtMoney(quarterlyBurn)}</div>
-              </div>
-              <div class="summary-item">
-                <div class="k">Meta edge after commute</div>
-                <div class="v ${scoreClass}">${fmtMoney(netMetaEdge)}</div>
-              </div>
-            </div>
-
-            <div class="detail-grid">
-              <div class="summary-item">
-                <div class="k">Commute cost</div>
-                <div class="v">${fmtMoney(a.annualCommuteCost)}</div>
-              </div>
-              <div class="summary-item">
-                <div class="k">Housing cost</div>
-                <div class="v">${fmtMoney(a.annualHousingCost)}</div>
-              </div>
-              <div class="summary-item">
-                <div class="k">Vehicle cost</div>
-                <div class="v">${fmtMoney(a.annualVehicleCost)}</div>
-              </div>
-            </div>
-
-            <div class="detail-row">
-              <div class="kv"><span class="k">Annual time drag</span><strong>${fmtHours(a.annualTimeHours)}</strong></div>
-              <div class="kv"><span class="k">Monthly burn</span><strong>${fmtMoney(monthlyBurn)}</strong></div>
-              <div class="kv"><span class="k">Lost RSU baked into scenario</span><strong>${fmtMoney(annualRsuLoss)}</strong></div>
-              <div class="kv"><span class="k">All-in yearly burden</span><strong>${fmtMoney(allInBurn)}</strong></div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      $('comparisonGrid').innerHTML = cards.map(card => `
+        <article class="option">
+          <h4>${card.title}</h4>
+          <p>${card.body}</p>
+          <div class="headline">${card.headline}</div>
+          <div class="chip ${card.tone}">${card.tone === 'good' ? 'Strong financial case' : card.tone === 'warn' ? 'Borderline' : 'Weak tradeoff'}</div>
+          <ul class="bullets">
+            ${card.bullets.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </article>
+      `).join('');
     }
 
     Object.values(inputs).forEach(input => input.addEventListener('input', render));
