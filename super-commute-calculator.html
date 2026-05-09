@@ -187,7 +187,8 @@
       gap: 6px;
     }
 
-    .assumption input {
+    .assumption input,
+    .assumption select {
       width: 100%;
       padding: 12px 14px;
       border-radius: 16px;
@@ -242,12 +243,12 @@
       color: var(--sub);
       font-size: 15px;
       line-height: 1.5;
-      max-width: 58ch;
+      max-width: 66ch;
     }
 
     .formula {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
       margin-top: 14px;
     }
@@ -358,7 +359,7 @@
       <div class="eyebrow">One-year decision tool</div>
       <h1>Is one more year at Meta worth the super commute?</h1>
       <p class="lede">
-        Start with the extra equity you keep by staying. Then subtract the cash cost, housing cost, and time drain of making the commute work. The goal is simple: see what is left over.
+        Start with the extra equity you keep by staying. Then compare realistic ways to make the year work: daily driving, weekly fly-ins, weekly train-ins, train plus overnight, or moving closer. The page now shows both versions of a move, one where the move itself is a burden and one where you wanted the move anyway.
       </p>
       <div class="hero-summary">
         <div class="big-number">
@@ -373,9 +374,9 @@
             <div class="note">This is the main thing a lower-equity job gives up.</div>
           </div>
           <div class="mini">
-            <div class="label">Your current paycheck baseline</div>
-            <div class="value" id="salaryValue">$0</div>
-            <div class="note">Useful context, but the decision usually swings on the RSU delta.</div>
+            <div class="label">Best one-year scenario in this model</div>
+            <div class="value" id="bestScenarioValue">$0</div>
+            <div class="note" id="bestScenarioNote">Compare every path against the RSU year.</div>
           </div>
         </div>
       </div>
@@ -387,6 +388,18 @@
         <p class="section-sub">Everything below is yearly unless noted. Keep this brutally simple.</p>
 
         <div class="assumptions">
+          <div class="assumption">
+            <label for="focusScenario">Break down this scenario</label>
+            <select id="focusScenario">
+              <option value="flight">Weekly fly-in + hotel</option>
+              <option value="train">Weekly train-in + hotel</option>
+              <option value="draper">Dan Draper style train + overnight</option>
+              <option value="dailyDrive">Daily drive from current home</option>
+              <option value="moveDrive">Move closer, then drive locally</option>
+              <option value="moveDriveWanted">Move closer, but treat move cost as wanted anyway</option>
+              <option value="lowerEquity">Take the lower-equity job</option>
+            </select>
+          </div>
           <div class="assumption">
             <label for="baseSalary">Meta base salary</label>
             <input id="baseSalary" type="number" value="255000" />
@@ -400,24 +413,44 @@
             <input id="weeksPerYear" type="number" value="52" />
           </div>
           <div class="assumption">
+            <label for="officeDaysPerWeek">Office days per week if you stay remote-ish</label>
+            <input id="officeDaysPerWeek" type="number" value="3" />
+          </div>
+          <div class="assumption">
             <label for="flightOneWay">Flight cost, one way</label>
             <input id="flightOneWay" type="number" value="150" />
           </div>
           <div class="assumption">
-            <label for="hotelNight">Hotel cost per night</label>
+            <label for="trainRoundTrip">Train cost, round trip</label>
+            <input id="trainRoundTrip" type="number" value="140" />
+          </div>
+          <div class="assumption">
+            <label for="hotelNight">Hotel or overnight stay cost per night</label>
             <input id="hotelNight" type="number" value="200" />
+          </div>
+          <div class="assumption">
+            <label for="dailyDriveMiles">Daily drive round-trip miles from current home</label>
+            <input id="dailyDriveMiles" type="number" value="140" />
+          </div>
+          <div class="assumption">
+            <label for="localDriveMiles">Daily drive round-trip miles after moving closer</label>
+            <input id="localDriveMiles" type="number" value="32" />
           </div>
           <div class="assumption">
             <label for="drivePerMile">Driving cost per mile</label>
             <input id="drivePerMile" type="number" step="0.01" value="0.35" />
           </div>
           <div class="assumption">
-            <label for="teslaAnnual">Annual vehicle cost</label>
+            <label for="teslaAnnual">Annual vehicle cost if you keep the car pattern</label>
             <input id="teslaAnnual" type="number" value="18000" />
           </div>
           <div class="assumption">
             <label for="nycRentMonth">Monthly rent if you move the family</label>
             <input id="nycRentMonth" type="number" value="10500" />
+          </div>
+          <div class="assumption">
+            <label for="moveCostOneTime">One-time move cost</label>
+            <input id="moveCostOneTime" type="number" value="30000" />
           </div>
           <div class="assumption">
             <label for="officeCoveredPerWeek">Weekly office-covered offset</label>
@@ -426,7 +459,7 @@
         </div>
 
         <div class="helper">
-          Default assumptions keep the original intent: $255k salary, $100k quarterly RSU vest, cheap flights, two hotel nights, expensive relocation rent, and a meaningful value on time.
+          A move can be real pain, or it can be something you half-wanted anyway, like upgrading to a lake house. That is why the move scenario appears twice: once with the one-time move cost counted, once with it ignored.
         </div>
       </aside>
 
@@ -438,20 +471,20 @@
         </section>
 
         <section class="question">
-          <h3>2. What does the commute cost me in one year?</h3>
+          <h3>2. What does this path cost me over one year?</h3>
           <div class="answer" id="q2Answer">$0</div>
           <div class="explain" id="q2Explain"></div>
           <div class="formula" id="q2Formula"></div>
         </section>
 
         <section class="question">
-          <h3>3. What is left over after the super commute?</h3>
+          <h3>3. What is left over after this scenario?</h3>
           <div class="answer" id="q3Answer">$0</div>
           <div class="explain" id="q3Explain"></div>
         </section>
 
         <section class="question">
-          <h3>4. How does that compare to other paths?</h3>
+          <h3>4. How do the realistic options stack up?</h3>
           <div class="comparison-grid" id="comparisonGrid"></div>
         </section>
       </main>
@@ -474,82 +507,154 @@
     const $ = id => document.getElementById(id);
 
     const inputs = {
+      focusScenario: $('focusScenario'),
       baseSalary: $('baseSalary'),
       rsuQuarterly: $('rsuQuarterly'),
       weeksPerYear: $('weeksPerYear'),
+      officeDaysPerWeek: $('officeDaysPerWeek'),
       flightOneWay: $('flightOneWay'),
+      trainRoundTrip: $('trainRoundTrip'),
       hotelNight: $('hotelNight'),
+      dailyDriveMiles: $('dailyDriveMiles'),
+      localDriveMiles: $('localDriveMiles'),
       drivePerMile: $('drivePerMile'),
       teslaAnnual: $('teslaAnnual'),
       nycRentMonth: $('nycRentMonth'),
+      moveCostOneTime: $('moveCostOneTime'),
       officeCoveredPerWeek: $('officeCoveredPerWeek')
     };
 
     function values() {
       return Object.fromEntries(
-        Object.entries(inputs).map(([key, el]) => [key, Number(el.value || 0)])
+        Object.entries(inputs).map(([key, el]) => [key, el.tagName === 'SELECT' ? el.value : Number(el.value || 0)])
       );
+    }
+
+    function makeScenario({ name, total, direct, housing = 0, moveCost = 0, hoursTotal, travelHours = 0, localHours = 0, leftover, note, travelCost = 0, overnightCost = 0, badgeNote }) {
+      return { name, total, direct, housing, moveCost, hoursTotal, travelHours, localHours, leftover, note, travelCost, overnightCost, badgeNote };
     }
 
     function commuteOptions(v) {
       const annualRsu = v.rsuQuarterly * 4;
-      const flightDirect = ((v.flightOneWay * 2) + (v.hotelNight * 2) - v.officeCoveredPerWeek) * v.weeksPerYear;
+      const officeDays = Math.max(v.officeDaysPerWeek, 1);
+      const hotelNights = Math.max(officeDays - 1, 0);
+
+      const flightTravel = Math.max(((v.flightOneWay * 2) - v.officeCoveredPerWeek), 0) * v.weeksPerYear;
+      const flightOvernights = v.hotelNight * hotelNights * v.weeksPerYear;
       const flightHours = 11 * v.weeksPerYear;
-      const flightTime = 0;
-      const flightTotal = flightDirect + flightTime;
+      const flightTotal = flightTravel + flightOvernights;
 
-      const driveDirect = (720 * v.drivePerMile * v.weeksPerYear) + v.teslaAnnual;
-      const driveHours = 18 * v.weeksPerYear;
-      const driveTime = 0;
-      const driveTotal = driveDirect + driveTime;
+      const trainTravel = Math.max((v.trainRoundTrip - v.officeCoveredPerWeek), 0) * v.weeksPerYear;
+      const trainOvernights = v.hotelNight * hotelNights * v.weeksPerYear;
+      const trainHours = 8 * v.weeksPerYear;
+      const trainTotal = trainTravel + trainOvernights;
 
-      const moveDirect = (v.nycRentMonth * 12) + 2500;
-      const moveHours = 6 * v.weeksPerYear;
-      const moveTime = 0;
-      const moveTotal = moveDirect + moveTime;
+      const draperTrips = v.weeksPerYear;
+      const draperNightsPerTrip = hotelNights + 1;
+      const draperTravel = Math.max((v.trainRoundTrip - v.officeCoveredPerWeek), 0) * draperTrips;
+      const draperOvernights = v.hotelNight * draperNightsPerTrip * draperTrips;
+      const draperHours = 7 * draperTrips;
+      const draperTotal = draperTravel + draperOvernights;
 
-      const lowerEquityLoss = annualRsu;
-      const lowerEquityTime = 0;
-      const lowerEquityTotal = lowerEquityLoss + lowerEquityTime;
+      const dailyDriveTravel = v.dailyDriveMiles * officeDays * v.drivePerMile * v.weeksPerYear;
+      const dailyDriveHours = 3.2 * officeDays * v.weeksPerYear;
+      const dailyDriveTotal = dailyDriveTravel + v.teslaAnnual;
+
+      const moveHousing = v.nycRentMonth * 12;
+      const moveLocalDrive = v.localDriveMiles * officeDays * v.drivePerMile * v.weeksPerYear;
+      const moveLocalHours = 1.1 * officeDays * v.weeksPerYear;
+      const moveWithBurden = moveHousing + moveLocalDrive + v.moveCostOneTime;
+      const moveWantedAnyway = moveHousing + moveLocalDrive;
+
+      const lowerEquityTotal = annualRsu;
 
       return {
         annualRsu,
-        flight: {
-          name: 'Fly in 3 days a week',
+        flight: makeScenario({
+          name: 'Weekly fly-in + hotel',
           total: flightTotal,
-          direct: flightDirect,
-          time: flightTime,
-          hours: flightHours,
+          direct: flightTotal,
+          travelCost: flightTravel,
+          overnightCost: flightOvernights,
+          hoursTotal: flightHours,
+          travelHours: flightHours,
           leftover: annualRsu - flightTotal,
-          note: 'Keeps the equity, but buys it with airports and hotel nights.'
-        },
-        drive: {
-          name: 'Drive long distance',
-          total: driveTotal,
-          direct: driveDirect,
-          time: driveTime,
-          hours: driveHours,
-          leftover: annualRsu - driveTotal,
-          note: 'Looks cheaper on paper until the hours eat the benefit.'
-        },
-        move: {
-          name: 'Move the family',
-          total: moveTotal,
-          direct: moveDirect,
-          time: moveTime,
-          hours: moveHours,
-          leftover: annualRsu - moveTotal,
-          note: 'Almost no commute pain, but rent becomes the new problem.'
-        },
-        lowerEquity: {
-          name: 'Take a lower-equity job',
+          note: 'Classic super-commute pattern: one round trip per week and hotel nights near the office.',
+          badgeNote: 'Keeps current home, buys flexibility with flights.'
+        }),
+        train: makeScenario({
+          name: 'Weekly train-in + hotel',
+          total: trainTotal,
+          direct: trainTotal,
+          travelCost: trainTravel,
+          overnightCost: trainOvernights,
+          hoursTotal: trainHours,
+          travelHours: trainHours,
+          leftover: annualRsu - trainTotal,
+          note: 'Same weekly pattern as flying, just swapping airports for train rides.',
+          badgeNote: 'Useful if train time feels less annoying than airport time.'
+        }),
+        draper: makeScenario({
+          name: 'Dan Draper style train + overnight',
+          total: draperTotal,
+          direct: draperTotal,
+          travelCost: draperTravel,
+          overnightCost: draperOvernights,
+          hoursTotal: draperHours,
+          travelHours: draperHours,
+          leftover: annualRsu - draperTotal,
+          note: 'Go in by train, stay longer, and compress office time into fewer commute legs with more overnights.',
+          badgeNote: 'Fewer travel transitions, more nights away from home.'
+        }),
+        dailyDrive: makeScenario({
+          name: 'Daily drive from current home',
+          total: dailyDriveTotal,
+          direct: dailyDriveTotal,
+          travelCost: dailyDriveTravel,
+          overnightCost: 0,
+          hoursTotal: dailyDriveHours,
+          travelHours: dailyDriveHours,
+          leftover: annualRsu - dailyDriveTotal,
+          note: 'No second apartment, no flights, just repeated long drives.',
+          badgeNote: 'Usually the worst hours burden, even when cash looks okay.'
+        }),
+        moveDrive: makeScenario({
+          name: 'Move closer, then drive locally',
+          total: moveWithBurden,
+          direct: moveWithBurden,
+          housing: moveHousing,
+          moveCost: v.moveCostOneTime,
+          travelCost: moveLocalDrive,
+          overnightCost: 0,
+          hoursTotal: moveLocalHours,
+          localHours: moveLocalHours,
+          leftover: annualRsu - moveWithBurden,
+          note: 'Treat the move itself as a burden, then add higher rent and a much easier daily drive.',
+          badgeNote: 'This is the strict financial version of moving.'
+        }),
+        moveDriveWanted: makeScenario({
+          name: 'Move closer, but treat move cost as wanted anyway',
+          total: moveWantedAnyway,
+          direct: moveWantedAnyway,
+          housing: moveHousing,
+          moveCost: 0,
+          travelCost: moveLocalDrive,
+          overnightCost: 0,
+          hoursTotal: moveLocalHours,
+          localHours: moveLocalHours,
+          leftover: annualRsu - moveWantedAnyway,
+          note: 'Same rent and local driving, but ignore the one-time move cost because the move may be partially desired anyway.',
+          badgeNote: 'Best lens if the move is not purely sacrifice.'
+        }),
+        lowerEquity: makeScenario({
+          name: 'Take the lower-equity job',
           total: lowerEquityTotal,
-          direct: lowerEquityLoss,
-          time: lowerEquityTime,
-          hours: 4 * v.weeksPerYear,
-          leftover: 0 - lowerEquityTime,
-          note: 'You avoid the commute, but you give up the entire RSU year.'
-        }
+          direct: lowerEquityTotal,
+          hoursTotal: 0,
+          leftover: 0,
+          note: 'You escape all commute gymnastics, but give up the RSU year entirely.',
+          badgeNote: 'Simplest life, biggest equity give-up.'
+        })
       };
     }
 
@@ -559,98 +664,87 @@
       return 'bad';
     }
 
+    function toneLabel(t) {
+      return t === 'good' ? 'Strong financial case' : t === 'warn' ? 'Borderline' : 'Weak tradeoff';
+    }
+
+    function breakdownRows(option) {
+      if (option.name === 'Take the lower-equity job') {
+        return [
+          ['Lost RSU upside', option.direct || 0],
+          ['Overnights', 0],
+          ['Housing', 0],
+          ['One-time move cost', 0]
+        ];
+      }
+
+      return [
+        ['Travel', option.travelCost || 0],
+        ['Overnights', option.overnightCost || 0],
+        ['Housing', option.housing || 0],
+        ['One-time move cost', option.moveCost || 0]
+      ];
+    }
+
     function render() {
       const v = values();
       const annualRsu = v.rsuQuarterly * 4;
       const annualComp = v.baseSalary + annualRsu;
       const options = commuteOptions(v);
-      const primary = options.flight;
+      const focus = options[v.focusScenario] || options.flight;
+      const scenarioList = [options.flight, options.train, options.draper, options.dailyDrive, options.moveDrive, options.moveDriveWanted, options.lowerEquity];
+      const best = scenarioList.slice(0, -1).sort((a, b) => b.leftover - a.leftover)[0];
 
       $('metaKeepValue').textContent = money(annualComp);
       $('metaKeepNote').textContent = `${money(v.baseSalary)} salary plus ${money(annualRsu)} RSU vest.`;
       $('equityValue').textContent = money(annualRsu);
-      $('salaryValue').textContent = money(v.baseSalary);
+      $('bestScenarioValue').textContent = money(best.leftover);
+      $('bestScenarioNote').textContent = `${best.name} leaves the most RSU upside in this model.`;
 
       $('q1Answer').textContent = money(annualRsu);
       $('q1Answer').className = 'answer';
-      $('q1Explain').textContent = `The one-year decision mostly turns on the ${money(annualRsu)} of RSU you keep by staying. Base salary exists either way, but this is the extra upside that is easiest to lose.`;
+      $('q1Explain').textContent = `The one-year decision mostly turns on the ${money(annualRsu)} of RSU you keep by staying. Base salary matters, but the cleanest comparison is usually the extra equity year.`;
 
-      $('q2Answer').textContent = money(primary.total);
-      $('q2Answer').className = `answer ${tone(primary.leftover)}`;
-      $('q2Explain').textContent = `Flying in 3 days a week costs about ${money(primary.direct)} in hard cash and takes about ${hours(primary.hours)} over the year. This assumes repeated flights plus two hotel nights most weeks.`;
-      $('q2Formula').innerHTML = [
-        ['Cash travel', money(primary.direct)],
-        ['Time cost', money(primary.time)],
-        ['Total one-year burden', money(primary.total)]
-      ].map(([label, value]) => `
+      $('q2Answer').textContent = money(focus.total);
+      $('q2Answer').className = `answer ${tone(focus.leftover)}`;
+      $('q2Explain').textContent = focus.name === 'Take the lower-equity job'
+        ? `This is the control case. There is no commute burden here, just the equity you no longer keep by leaving.`
+        : `${focus.name} costs about ${money(focus.total)} over the year. Below is the explicit math so you can see whether the burden is travel, overnights, rent, or the one-time move hit.`;
+      $('q2Formula').innerHTML = breakdownRows(focus).map(([label, value]) => `
         <div class="item">
           <div class="label">${label}</div>
-          <div class="value">${value}</div>
+          <div class="value">${money(value)}</div>
         </div>
       `).join('');
 
-      $('q3Answer').textContent = money(primary.leftover);
-      $('q3Answer').className = `answer ${tone(primary.leftover)}`;
-      $('q3Explain').textContent = `${money(annualRsu)} of retained RSU minus ${money(primary.total)} of commute burden leaves about ${money(primary.leftover)} of real one-year upside. That is the core answer.`;
+      $('q3Answer').textContent = focus.name === 'Take the lower-equity job' ? `${money(focus.total)} given up` : `${money(focus.leftover)} left`;
+      $('q3Answer').className = `answer ${focus.name === 'Take the lower-equity job' ? 'bad' : tone(focus.leftover)}`;
+      $('q3Explain').textContent = focus.name === 'Take the lower-equity job'
+        ? `This is the clean control scenario: you avoid the commute, but you also walk away from the full ${money(annualRsu)} RSU year.`
+        : `${money(annualRsu)} of retained RSU minus ${money(focus.total)} of scenario burden leaves about ${money(focus.leftover)} of one-year upside. ${focus.badgeNote}`;
 
-      const cards = [
-        {
-          title: options.flight.name,
-          headline: `${money(options.flight.leftover)} left`,
-          tone: tone(options.flight.leftover),
-          body: options.flight.note,
-          bullets: [
-            `${money(options.flight.direct)} direct travel cost`,
-            `Time not monetized`,
-            `${hours(options.flight.hours)} of commute time`
-          ]
-        },
-        {
-          title: options.drive.name,
-          headline: `${money(options.drive.leftover)} left`,
-          tone: tone(options.drive.leftover),
-          body: options.drive.note,
-          bullets: [
-            `${money(options.drive.direct)} driving and car cost`,
-            `Time not monetized`,
-            `${money(options.flight.leftover - options.drive.leftover)} worse than flying in`
-          ]
-        },
-        {
-          title: options.move.name,
-          headline: `${money(options.move.leftover)} left`,
-          tone: tone(options.move.leftover),
-          body: options.move.note,
-          bullets: [
-            `${money(options.move.direct)} housing and local cost`,
-            `Time not monetized`,
-            `${money(options.flight.leftover - options.move.leftover)} worse than flying in`
-          ]
-        },
-        {
-          title: options.lowerEquity.name,
-          headline: `${money(options.lowerEquity.total)} given up`,
-          tone: 'bad',
-          body: options.lowerEquity.note,
-          bullets: [
-            `${money(annualRsu)} lost RSU upside`,
-            `${money(options.lowerEquity.time)} small time drag still assumed`,
-            `${money(primary.leftover)} better to stay and fly, if these assumptions hold`
-          ]
-        }
-      ];
-
-      $('comparisonGrid').innerHTML = cards.map(card => `
-        <article class="option">
-          <h4>${card.title}</h4>
-          <p>${card.body}</p>
-          <div class="headline">${card.headline}</div>
-          <div class="chip ${card.tone}">${card.tone === 'good' ? 'Strong financial case' : card.tone === 'warn' ? 'Borderline' : 'Weak tradeoff'}</div>
-          <ul class="bullets">
-            ${card.bullets.map(item => `<li>${item}</li>`).join('')}
-          </ul>
-        </article>
-      `).join('');
+      $('comparisonGrid').innerHTML = scenarioList.map(option => {
+        const optionTone = option.name === 'Take the lower-equity job' ? 'bad' : tone(option.leftover);
+        const relative = option.name === 'Take the lower-equity job'
+          ? `${money(annualRsu)} lost RSU upside`
+          : `${hours(option.hoursTotal)} commute time`;
+        const moveLine = option.name.includes('Move closer')
+          ? option.moveCost > 0 ? `${money(option.moveCost)} one-time move cost counted` : 'Move cost ignored on purpose'
+          : option.overnightCost > 0 ? `${money(option.overnightCost)} overnight spend` : 'No overnight spend';
+        return `
+          <article class="option">
+            <h4>${option.name}</h4>
+            <p>${option.note}</p>
+            <div class="headline">${option.name === 'Take the lower-equity job' ? `${money(option.total)} given up` : `${money(option.leftover)} left`}</div>
+            <div class="chip ${optionTone}">${toneLabel(optionTone)}</div>
+            <ul class="bullets">
+              <li>${money(option.travelCost || option.direct)} direct travel or equity cost</li>
+              <li>${moveLine}</li>
+              <li>${relative}</li>
+            </ul>
+          </article>
+        `;
+      }).join('');
     }
 
     Object.values(inputs).forEach(input => input.addEventListener('input', render));
