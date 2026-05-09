@@ -129,6 +129,16 @@
       transition: border-color .12s, color .12s, background .12s;
       flex-shrink: 0;
     }
+    .region-chip .count {
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 4px 6px;
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--sub);
+      border: 1px solid var(--border);
+    }
     .region-chip .dot {
       width: 7px;
       height: 7px;
@@ -147,6 +157,50 @@
       -webkit-overflow-scrolling: touch;
       padding: 14px 16px calc(14px + var(--safe-b));
       overscroll-behavior: contain;
+    }
+
+    .board-banner {
+      margin: 0 0 14px;
+      padding: 11px 12px;
+      border-radius: 13px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border);
+    }
+    .board-banner-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .board-banner-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--sub);
+    }
+    .board-banner-stamp {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #065f46;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 999px;
+      padding: 3px 7px;
+      white-space: nowrap;
+    }
+    .board-banner-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 2px;
+    }
+    .board-banner-copy {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--sub);
+      margin: 0;
     }
 
     .detail-tier {
@@ -428,6 +482,7 @@
     <div class="filter-row" id="filterRow"></div>
     <div class="region-scroll" id="regionScroll"></div>
     <div class="sheet-body">
+      <div class="board-banner" id="boardBanner"></div>
       <div class="detail-tier" id="detailTier"></div>
       <h2 class="detail-name" id="detailName"></h2>
       <p class="detail-summary" id="detailSummary"></p>
@@ -436,9 +491,9 @@
       <div class="action-row" id="detailActions"></div>
       <div class="section-head">Board read</div>
       <div class="fact-list" id="detailFacts"></div>
-      <div class="section-head">Active hubs</div>
+      <div class="section-head" id="hubsHead">Active hubs</div>
       <div class="hub-list" id="detailHubs"></div>
-      <div class="section-head">Candidate towns</div>
+      <div class="section-head" id="townsHead">Candidate towns</div>
       <div class="town-list" id="detailTowns"></div>
       <div class="section-head">Why it belongs on the board</div>
       <ul class="why-list" id="detailWhy"></ul>
@@ -669,11 +724,41 @@ const REGIONS = [
     ],
   },
   {
+    id: 'rdu-triangle', shortName: 'RDU Triangle', name: 'Raleigh / Durham Triangle via RDU', type: 'flight', tier: 'Best new Sun Belt fly-in region', color: '#c2410c',
+    hub: { lat: 35.8776, lng: -78.7875, label: 'RDU Airport', type: 'airport' }, radiusMiles: 18,
+    commute: { pattern: 'Frequent RDU nonstop or one-stop', doorToDesk: '1h55m to 2h25m', notes: 'RDU is the primary node, and Cary plus Durham stay visible as backup rail-adjacent anchors for daily family life rather than just one airport dot.' },
+    summary: 'The app now visibly expands into the Triangle, adding a real Raleigh-Durham family region instead of skipping one of the most obvious Southeast contenders.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'New region', cls: 'good' }, { text: 'Airport-first', cls: 'info' }],
+    facts: [
+      ['Schools', 'Cary, Chapel Hill, and Apex make the school story feel real immediately.'],
+      ['Commute', 'Not as tight as BOS or BWI, but RDU has enough schedule depth to stay credible for recurring NYC trips.'],
+      ['Housing', 'Usually more flexible than Northeast premium suburbs while still offering strong family-product towns.'],
+      ['Lifestyle', 'Warm-weather, growth-market energy with several obvious family landing zones now surfaced in the app.'],
+    ],
+    why: ['Fills a very visible live-board gap.', 'Makes the fly-in list feel more complete on refresh.', 'Useful if you want a strong family market without Northeast pricing.'],
+    links: [
+      { label: 'Search in Cary', note: 'Triangle family core', url: 'https://www.zillow.com/homes/for_rent/Cary,-NC/4-_beds/3-_baths/' },
+      { label: 'Search in Chapel Hill', note: 'School-heavy Triangle lens', url: 'https://www.redfin.com/city/3101/NC/Chapel-Hill/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
+    ],
+    hubs: [
+      { name: 'RDU Airport', type: 'airport', role: 'Primary', note: 'Main Triangle air node with the most schedule depth.' },
+      { name: 'Cary Station', type: 'rail', role: 'Backup', note: 'Keeps a polished western Triangle family base visible.' },
+      { name: 'Durham Station', type: 'rail', role: 'Backup', note: 'Useful if the search tilts more Durham-Chapel Hill than Raleigh.' },
+    ],
+    towns: [
+      { name: 'Cary', tag: 'Highest-confidence family base', commute: '1h55m to 2h15m', note: 'Most obvious all-around Triangle answer for schools, convenience, and airport reach.' },
+      { name: 'Chapel Hill', tag: 'School and charm', commute: '2h05m to 2h25m', note: 'Academic-town prestige with a softer, greener family feel.' },
+      { name: 'Apex', tag: 'Practical growth pick', commute: '2h00m to 2h18m', note: 'Strong suburban utility with newer-family-housing depth.' },
+      { name: 'North Raleigh', tag: 'Big-bench option', commute: '2h00m to 2h20m', note: 'Broad inventory and good daily-life convenience if you want Raleigh proper in play.' },
+      { name: 'Durham', tag: 'Culture-led wildcard', commute: '2h00m to 2h20m', note: 'More personality and university energy while staying close to RDU.' },
+    ],
+  },
+  {
     id: 'boston-coast', shortName: 'Boston', name: 'Boston Coastal Hub', type: 'flight', tier: 'Best fly-in hub', color: '#0891b2',
     hub: { lat: 42.3656, lng: -71.0096, label: 'BOS Airport', type: 'airport' }, radiusMiles: 22,
     commute: { pattern: 'Frequent shuttle-style flights', doorToDesk: '1h50m to 2h35m', notes: 'Logan is primary, Back Bay stays visible as a rail fallback, and the towns now show the full Boston spread from inner ring to coast.' },
     summary: 'Elite schools, real quality of life, and a dense BOS corridor into NYC, now with a visibly larger Boston-area bench.',
-    signals: [{ text: '4 towns loaded', cls: 'good' }, { text: 'Airport + rail', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }],
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Airport + rail', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }],
     facts: [
       ['Schools', 'Very strong public environment with multiple high-confidence family towns now in the app.'],
       ['Commute', 'A real business-travel corridor, not a fringe airport gamble.'],
@@ -695,6 +780,7 @@ const REGIONS = [
       { name: 'Wellesley', tag: 'School prestige', commute: '1h55m to 2h15m', note: 'Elite school-market benchmark even without coast.' },
       { name: 'Hingham', tag: 'South Shore fit', commute: '2h05m to 2h25m', note: 'Best South Shore family-water blend.' },
       { name: 'Marblehead', tag: 'Coastal charisma', commute: '2h15m to 2h35m', note: 'North Shore charm heavyweight.' },
+      { name: 'Needham', tag: 'Quiet school depth', commute: '1h55m to 2h15m', note: 'Adds another plainly strong family-town card to the Boston stack.' },
     ],
   },
   {
@@ -702,7 +788,7 @@ const REGIONS = [
     hub: { lat: 39.1774, lng: -76.6684, label: 'BWI Airport', type: 'airport' }, radiusMiles: 18,
     commute: { pattern: 'Air + Amtrak redundancy', doorToDesk: '1h45m to 2h18m', notes: 'BWI is the primary node, and the sheet now makes BWI Rail and New Carrollton explicit backup hub types.' },
     summary: 'Strong family region with water, school confidence, and actual air plus rail redundancy now shown right in the live UI.',
-    signals: [{ text: '4 towns loaded', cls: 'good' }, { text: 'Airport + rail', cls: 'info' }, { text: 'Bay / water life', cls: 'info' }],
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Airport + rail', cls: 'info' }, { text: 'Bay / water life', cls: 'info' }],
     facts: [
       ['Schools', 'Good to very good school signal across several practical family towns.'],
       ['Commute', 'BWI plus Amtrak gives redundancy, and now the hub set is explicit instead of implied.'],
@@ -724,6 +810,7 @@ const REGIONS = [
       { name: 'Severna Park', tag: 'Practical family base', commute: '1h50m to 2h10m', note: 'Balanced schools, housing, and airport reach.' },
       { name: 'Annapolis', tag: 'Water-led lifestyle', commute: '1h55m to 2h15m', note: 'The more emotional Chesapeake answer.' },
       { name: 'Davidsonville', tag: 'Larger-lot play', commute: '1h55m to 2h18m', note: 'More land while keeping the same network.' },
+      { name: 'Edgewater', tag: 'Bay-access balance', commute: '1h52m to 2h12m', note: 'Keeps a water-adjacent Anne Arundel option visibly on the board.' },
     ],
   },
 ];
@@ -801,6 +888,7 @@ function renderFilters() {
       activeFilter = filter.id;
       renderFilters();
       renderRegionSwitcher();
+      renderBoardBanner();
       updateMapVisibility();
       const visible = filteredRegions();
       if (!visible.find((region) => region.id === activeId)) selectRegion(visible[0]?.id);
@@ -815,7 +903,7 @@ function renderRegionSwitcher() {
   filteredRegions().forEach((region) => {
     const chip = document.createElement('button');
     chip.className = 'region-chip' + (region.id === activeId ? ' active' : '');
-    chip.innerHTML = `<span class="dot" style="background:${region.color}"></span>${region.shortName}`;
+    chip.innerHTML = `<span class="dot" style="background:${region.color}"></span>${region.shortName}<span class="count">${region.towns.length}</span>`;
     if (region.id === activeId) {
       chip.style.borderColor = region.color;
       chip.style.color = region.color;
@@ -868,7 +956,26 @@ function renderFacts(region) {
   `).join('');
 }
 
+function renderBoardBanner() {
+  const visible = filteredRegions();
+  const regionCount = visible.length;
+  const townCount = visible.reduce((sum, region) => sum + region.towns.length, 0);
+  const newestRegion = REGIONS.find((region) => region.id === 'rdu-triangle');
+  const mention = visible.some((region) => region.id === 'rdu-triangle') && newestRegion
+    ? `Now includes ${newestRegion.shortName} and ${newestRegion.towns.length} Triangle towns.`
+    : 'Expanded coverage stays visible across every region chip and town stack.';
+  document.getElementById('boardBanner').innerHTML = `
+    <div class="board-banner-top">
+      <span class="board-banner-label">Live board</span>
+      <span class="board-banner-stamp">Expanded</span>
+    </div>
+    <p class="board-banner-title">${regionCount} regions · ${townCount} visible towns</p>
+    <p class="board-banner-copy">${mention}</p>
+  `;
+}
+
 function renderHubs(region) {
+  document.getElementById('hubsHead').textContent = `Active hubs (${region.hubs.length})`;
   document.getElementById('detailHubs').innerHTML = region.hubs.map((hub) => `
     <div class="hub-card">
       <div class="hub-top">
@@ -881,6 +988,7 @@ function renderHubs(region) {
 }
 
 function renderTowns(region) {
+  document.getElementById('townsHead').textContent = `Candidate towns (${region.towns.length})`;
   document.getElementById('detailTowns').innerHTML = region.towns.map((town) => `
     <div class="town-card">
       <div class="town-top">
@@ -973,6 +1081,7 @@ document.getElementById('resetBtn').onclick = () => {
 
 renderFilters();
 renderRegionSwitcher();
+renderBoardBanner();
 applySheetHeight(SHEET_COMPACT);
 if (activeId) selectRegion(activeId, true);
 </script>
