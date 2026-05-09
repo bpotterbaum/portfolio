@@ -400,10 +400,6 @@
             <input id="weeksPerYear" type="number" value="52" />
           </div>
           <div class="assumption">
-            <label for="hourValue">What one hour of your life is worth</label>
-            <input id="hourValue" type="number" value="150" />
-          </div>
-          <div class="assumption">
             <label for="flightOneWay">Flight cost, one way</label>
             <input id="flightOneWay" type="number" value="150" />
           </div>
@@ -481,7 +477,6 @@
       baseSalary: $('baseSalary'),
       rsuQuarterly: $('rsuQuarterly'),
       weeksPerYear: $('weeksPerYear'),
-      hourValue: $('hourValue'),
       flightOneWay: $('flightOneWay'),
       hotelNight: $('hotelNight'),
       drivePerMile: $('drivePerMile'),
@@ -500,21 +495,21 @@
       const annualRsu = v.rsuQuarterly * 4;
       const flightDirect = ((v.flightOneWay * 2) + (v.hotelNight * 2) - v.officeCoveredPerWeek) * v.weeksPerYear;
       const flightHours = 11 * v.weeksPerYear;
-      const flightTime = flightHours * v.hourValue;
+      const flightTime = 0;
       const flightTotal = flightDirect + flightTime;
 
       const driveDirect = (720 * v.drivePerMile * v.weeksPerYear) + v.teslaAnnual;
       const driveHours = 18 * v.weeksPerYear;
-      const driveTime = driveHours * v.hourValue;
+      const driveTime = 0;
       const driveTotal = driveDirect + driveTime;
 
       const moveDirect = (v.nycRentMonth * 12) + 2500;
       const moveHours = 6 * v.weeksPerYear;
-      const moveTime = moveHours * v.hourValue;
+      const moveTime = 0;
       const moveTotal = moveDirect + moveTime;
 
       const lowerEquityLoss = annualRsu;
-      const lowerEquityTime = 4 * v.weeksPerYear * v.hourValue;
+      const lowerEquityTime = 0;
       const lowerEquityTotal = lowerEquityLoss + lowerEquityTime;
 
       return {
@@ -582,7 +577,7 @@
 
       $('q2Answer').textContent = money(primary.total);
       $('q2Answer').className = `answer ${tone(primary.leftover)}`;
-      $('q2Explain').textContent = `Flying in 3 days a week costs about ${money(primary.direct)} in cash plus ${money(primary.time)} in time value, or ${hours(primary.hours)} over the year.`;
+      $('q2Explain').textContent = `Flying in 3 days a week costs about ${money(primary.direct)} in hard cash and takes about ${hours(primary.hours)} over the year. Time is shown, but not monetized.`;
       $('q2Formula').innerHTML = [
         ['Cash travel', money(primary.direct)],
         ['Time cost', money(primary.time)],
@@ -606,8 +601,8 @@
           body: options.flight.note,
           bullets: [
             `${money(options.flight.direct)} direct travel cost`,
-            `${money(options.flight.time)} time cost`,
-            `${hours(options.flight.hours)} lost to the commute`
+            `Time not monetized`,
+            `${hours(options.flight.hours)} of commute time`
           ]
         },
         {
@@ -617,7 +612,7 @@
           body: options.drive.note,
           bullets: [
             `${money(options.drive.direct)} driving and car cost`,
-            `${money(options.drive.time)} time cost`,
+            `Time not monetized`,
             `${money(options.flight.leftover - options.drive.leftover)} worse than flying in`
           ]
         },
@@ -628,7 +623,7 @@
           body: options.move.note,
           bullets: [
             `${money(options.move.direct)} housing and local cost`,
-            `${money(options.move.time)} time cost`,
+            `Time not monetized`,
             `${money(options.flight.leftover - options.move.leftover)} worse than flying in`
           ]
         },
