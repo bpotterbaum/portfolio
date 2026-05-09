@@ -577,7 +577,7 @@
 
       $('q2Answer').textContent = money(primary.total);
       $('q2Answer').className = `answer ${tone(primary.leftover)}`;
-      $('q2Explain').textContent = `Flying in 3 days a week costs about ${money(primary.direct)} in hard cash and takes about ${hours(primary.hours)} over the year. Time is shown, but not monetized.`;
+      $('q2Explain').textContent = `Flying in 3 days a week costs about ${money(primary.direct)} in hard cash and takes about ${hours(primary.hours)} over the year. This assumes repeated flights plus two hotel nights most weeks.`;
       $('q2Formula').innerHTML = [
         ['Cash travel', money(primary.direct)],
         ['Time cost', money(primary.time)],
