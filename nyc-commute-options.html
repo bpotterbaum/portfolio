@@ -319,7 +319,52 @@
       padding: 3px 7px;
       white-space: nowrap;
     }
+    .town-commute {
+      display: inline-block;
+      margin-bottom: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+    }
     .town-note {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--sub);
+      margin: 0;
+    }
+    .hub-list {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .hub-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: #fff;
+    }
+    .hub-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .hub-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .hub-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--sub);
+      background: var(--surface);
+      border-radius: 999px;
+      padding: 3px 7px;
+      white-space: nowrap;
+    }
+    .hub-note {
       font-size: 12px;
       line-height: 1.45;
       color: var(--sub);
@@ -391,6 +436,8 @@
       <div class="action-row" id="detailActions"></div>
       <div class="section-head">Board read</div>
       <div class="fact-list" id="detailFacts"></div>
+      <div class="section-head">Active hubs</div>
+      <div class="hub-list" id="detailHubs"></div>
       <div class="section-head">Candidate towns</div>
       <div class="town-list" id="detailTowns"></div>
       <div class="section-head">Why it belongs on the board</div>
@@ -409,224 +456,228 @@ const OFFICE_LABEL = '380 W 33rd St · Office';
 
 const HUB_TYPE_META = {
   airport: { label: 'Airport', icon: '✈️' },
-  rail: { label: 'Rail', icon: '🚆' },
-  ferry: { label: 'Ferry', icon: '⛴️' },
-  bus: { label: 'Bus', icon: '🚌' },
+  rail: { label: 'Rail station', icon: '🚆' },
+  ferry: { label: 'Ferry terminal', icon: '⛴️' },
+  bus: { label: 'Bus terminal', icon: '🚌' },
 };
 
 const REGIONS = [
   {
     id: 'nj-midtown-direct', shortName: 'NJ Direct', name: 'NJ Midtown Direct Core', type: 'ground', tier: 'Best pure commute', color: '#2563eb',
-    hub: { lat: 40.7154, lng: -74.3587, label: 'Summit Station', kind: 'rail' }, radiusMiles: 8,
-    summary: 'Best execution for Penn-area work, with strong family towns and confident public schools.',
-    doorToDesk: { value: '70 to 88 min', note: 'Door-to-desk estimate via Midtown Direct plus office walk from Penn.' },
-    signals: [{ text: 'Direct Penn', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }, { text: 'Housing: premium', cls: 'caution' }],
+    hub: { lat: 40.7154, lng: -74.3587, label: 'Summit Station', type: 'rail' }, radiusMiles: 10,
+    commute: { pattern: 'Direct Penn rail', doorToDesk: '63 to 82 min', notes: 'Midtown Direct is still the cleanest office geometry. Short Hills and Newark Penn stay in view as resilience nodes.' },
+    summary: 'Best execution for Penn-area work, now shown as a full direct-Penn cluster instead of a thin sample.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Rail-native', cls: 'info' }, { text: 'Direct Penn', cls: 'info' }],
     facts: [
-      ['Schools', 'Public-school confidence high enough that private school is optional, not assumed.'],
-      ['Commute', 'Direct Penn access, least friction for your exact office, no transfer, no guesswork.'],
-      ['Housing', 'Expensive, but more rational than top coastal CT. Good detached-home stock.'],
-      ['Lifestyle', 'Not the dreamiest region, but arguably the best pure life-mechanics answer.'],
+      ['Schools', 'Public-school confidence is high across the whole cluster, not just one flagship town.'],
+      ['Commute', 'Still the least-friction answer for 380 W 33rd with no GCT tax.'],
+      ['Housing', 'Premium, but now the app visibly shows the deeper bench from Millburn through New Providence.'],
+      ['Lifestyle', 'More execution than romance, which is exactly why it keeps winning.'],
     ],
-    why: ['Most rational all-around answer if the job remains important.', 'Great match between office geometry and daily family reality.', 'Should stay near the top unless water or lifestyle becomes the deciding factor.'],
+    why: ['Most rational all-around answer if the job remains important.', 'Now clearly represented as a full cluster.', 'Should stay at or near the top unless water becomes non-negotiable.'],
     links: [
       { label: 'Search in Summit', note: '4+ bed · 3+ bath', url: 'https://www.zillow.com/homes/for_rent/Summit,-NJ/4-_beds/3-_baths/' },
       { label: 'Search in Chatham', note: 'Broader price range', url: 'https://www.redfin.com/city/3501/NJ/Chatham/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'Summit', type: 'rail', note: 'Fastest Midtown Direct anchor.' },
-      { name: 'Short Hills', type: 'rail', note: 'Premium school plus express rail lane.' },
-      { name: 'Maplewood', type: 'rail', note: 'Townier feel with direct Penn runs.' },
-      { name: 'South Orange', type: 'rail', note: 'Village feel, same rail spine.' },
-      { name: 'New Providence', type: 'rail', note: 'Good family fallback if Summit stock is thin.' },
+      { name: 'Summit Station', type: 'rail', role: 'Primary', note: 'Fastest Midtown Direct anchor.' },
+      { name: 'Short Hills Station', type: 'rail', role: 'Backup', note: 'Premium school lane with excellent direct service.' },
+      { name: 'Newark Penn', type: 'rail', role: 'Backup', note: 'Useful resilience node when service patterns shift.' },
     ],
     towns: [
-      { name: 'Summit', note: 'Best all-around execution, pricey but clean answer.' },
-      { name: 'Chatham', note: 'Strong schools, slightly more inventory flexibility.' },
-      { name: 'Madison', note: 'Walkable downtown and still solid rail geometry.' },
-      { name: 'Maplewood', note: 'More character, slightly softer pure-commute profile.' },
-      { name: 'South Orange', note: 'Village vibe, same rail logic.' },
+      { name: 'Summit', tag: 'Highest confidence', commute: '66 to 74 min', note: 'Best-known all-around fit.' },
+      { name: 'Chatham', tag: 'Value within lane', commute: '69 to 78 min', note: 'Slightly broader inventory without breaking the rail pattern.' },
+      { name: 'Millburn', tag: 'Premium schools', commute: '63 to 73 min', note: 'Stronger school signal with cost to match.' },
+      { name: 'Madison', tag: 'Deep bench', commute: '70 to 80 min', note: 'Walkable downtown and still clean office mechanics.' },
+      { name: 'New Providence', tag: 'Softer pricing', commute: '72 to 82 min', note: 'Useful fallback if Summit stock is thin.' },
     ],
   },
   {
     id: 'nassau-port-washington', shortName: 'North Shore', name: 'North Shore Nassau / Port Washington', type: 'ground', tier: 'Best commute + charm mix', color: '#7c3aed',
-    hub: { lat: 40.7973, lng: -73.6993, label: 'Manhasset LIRR', kind: 'rail' }, radiusMiles: 7,
-    summary: 'Direct Penn access with better water-adjacent charm and lifestyle upside than the NJ rail answer.',
-    doorToDesk: { value: '68 to 85 min', note: 'Door-to-desk estimate through the Port Washington Branch into Penn.' },
-    signals: [{ text: 'Direct Penn', cls: 'info' }, { text: 'Water upside', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }],
+    hub: { lat: 40.7973, lng: -73.6993, label: 'Manhasset LIRR', type: 'rail' }, radiusMiles: 9,
+    commute: { pattern: 'Direct Penn rail', doorToDesk: '57 to 78 min', notes: 'Manhasset and Port Washington are the lead nodes, with Great Neck visible as a backup branch option.' },
+    summary: 'Direct Penn access with a much deeper North Shore cluster, including both practical and charm-led towns.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Rail-native', cls: 'info' }, { text: 'Water upside', cls: 'info' }],
     facts: [
-      ['Schools', 'Manhasset is especially strong. Port Washington is good and more attainable.'],
-      ['Commute', 'One of the best Penn-oriented commute structures on the board.'],
-      ['Housing', 'Premium quickly, but Port Washington is likely the most realistic entry point.'],
-      ['Lifestyle', 'Harbor and coastal feel gives this region more emotional pull than NJ.'],
+      ['Schools', 'Manhasset remains the sharpest school signal, but Roslyn and nearby towns deepen the board materially.'],
+      ['Commute', 'One of the best Penn-oriented structures on the board.'],
+      ['Housing', 'Still expensive, but the cluster now looks genuinely broad instead of symbolic.'],
+      ['Lifestyle', 'Harbor towns and village charm give this more emotional pull than inland NJ.'],
     ],
-    why: ['Direct-Penn practicality without giving up all the charm.', 'One of the best balance points between commute and quality of life on the board.', 'Should remain a top relocation conversation.'],
+    why: ['Direct-Penn practicality without giving up all the charm.', 'One of the best balance points between commute and family feel.', 'Now visibly reads like a real region, not a stub.'],
     links: [
       { label: 'Search in Port Washington', note: 'Best value entry point', url: 'https://www.zillow.com/homes/for_rent/Port-Washington,-NY/4-_beds/3-_baths/' },
       { label: 'Search in Manhasset', note: 'Premium side of market', url: 'https://www.redfin.com/city/11371/NY/Manhasset/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'Manhasset', type: 'rail', note: 'Fast express access on the Port Washington Branch.' },
-      { name: 'Plandome', type: 'rail', note: 'Great for Flower Hill and Munsey Park lens.' },
-      { name: 'Port Washington', type: 'rail', note: 'Harbor-side entry point with direct Penn service.' },
+      { name: 'Manhasset LIRR', type: 'rail', role: 'Primary', note: 'Fast express access on the Port Washington Branch.' },
+      { name: 'Port Washington LIRR', type: 'rail', role: 'Backup', note: 'Harbor-side end of the branch with the most obvious lifestyle upside.' },
+      { name: 'Great Neck LIRR', type: 'rail', role: 'Backup', note: 'Another strong Penn-oriented option if the search slides west.' },
     ],
     towns: [
-      { name: 'Port Washington', note: 'Likeliest practical harbor-town entry point.' },
-      { name: 'Manhasset', note: 'Premium schools and commute, high cost.' },
-      { name: 'Plandome', note: 'More tucked-away, family-polished option.' },
-      { name: 'Sea Cliff', note: 'Quirkier North Shore alternative if branch tradeoff is acceptable.' },
+      { name: 'Port Washington', tag: 'Most realistic entry', commute: '62 to 72 min', note: 'Likeliest practical harbor-town entry point.' },
+      { name: 'Manhasset', tag: 'Premium school signal', commute: '57 to 66 min', note: 'Fast and polished, with premium pricing.' },
+      { name: 'Roslyn', tag: 'Village charm', commute: '63 to 73 min', note: 'Stronger old-village feel than the mainline picks.' },
+      { name: 'Glen Head', tag: 'Value pocket', commute: '66 to 76 min', note: 'A practical North Shore add with more breathing room.' },
+      { name: 'Sea Cliff', tag: 'Charm wildcard', commute: '68 to 78 min', note: 'Personality-heavy option if water adjacency matters.' },
     ],
   },
   {
     id: 'lower-fairfield', shortName: 'Fairfield CT', name: 'Lower Fairfield Coast, CT', type: 'ground', tier: 'Best premium coastal family life', color: '#d97706',
-    hub: { lat: 41.0774, lng: -73.4693, label: 'Darien Station', kind: 'rail' }, radiusMiles: 10,
-    summary: 'Elite family product and coastal life, with a commute tax because Grand Central is not Penn.',
-    doorToDesk: { value: '95 to 120 min', note: 'Door-to-desk estimate assumes Metro-North to Grand Central plus crosstown transfer.' },
-    signals: [{ text: 'GCT oriented', cls: 'caution' }, { text: 'Coastal', cls: 'info' }, { text: 'Schools: elite', cls: 'good' }],
+    hub: { lat: 41.0774, lng: -73.4693, label: 'Darien Station', type: 'rail' }, radiusMiles: 13,
+    commute: { pattern: 'Metro-North + GCT transfer', doorToDesk: '82 to 105 min', notes: 'The app now makes the GCT penalty explicit and keeps Rowayton plus Westport visible as real alternates.' },
+    summary: 'Elite family product and coastal life, now shown as a broader Fairfield County stack instead of two obvious trophy towns.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Coastal premium', cls: 'caution' }, { text: 'Rail-native', cls: 'info' }],
     facts: [
-      ['Schools', 'Elite, one of the primary reasons to pay the premium.'],
-      ['Commute', 'Workable for 2 to 3 days a week, but less elegant than direct Penn lines.'],
-      ['Housing', 'Premium to ultra-premium family product. Budget accordingly.'],
-      ['Lifestyle', 'One of the prettiest and most polished family regions on the board.'],
+      ['Schools', 'Elite family signal remains one of the strongest on the board.'],
+      ['Commute', 'Good enough for 2 to 3 days a week, but the Penn mismatch is now plain in the UI.'],
+      ['Housing', 'Premium to ultra-premium, though Fairfield broadens the practical edge of the cluster.'],
+      ['Lifestyle', 'Still one of the prettiest family-region stories available.'],
     ],
-    why: ['A real contender when family quality outranks commute purity.', 'Darien feels especially clean. Westport may be the most complete lifestyle town.', 'Should stay high for the premium-coastal lane.'],
+    why: ['A real contender when family quality outranks commute purity.', 'Now includes both trophy towns and broader inventory towns.', 'Should stay high for the premium-coastal lane.'],
     links: [
       { label: 'Search in Darien', note: 'Premium coastal stock', url: 'https://www.zillow.com/homes/for_rent/Darien,-CT/4-_beds/3-_baths/' },
       { label: 'Search in Westport', note: 'Lifestyle-premium lens', url: 'https://www.redfin.com/city/21455/CT/Westport/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'Darien', type: 'rail', note: 'Straightforward New Haven Line anchor.' },
-      { name: 'Rowayton', type: 'rail', note: 'Village and coast blend with small-station feel.' },
-      { name: 'Westport', type: 'rail', note: 'Lifestyle heavyweight with commute penalty.' },
-      { name: 'South Norwalk', type: 'rail', note: 'Fallback node if town-first search broadens.' },
+      { name: 'Darien Station', type: 'rail', role: 'Primary', note: 'Straightforward New Haven Line anchor.' },
+      { name: 'Rowayton Station', type: 'rail', role: 'Backup', note: 'Smaller village station with big charm upside.' },
+      { name: 'Westport Station', type: 'rail', role: 'Backup', note: 'Keeps the western Fairfield lifestyle heavyweight in play.' },
     ],
     towns: [
-      { name: 'Darien', note: 'Cleanest family answer in the lane.' },
-      { name: 'Westport', note: 'Most complete lifestyle town, very premium.' },
-      { name: 'Fairfield', note: 'Slightly softer pricing with real coastal upside.' },
-      { name: 'Rowayton', note: 'Smaller, charming, water-adjacent pocket.' },
+      { name: 'Darien', tag: 'Pure premium', commute: '84 to 95 min', note: 'Cleanest family answer in the lane.' },
+      { name: 'Westport', tag: 'Lifestyle upside', commute: '88 to 100 min', note: 'Most complete coastal-family story if budget allows.' },
+      { name: 'New Canaan', tag: 'Schools first', commute: '87 to 99 min', note: 'Elite schools with the same GCT tax.' },
+      { name: 'Rowayton', tag: 'Harbor pocket', commute: '82 to 92 min', note: 'Smaller, more intimate water-adjacent play.' },
+      { name: 'Fairfield', tag: 'Broader inventory', commute: '92 to 105 min', note: 'Less polished, more practical, still coastal.' },
     ],
   },
   {
     id: 'westchester-villages', shortName: 'Westchester', name: 'Westchester Villages', type: 'ground', tier: 'Excellent but secondary for this office', color: '#dc2626',
-    hub: { lat: 40.9898, lng: -73.8087, label: 'Scarsdale Station', kind: 'rail' }, radiusMiles: 8,
-    summary: 'Excellent family towns and schools, but wrong geometry for a Penn-area office.',
-    doorToDesk: { value: '88 to 112 min', note: 'Door-to-desk estimate assumes Metro-North into Grand Central plus transfer.' },
-    signals: [{ text: 'GCT oriented', cls: 'caution' }, { text: 'Schools: elite', cls: 'good' }, { text: 'Secondary pick', cls: 'caution' }],
+    hub: { lat: 40.9898, lng: -73.8087, label: 'Scarsdale Station', type: 'rail' }, radiusMiles: 10,
+    commute: { pattern: 'Metro-North + GCT transfer', doorToDesk: '68 to 88 min', notes: 'Bronxville is the faster village lane, Rye and Larchmont are the lifestyle-led Sound Shore picks.' },
+    summary: 'Excellent family towns and schools, now shown as a wider central plus Sound Shore Westchester cluster with real timing ranges.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'GCT tax', cls: 'caution' }, { text: 'Rail-native', cls: 'info' }],
     facts: [
-      ['Schools', 'Elite school quality is not the issue here.'],
-      ['Commute', 'Grand Central orientation is the geometry tax for your specific office.'],
-      ['Housing', 'High to very high, with less value upside than many expect.'],
-      ['Lifestyle', 'Still a classic strong-family region, especially in the best villages.'],
+      ['Schools', 'Elite school quality is not the issue here, and the deeper cluster makes that obvious.'],
+      ['Commute', 'Good Metro-North access, but still not Penn-native.'],
+      ['Housing', 'High to very high, with more variation than Scarsdale alone suggests.'],
+      ['Lifestyle', 'A serious family region, especially if you want Sound Shore polish.'],
     ],
-    why: ['Needs to stay visible because the family case is real.', 'Likely secondary unless office cadence stays lighter than expected.', 'A good region, just slightly wrong geometry for this job.'],
+    why: ['Needs to stay visible because the family case is real.', 'Now reads like a real cluster instead of two names.', 'Still secondary unless office cadence stays lighter than expected.'],
     links: [
       { label: 'Search in Rye', note: 'Shoreline-leaning lens', url: 'https://www.zillow.com/homes/for_rent/Rye,-NY/4-_beds/3-_baths/' },
       { label: 'Search in Scarsdale', note: 'School-premium market', url: 'https://www.redfin.com/city/17669/NY/Scarsdale/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'Scarsdale', type: 'rail', note: 'Core school-premium station.' },
-      { name: 'Bronxville', type: 'rail', note: 'Village-centric Metro-North answer.' },
-      { name: 'Rye', type: 'rail', note: 'Shoreline Westchester option.' },
-      { name: 'Larchmont', type: 'rail', note: 'Sound Shore family town with strong reputation.' },
+      { name: 'Scarsdale Station', type: 'rail', role: 'Primary', note: 'Core school-premium station.' },
+      { name: 'Bronxville Station', type: 'rail', role: 'Backup', note: 'Fastest village-style Metro-North option in the cluster.' },
+      { name: 'Rye Station', type: 'rail', role: 'Backup', note: 'Sound Shore version of the argument.' },
     ],
     towns: [
-      { name: 'Scarsdale', note: 'Elite schools, high cost, office mismatch.' },
-      { name: 'Bronxville', note: 'Beautiful village format, expensive.' },
-      { name: 'Rye', note: 'Best water-adjacent Westchester lane.' },
-      { name: 'Larchmont', note: 'Softer vibe than Scarsdale, still strong schools.' },
+      { name: 'Bronxville', tag: 'Fastest village rail', commute: '68 to 78 min', note: 'One of the strongest village products in the county.' },
+      { name: 'Scarsdale', tag: 'School premium', commute: '74 to 85 min', note: 'Elite schools, high cost, office mismatch.' },
+      { name: 'Rye', tag: 'Shoreline variant', commute: '77 to 88 min', note: 'Best water-adjacent Westchester lane.' },
+      { name: 'Larchmont', tag: 'Water plus train', commute: '73 to 83 min', note: 'Sound Shore feel with strong reputation.' },
+      { name: 'Harrison', tag: 'Broader inventory', commute: '75 to 86 min', note: 'Useful if you want more housing choice without breaking the cluster.' },
     ],
   },
   {
     id: 'nj-coast-ferry', shortName: 'NJ Coast', name: 'NJ Coast + Ferry Belt', type: 'ground', tier: 'Best water-first ground play', color: '#0f766e',
-    hub: { lat: 40.3521, lng: -74.0419, label: 'Highlands Ferry / SeaStreak', kind: 'ferry' }, radiusMiles: 14,
+    hub: { lat: 40.4023, lng: -73.9772, label: 'Highlands Ferry / SeaStreak', type: 'ferry' }, radiusMiles: 15,
+    commute: { pattern: 'Ferry + subway / rail fallback', doorToDesk: '92 to 118 min', notes: 'The map stays light, but the sheet now makes it obvious this lane has ferry, rail, and bus redundancy.' },
     summary: 'Monmouth coast towns with ferry optionality, better lifestyle pull, and a still-plausible office pattern if ferry days are disciplined.',
-    doorToDesk: { value: '92 to 118 min', note: 'Door-to-desk estimate assumes drive to ferry, Midtown or Wall Street arrival, then subway or walkback to Penn area.' },
-    signals: [{ text: 'Ferry-first', cls: 'info' }, { text: 'Water lifestyle', cls: 'good' }, { text: 'Longer daily rhythm', cls: 'caution' }],
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Ferry-first', cls: 'info' }, { text: 'Water lifestyle', cls: 'good' }],
     facts: [
-      ['Schools', 'Strong enough in Rumson, Fair Haven, Little Silver, and nearby pockets to keep public-school path credible.'],
-      ['Commute', 'Not as pure as direct Penn rail, but ferry gives a psychologically better ride than many train grinds.'],
-      ['Housing', 'Expensive in the best river and shore pockets, but more emotionally compelling than inland premium markets.'],
-      ['Lifestyle', 'This is the strongest water-and-family answer on the NJ side of the board.'],
+      ['Schools', 'Rumson, Fair Haven, and Little Silver keep the public-school path credible.'],
+      ['Commute', 'Not as pure as direct Penn rail, but ferry can be a psychologically better ride.'],
+      ['Housing', 'Expensive in the best river and shore pockets, but emotionally compelling.'],
+      ['Lifestyle', 'Strongest water-and-family answer on the NJ side of the board.'],
     ],
-    why: ['Keeps real shoreline life in the conversation without jumping to Connecticut pricing.', 'Ferry, NJCL rail, and park-and-ride options create a wider operating envelope than a single-mode commute.', 'Belongs on the board as the best NJ lifestyle counterweight to Summit and Chatham logic.'],
+    why: ['Keeps real shoreline life in the conversation without Connecticut pricing.', 'Multi-mode redundancy makes it sturdier than a one-trick commute.', 'Belongs on the board as the best NJ lifestyle counterweight to Summit logic.'],
     links: [
       { label: 'Search in Rumson', note: 'River and shore premium core', url: 'https://www.zillow.com/homes/for_rent/Rumson,-NJ/4-_beds/3-_baths/' },
       { label: 'Search in Fair Haven', note: 'Family-town alternative', url: 'https://www.redfin.com/city/6139/NJ/Fair-Haven/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'Highlands / SeaStreak', type: 'ferry', note: 'Fastest emotional commute, but car dependency matters.' },
-      { name: 'Atlantic Highlands Ferry', type: 'ferry', note: 'Another ferry lane with strong water-life upside.' },
-      { name: 'Red Bank', type: 'rail', note: 'NJCL fallback with more town services.' },
-      { name: 'Middletown Park and Ride', type: 'bus', note: 'Useful redundancy for early and late office days.' },
+      { name: 'SeaStreak Highlands', type: 'ferry', role: 'Primary', note: 'Fastest emotional commute, but car dependency matters.' },
+      { name: 'Red Bank', type: 'rail', role: 'Backup', note: 'NJCL fallback with more town services.' },
+      { name: 'Middletown Park and Ride', type: 'bus', role: 'Backup', note: 'Useful redundancy for early and late office days.' },
     ],
     towns: [
-      { name: 'Rumson', note: 'Best-in-class family plus water product, very premium.' },
-      { name: 'Fair Haven', note: 'Strong schools and town feel with better flexibility.' },
-      { name: 'Little Silver', note: 'Quiet family lane near Red Bank hub.' },
-      { name: 'Atlantic Highlands', note: 'Most ferry-native lifestyle answer.' },
-      { name: 'Monmouth Beach', note: 'Pure shore pull if budget allows.' },
+      { name: 'Rumson', tag: 'Best-in-class water', commute: '96 to 112 min', note: 'Best family plus water product, very premium.' },
+      { name: 'Fair Haven', tag: 'Balanced pick', commute: '92 to 108 min', note: 'Strong schools and town feel with better flexibility.' },
+      { name: 'Little Silver', tag: 'Quiet family lane', commute: '95 to 110 min', note: 'Near Red Bank with strong day-to-day mechanics.' },
+      { name: 'Atlantic Highlands', tag: 'Ferry native', commute: '93 to 104 min', note: 'Most ferry-native lifestyle answer.' },
+      { name: 'Monmouth Beach', tag: 'Pure shore pull', commute: '102 to 118 min', note: 'For when the lifestyle picture outranks convenience.' },
     ],
   },
   {
     id: 'nec-princeton-metropark', shortName: 'NEC South', name: 'Princeton / Metropark NEC Corridor', type: 'ground', tier: 'High-function rail fallback', color: '#4f46e5',
-    hub: { lat: 40.5681, lng: -74.3291, label: 'Metropark Station', kind: 'rail' }, radiusMiles: 18,
-    summary: 'NEC towns that trade some charm for blunt rail utility, school quality, and a wide set of family suburbs.',
-    doorToDesk: { value: '78 to 102 min', note: 'Door-to-desk estimate via NEC express service into Penn.' },
-    signals: [{ text: 'NEC express', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }, { text: 'Less coastal charm', cls: 'caution' }],
+    hub: { lat: 40.5681, lng: -74.3291, label: 'Metropark Station', type: 'rail' }, radiusMiles: 18,
+    commute: { pattern: 'NEC express to Penn', doorToDesk: '78 to 102 min', notes: 'Metropark is the blunt-force utility node, with Princeton Junction and New Brunswick broadening the cluster.' },
+    summary: 'NEC towns that trade some romance for blunt rail utility, school quality, and a wide set of family suburbs.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'NEC express', cls: 'info' }, { text: 'Function-first', cls: 'caution' }],
     facts: [
-      ['Schools', 'Princeton, Westfield-adjacent pockets, and Metuchen-side options keep school confidence high.'],
-      ['Commute', 'Metropark is one of the cleanest non-coastal Penn access points outside Midtown Direct.'],
+      ['Schools', 'Princeton and the stronger NEC suburbs keep school confidence high.'],
+      ['Commute', 'One of the cleanest non-coastal Penn access points outside Midtown Direct.'],
       ['Housing', 'More range than top North Shore or Fairfield markets.'],
       ['Lifestyle', 'Competent rather than dreamy, but highly usable.'],
     ],
-    why: ['Adds a bigger south-of-the-city rail catchment to the live board.', 'Useful when family housing search needs breadth more than postcard charm.', 'A strong rational fallback if NJ Direct inventory gets too constrained.'],
+    why: ['Adds a bigger south-of-the-city rail catchment to the live board.', 'Useful when the family search needs breadth more than postcard charm.', 'A strong rational fallback if NJ Direct inventory gets too constrained.'],
     links: [
       { label: 'Search in Princeton', note: 'School-heavy south corridor lens', url: 'https://www.zillow.com/homes/for_rent/Princeton,-NJ/4-_beds/3-_baths/' },
       { label: 'Search in Metuchen', note: 'More attainable NEC node', url: 'https://www.redfin.com/city/12456/NJ/Metuchen/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'Metropark', type: 'rail', note: 'Blunt-force NEC utility.' },
-      { name: 'Princeton Junction', type: 'rail', note: 'Best rail anchor for Princeton-area families.' },
-      { name: 'New Brunswick', type: 'rail', note: 'Adds Rutgers-side service depth.' },
-      { name: 'Suburban Transit Park and Ride', type: 'bus', note: 'Backup for early and late commute windows.' },
+      { name: 'Metropark', type: 'rail', role: 'Primary', note: 'Blunt-force NEC utility.' },
+      { name: 'Princeton Junction', type: 'rail', role: 'Backup', note: 'Best rail anchor for Princeton-area families.' },
+      { name: 'New Brunswick', type: 'rail', role: 'Backup', note: 'Adds Rutgers-side service depth.' },
     ],
     towns: [
-      { name: 'Princeton', note: 'Best prestige and school blend in this lane.' },
-      { name: 'West Windsor', note: 'Function-first Princeton Junction answer.' },
-      { name: 'Metuchen', note: 'Walkable and more attainable.' },
-      { name: 'Cranford', note: 'Different flavor but still strong family mechanics.' },
+      { name: 'Princeton', tag: 'Prestige lead', commute: '90 to 102 min', note: 'Best prestige and school blend in this lane.' },
+      { name: 'West Windsor', tag: 'Function first', commute: '84 to 95 min', note: 'Best rail mechanics for Princeton-area families.' },
+      { name: 'Metuchen', tag: 'Attainable node', commute: '78 to 88 min', note: 'Walkable and more attainable.' },
+      { name: 'Cranford', tag: 'Different flavor', commute: '79 to 90 min', note: 'Another family-capable rail lane to keep visible.' },
+      { name: 'New Brunswick', tag: 'Broader inventory', commute: '81 to 93 min', note: 'Useful depth if you want more housing options.' },
     ],
   },
   {
     id: 'bna-home-base', shortName: 'Stay in TN', name: 'Stay in Tennessee, fly from BNA', type: 'flight', tier: 'Baseline fly-in scenario', color: '#059669',
-    hub: { lat: 36.1263, lng: -86.6774, label: 'BNA Airport', kind: 'airport' }, radiusMiles: 24,
-    summary: 'The control scenario. If a relocation hub is not clearly better than this, it should not survive.',
-    doorToDesk: { value: '~2h15m best case', note: 'Visible baseline for every air-commute comparison on the board.' },
-    signals: [{ text: 'No move', cls: 'good' }, { text: '~2h15m door-to-desk', cls: 'caution' }, { text: 'Baseline', cls: '' }],
+    hub: { lat: 36.1263, lng: -86.6774, label: 'BNA Airport', type: 'airport' }, radiusMiles: 26,
+    commute: { pattern: 'Nonstop fly-in baseline', doorToDesk: '2h15m to 2h40m', notes: 'This is still the control case, but now it visibly includes multiple Tennessee baseline towns.' },
+    summary: 'The control scenario now shows more than one Tennessee benchmark, so relocation clusters have to beat a fuller no-move case.',
+    signals: [{ text: '3 towns loaded', cls: 'good' }, { text: 'Airport hub', cls: 'info' }, { text: 'No move', cls: 'good' }],
     facts: [
       ['Schools', 'No forced family disruption if this phase is temporary.'],
-      ['Commute', '~2h15m and about $139 one-way on a good nonstop pattern. Body and mind pay the cost.'],
-      ['Housing', 'No new housing spend if the farm stays home base.'],
-      ['Lifestyle', 'Best for family continuity. Hardest on you personally.'],
+      ['Commute', 'Still the longest day, but the cleanest control case against every relocation idea.'],
+      ['Housing', 'No new housing spend, and the expanded TN baseline keeps the comparison honest.'],
+      ['Lifestyle', 'Best for family continuity, hardest on you personally.'],
     ],
-    why: ['Must remain on the board as the floor, every other option competes against this.', 'Protects family continuity while preserving current compensation.', 'Every fly-in hub should be directly compared to this baseline.'],
+    why: ['Must remain on the board as the floor every other option competes against.', 'Now compares against multiple Tennessee baselines instead of one abstract point.', 'Useful whenever a relocation premium starts to feel too theoretical.'],
     links: [
       { label: 'BNA → NYC flights', note: 'Baseline route logic', url: 'https://www.google.com/travel/flights/flights-from-nashville-to-new-york.html?gl=US&hl=en-US' },
       { label: 'Hotels near Penn', note: 'Mon/Tue overnight options', url: 'https://www.google.com/travel/hotels/New%20York%20Penn%20Station' },
     ],
-    hubs: [{ name: 'BNA', type: 'airport', note: 'Baseline nonstop business route.' }],
-    towns: [{ name: 'Current Tennessee base', note: 'No relocation cost, but highest personal wear.' }],
+    hubs: [
+      { name: 'BNA Airport', type: 'airport', role: 'Primary', note: 'Baseline nonstop business route.' },
+    ],
+    towns: [
+      { name: 'Nashville core', tag: 'No move', commute: '2h15m to 2h25m', note: 'Pure baseline if you stay closest to the airport spine.' },
+      { name: 'Franklin', tag: 'Family favorite', commute: '2h25m to 2h40m', note: 'Polished suburban benchmark for the no-move case.' },
+      { name: 'Brentwood', tag: 'Closest premium analog', commute: '2h20m to 2h35m', note: 'Useful control if the family picture wants premium suburbia.' },
+    ],
   },
   {
     id: 'boston-coast', shortName: 'Boston', name: 'Boston Coastal Hub', type: 'flight', tier: 'Best fly-in hub', color: '#0891b2',
-    hub: { lat: 42.3656, lng: -71.0096, label: 'BOS Airport', kind: 'airport' }, radiusMiles: 18,
-    summary: 'Elite schools, real coastal life, and a dense flight corridor into NYC, the strongest fly-in answer.',
-    doorToDesk: { value: '2h00m to 2h30m', note: 'Varies with BOS security and airport rail timing, but corridor density is excellent.' },
-    signals: [{ text: 'Dense air corridor', cls: 'info' }, { text: 'Coastal', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }],
+    hub: { lat: 42.3656, lng: -71.0096, label: 'BOS Airport', type: 'airport' }, radiusMiles: 22,
+    commute: { pattern: 'Frequent shuttle-style flights', doorToDesk: '1h50m to 2h35m', notes: 'Logan is primary, Back Bay stays visible as a rail fallback, and the towns now show the full Boston spread from inner ring to coast.' },
+    summary: 'Elite schools, real quality of life, and a dense BOS corridor into NYC, now with a visibly larger Boston-area bench.',
+    signals: [{ text: '4 towns loaded', cls: 'good' }, { text: 'Airport + rail', cls: 'info' }, { text: 'Schools: strong', cls: 'good' }],
     facts: [
-      ['Schools', 'Very strong public environment, private schools available if ever desired.'],
-      ['Commute', 'A real business-travel corridor, not a fringe airport gamble. Multiple flights daily.'],
-      ['Housing', 'Expensive, but the quality is real, not speculative.'],
+      ['Schools', 'Very strong public environment with multiple high-confidence family towns now in the app.'],
+      ['Commute', 'A real business-travel corridor, not a fringe airport gamble.'],
+      ['Housing', 'Expensive, but the expanded set makes the trade space clearer.'],
       ['Lifestyle', 'One of the prettiest serious fly-in answers on the board.'],
     ],
     why: ['Strong blend of school confidence, family quality, and travel redundancy.', 'Feels like a real place to live, not a commuter hack.', 'Should stay near the top of the fly-in board.'],
@@ -635,56 +686,27 @@ const REGIONS = [
       { label: 'Search in Marblehead', note: 'North Shore coastal lens', url: 'https://www.redfin.com/city/11138/MA/Marblehead/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'BOS', type: 'airport', note: 'Main corridor airport with huge schedule depth.' },
-      { name: 'Back Bay', type: 'rail', note: 'Amtrak fallback if weather or overnight pattern changes.' },
-      { name: 'Hingham Ferry', type: 'ferry', note: 'Useful if South Shore and Logan access mix matters.' },
+      { name: 'BOS Airport', type: 'airport', role: 'Primary', note: 'Main corridor airport with huge schedule depth.' },
+      { name: 'Back Bay', type: 'rail', role: 'Backup', note: 'Amtrak fallback if weather or overnight pattern changes.' },
+      { name: 'Hingham Ferry', type: 'ferry', role: 'Backup', note: 'Useful if South Shore and Logan access mix matters.' },
     ],
     towns: [
-      { name: 'Hingham', note: 'Best South Shore family-water blend.' },
-      { name: 'Marblehead', note: 'North Shore charm heavyweight.' },
-      { name: 'Winchester', note: 'School-first option if less water is acceptable.' },
-      { name: 'Cohasset', note: 'Coastal premium but compelling.' },
-    ],
-  },
-  {
-    id: 'providence-boston-rail-air', shortName: 'Providence', name: 'Providence / South County via PVD + Amtrak', type: 'flight', tier: 'Best hybrid air-rail New England play', color: '#7c2d12',
-    hub: { lat: 41.7221, lng: -71.4281, label: 'TF Green Airport', kind: 'airport' }, radiusMiles: 22,
-    summary: 'Providence and South County add lower-friction New England family options with both PVD and Northeast Corridor redundancy.',
-    doorToDesk: { value: '2h10m to 2h45m', note: 'Uses TF Green or Providence Amtrak depending day pattern, not as dense as BOS but more redundant than a tiny airport bet.' },
-    signals: [{ text: 'Air + Amtrak', cls: 'info' }, { text: 'Coastal New England', cls: 'good' }, { text: 'Smaller corridor', cls: 'caution' }],
-    facts: [
-      ['Schools', 'East Greenwich, Barrington, and South County private and public mixes keep this lane credible for family life.'],
-      ['Commute', 'PVD is manageable, and Providence Station gives true NEC backup.'],
-      ['Housing', 'Usually more attainable than top Boston-coast comparables.'],
-      ['Lifestyle', 'A calmer, slightly less glamorous New England answer that still feels real.'],
-    ],
-    why: ['Expands the board beyond BOS with a second New England corridor that has actual redundancy.', 'Brings Rhode Island coastal towns into the same map-first decision frame.', 'Useful if Boston pricing feels irrational but New England still wins emotionally.'],
-    links: [
-      { label: 'Search in East Greenwich', note: 'Strong school base near PVD', url: 'https://www.zillow.com/homes/for_rent/East-Greenwich,-RI/4-_beds/3-_baths/' },
-      { label: 'Search in Barrington', note: 'Water-adjacent RI family lane', url: 'https://www.redfin.com/city/1231/RI/Barrington/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
-    ],
-    hubs: [
-      { name: 'TF Green', type: 'airport', note: 'Primary flight node.' },
-      { name: 'Providence Station', type: 'rail', note: 'True Northeast Corridor fallback.' },
-      { name: 'Wickford Junction', type: 'rail', note: 'Helpful South County park-and-ride access.' },
-    ],
-    towns: [
-      { name: 'East Greenwich', note: 'Most balanced family answer near PVD.' },
-      { name: 'Barrington', note: 'School plus water credibility.' },
-      { name: 'Narragansett', note: 'Pure coast play with longer airport mechanics.' },
-      { name: 'North Kingstown', note: 'More rational South County base.' },
+      { name: 'Winchester', tag: 'Inner-ring edge', commute: '1h50m to 2h10m', note: 'Closest family-town answer with excellent schools.' },
+      { name: 'Wellesley', tag: 'School prestige', commute: '1h55m to 2h15m', note: 'Elite school-market benchmark even without coast.' },
+      { name: 'Hingham', tag: 'South Shore fit', commute: '2h05m to 2h25m', note: 'Best South Shore family-water blend.' },
+      { name: 'Marblehead', tag: 'Coastal charisma', commute: '2h15m to 2h35m', note: 'North Shore charm heavyweight.' },
     ],
   },
   {
     id: 'chesapeake-bwi', shortName: 'Annapolis', name: 'Annapolis / Chesapeake via BWI', type: 'flight', tier: 'Most practical fly-in water region', color: '#65a30d',
-    hub: { lat: 39.1774, lng: -76.6684, label: 'BWI Airport', kind: 'airport' }, radiusMiles: 16,
-    summary: 'Strong family region with water, good school confidence, and practical air/rail flexibility.',
-    doorToDesk: { value: '2h00m to 2h35m', note: 'Benefits from BWI frequency and Amtrak redundancy.' },
-    signals: [{ text: 'Air + rail options', cls: 'info' }, { text: 'Bay / water life', cls: 'info' }, { text: 'Schools: good', cls: 'good' }],
+    hub: { lat: 39.1774, lng: -76.6684, label: 'BWI Airport', type: 'airport' }, radiusMiles: 18,
+    commute: { pattern: 'Air + Amtrak redundancy', doorToDesk: '1h45m to 2h18m', notes: 'BWI is the primary node, and the sheet now makes BWI Rail and New Carrollton explicit backup hub types.' },
+    summary: 'Strong family region with water, school confidence, and actual air plus rail redundancy now shown right in the live UI.',
+    signals: [{ text: '4 towns loaded', cls: 'good' }, { text: 'Airport + rail', cls: 'info' }, { text: 'Bay / water life', cls: 'info' }],
     facts: [
-      ['Schools', 'Good to very good school signal, especially in stronger suburban pockets.'],
-      ['Commute', 'BWI plus Amtrak gives redundancy. More resilient than pure small-airport strategies.'],
-      ['Housing', 'More flexible than top coastal premium markets, real value is possible.'],
+      ['Schools', 'Good to very good school signal across several practical family towns.'],
+      ['Commute', 'BWI plus Amtrak gives redundancy, and now the hub set is explicit instead of implied.'],
+      ['Housing', 'More flexible than top coastal premium markets, with real value pockets like Crofton.'],
       ['Lifestyle', 'Big Chesapeake upside without requiring a fantasy budget.'],
     ],
     why: ['One of the best real-life-could-be-good-here fly-in answers.', 'Not as glamorous as coastal New England, but very practical.', 'Deserves serious consideration on the fly-in board.'],
@@ -693,125 +715,18 @@ const REGIONS = [
       { label: 'Search in Annapolis', note: 'Water lifestyle view', url: 'https://www.redfin.com/city/806/MD/Annapolis/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
     ],
     hubs: [
-      { name: 'BWI', type: 'airport', note: 'Main air node with schedule depth.' },
-      { name: 'BWI Rail Station', type: 'rail', note: 'Amtrak and MARC fallback.' },
-      { name: 'Annapolis commuter bus', type: 'bus', note: 'Useful for DC-side optionality, not the primary NYC path.' },
+      { name: 'BWI Airport', type: 'airport', role: 'Primary', note: 'Main air node with schedule depth.' },
+      { name: 'BWI Rail Station', type: 'rail', role: 'Backup', note: 'Amtrak and MARC fallback.' },
+      { name: 'New Carrollton', type: 'rail', role: 'Backup', note: 'Useful rail resilience node on tougher travel days.' },
     ],
     towns: [
-      { name: 'Annapolis', note: 'Best lifestyle name in the region.' },
-      { name: 'Severna Park', note: 'Family-practical water-adjacent lane.' },
-      { name: 'Arnold', note: 'More understated version of the same logic.' },
-      { name: 'Davidsonville', note: 'Larger-lot family fallback.' },
-    ],
-  },
-  {
-    id: 'rdu-triangle', shortName: 'RDU', name: 'Raleigh / Durham via RDU', type: 'flight', tier: 'Best Southeast fly-in rationalist play', color: '#2563eb',
-    hub: { lat: 35.8801, lng: -78.7880, label: 'RDU Airport', kind: 'airport' }, radiusMiles: 20,
-    summary: 'The Triangle offers strong schools, deep job-market quality, and enough nonstop service to be a serious southeastern fly-in contender.',
-    doorToDesk: { value: '2h10m to 2h40m', note: 'Depends on nonstop timing and how close the home base sits to RDU.' },
-    signals: [{ text: 'Research Triangle', cls: 'good' }, { text: 'Dense enough air', cls: 'info' }, { text: 'No water magic', cls: 'caution' }],
-    facts: [
-      ['Schools', 'Cary, Chapel Hill-adjacent, and North Raleigh lanes keep public-school confidence high.'],
-      ['Commute', 'RDU is materially more credible than a fringe regional airport, though still not BOS or BWI class.'],
-      ['Housing', 'Stronger family value than Northeast premium coastal markets.'],
-      ['Lifestyle', 'Excellent mechanics and future optionality, less immediate romance.'],
-    ],
-    why: ['Adds the Southeast powerhouse market the board was missing.', 'Useful as a serious family-forward alternative to staying in Tennessee.', 'Competes on value and life mechanics, not coastline fantasy.'],
-    links: [
-      { label: 'Search in Cary', note: 'Strong school plus airport access', url: 'https://www.zillow.com/homes/for_rent/Cary,-NC/4-_beds/3-_baths/' },
-      { label: 'Search in Chapel Hill', note: 'Higher-charisma Triangle lane', url: 'https://www.redfin.com/city/3100/NC/Chapel-Hill/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
-    ],
-    hubs: [
-      { name: 'RDU', type: 'airport', note: 'Primary nonstop anchor.' },
-      { name: 'Durham Station', type: 'bus', note: 'Visible placeholder for future rail, not a primary commute driver.' },
-      { name: 'Cary park-and-ride', type: 'bus', note: 'Useful local access node when airport-run logistics matter.' },
-    ],
-    towns: [
-      { name: 'Cary', note: 'Most rational family-airport base.' },
-      { name: 'Chapel Hill', note: 'Best charm and intellect version of the Triangle.' },
-      { name: 'North Raleigh', note: 'School and housing breadth.' },
-      { name: 'Apex', note: 'Family-value option with good airport reach.' },
-    ],
-  },
-  {
-    id: 'charlotte-clt', shortName: 'Charlotte', name: 'Charlotte via CLT', type: 'flight', tier: 'Best big-airport Southeast fallback', color: '#be185d',
-    hub: { lat: 35.2144, lng: -80.9473, label: 'CLT Airport', kind: 'airport' }, radiusMiles: 22,
-    summary: 'Charlotte brings major-airport depth, suburban family inventory, and decent nonstop coverage, even if the place itself is more utility than romance.',
-    doorToDesk: { value: '2h05m to 2h35m', note: 'Big-airport schedule depth is the selling point here.' },
-    signals: [{ text: 'Major hub airport', cls: 'good' }, { text: 'Suburban inventory', cls: 'info' }, { text: 'Lifestyle less distinct', cls: 'caution' }],
-    facts: [
-      ['Schools', 'South Charlotte and Lake Norman-adjacent suburbs create viable family clusters.'],
-      ['Commute', 'CLT is a real hub, which matters when travel reliability matters more than charm.'],
-      ['Housing', 'Good family-house inventory relative to Northeast premium zones.'],
-      ['Lifestyle', 'Feels competent and scalable, not especially magical.'],
-    ],
-    why: ['Adds the airport-depth counterweight to the more cerebral RDU option.', 'Should stay visible when route reliability matters most.', 'A serious fallback if staying in the Southeast remains appealing.'],
-    links: [
-      { label: 'Search in SouthPark', note: 'Closer-in premium family lane', url: 'https://www.zillow.com/homes/for_rent/Charlotte,-NC/4-_beds/3-_baths/' },
-      { label: 'Search in Davidson', note: 'Lake Norman charm lane', url: 'https://www.redfin.com/city/4802/NC/Davidson/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
-    ],
-    hubs: [
-      { name: 'CLT', type: 'airport', note: 'Main reliability engine.' },
-      { name: 'Gateway Station', type: 'rail', note: 'Visible placeholder for future rail depth, not current commute driver.' },
-      { name: 'SouthPark express bus', type: 'bus', note: 'Local access placeholder for airport-focused routines.' },
-    ],
-    towns: [
-      { name: 'South Charlotte', note: 'Most practical family housing band.' },
-      { name: 'Davidson', note: 'Best charm town in the orbit.' },
-      { name: 'Huntersville', note: 'Useful inventory near north suburban band.' },
-      { name: 'Fort Mill', note: 'School and value play just over the line.' },
-    ],
-  },
-  {
-    id: 'midwest-ohare-mke', shortName: 'Midwest', name: 'Midwest Fly-in Pass via ORD / MKE', type: 'flight', tier: 'Big-market Midwest pass', color: '#475569',
-    hub: { lat: 41.9803, lng: -87.9090, label: 'ORD Airport', kind: 'airport' }, radiusMiles: 42,
-    summary: 'A broader Midwest pass anchored by Chicago access and select Milwaukee and North Shore family towns, kept visible because airport depth can overpower romance.',
-    doorToDesk: { value: '2h20m to 2h55m', note: 'Longer on average, but ORD schedule redundancy is elite. MKE is a secondary convenience node.' },
-    signals: [{ text: 'ORD depth', cls: 'good' }, { text: 'Multiple town bands', cls: 'info' }, { text: 'Longer air day', cls: 'caution' }],
-    facts: [
-      ['Schools', 'North Shore Chicago suburbs and select Milwaukee belts keep this a serious family-quality lane.'],
-      ['Commute', 'Not elegant, but the sheer route density out of O\'Hare matters if this turns into a durable pattern.'],
-      ['Housing', 'Can buy more house and school quality than on the coasts.'],
-      ['Lifestyle', 'Less water fantasy than East Coast coastal lanes, more durable metro optionality.'],
-    ],
-    why: ['Adds the Midwest airport-depth scenario the board was missing.', 'Useful when family economics and broad metro optionality matter more than coastlines.', 'Should stay on the app as a pass, not a single-town claim.'],
-    links: [
-      { label: 'Search in Wilmette', note: 'Chicago North Shore school lane', url: 'https://www.zillow.com/homes/for_rent/Wilmette,-IL/4-_beds/3-_baths/' },
-      { label: 'Search in Whitefish Bay', note: 'Milwaukee family-water lane', url: 'https://www.redfin.com/city/20547/WI/Whitefish-Bay/filter/min-beds=4,min-baths=3,property-type=house+townhouse' },
-    ],
-    hubs: [
-      { name: 'ORD', type: 'airport', note: 'Primary route-depth anchor.' },
-      { name: 'MKE', type: 'airport', note: 'Secondary airport for Milwaukee-side living.' },
-      { name: 'Union Station Chicago', type: 'rail', note: 'Visible Amtrak node for overnight and backup logic.' },
-    ],
-    towns: [
-      { name: 'Wilmette', note: 'North Shore family prestige.' },
-      { name: 'Lake Forest', note: 'Premium suburban version of the same thesis.' },
-      { name: 'Whitefish Bay', note: 'Milwaukee-side school and water credibility.' },
-      { name: 'Naperville', note: 'Pure function and value suburban option near flight logistics.' },
+      { name: 'Crofton', tag: 'Value pocket', commute: '1h45m to 2h05m', note: 'Budget-sensitive family option with the same travel network.' },
+      { name: 'Severna Park', tag: 'Practical family base', commute: '1h50m to 2h10m', note: 'Balanced schools, housing, and airport reach.' },
+      { name: 'Annapolis', tag: 'Water-led lifestyle', commute: '1h55m to 2h15m', note: 'The more emotional Chesapeake answer.' },
+      { name: 'Davidsonville', tag: 'Larger-lot play', commute: '1h55m to 2h18m', note: 'More land while keeping the same network.' },
     ],
   },
 ];
-
-const HUB_TYPES = Object.fromEntries(Object.entries(HUB_TYPE_META).map(([key, meta]) => [key, meta.label]));
-
-REGIONS.forEach((region) => {
-  const primaryHubType = region.hub.kind || region.hub.type || region.hubs?.[0]?.type || 'rail';
-  region.hub.type = primaryHubType;
-  region.commute = region.commute || {
-    pattern: region.type === 'ground' ? 'Ground access' : 'Fly-in access',
-    doorToDesk: region.doorToDesk?.value || 'Placeholder',
-    notes: region.doorToDesk?.note || 'Door-to-desk placeholder pending.',
-  };
-  region.stats = region.stats || {
-    hubType: HUB_TYPES[primaryHubType] || primaryHubType,
-    townCount: (region.towns || []).length,
-  };
-  region.towns = (region.towns || []).map((town) => ({
-    tag: town.tag || ((primaryHubType === 'airport' || primaryHubType === 'ferry') ? 'Submarket' : 'Rail town'),
-    ...town,
-  }));
-});
 
 const FILTERS = [
   { id: 'all', label: 'All' },
@@ -830,18 +745,10 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 L.control.zoom({ position: 'topright' }).addTo(map);
 
 const officeIcon = L.divIcon({
-  html: `<div style="
-    width:14px;height:14px;border-radius:50%;
-    background:#1d4ed8;border:2.5px solid #fff;
-    box-shadow:0 1px 6px rgba(0,0,0,.35)
-  "></div>`,
-  className: '',
-  iconSize: [14, 14],
-  iconAnchor: [7, 7],
+  html: `<div style="width:14px;height:14px;border-radius:50%;background:#1d4ed8;border:2.5px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.35)"></div>`,
+  className: '', iconSize: [14, 14], iconAnchor: [7, 7],
 });
-L.marker(OFFICE, { icon: officeIcon, zIndexOffset: 1000 })
-  .addTo(map)
-  .bindTooltip(OFFICE_LABEL, { permanent: false, direction: 'top', offset: [0, -10] });
+L.marker(OFFICE, { icon: officeIcon, zIndexOffset: 1000 }).addTo(map).bindTooltip(OFFICE_LABEL, { direction: 'top', offset: [0, -10] });
 
 let activeFilter = 'all';
 let activeId = REGIONS[0]?.id || null;
@@ -852,30 +759,29 @@ REGIONS.forEach((region) => {
     radius: region.radiusMiles * 1609.34,
     color: region.color,
     fillColor: region.color,
-    fillOpacity: .12,
-    weight: 2,
-    opacity: .5,
+    fillOpacity: .10,
+    weight: 1.8,
+    opacity: .45,
     interactive: true,
   });
 
-  const hubIcon = L.divIcon({
-    html: `<div style="
-      width:11px;height:11px;border-radius:50%;
-      background:${region.color};border:2.5px solid #fff;
-      box-shadow:0 1px 5px rgba(0,0,0,.3)
-    "></div>`,
-    className: '',
-    iconSize: [11, 11],
-    iconAnchor: [5.5, 5.5],
+  const primaryIcon = L.divIcon({
+    html: `<div style="width:11px;height:11px;border-radius:50%;background:${region.color};border:2.5px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3)"></div>`,
+    className: '', iconSize: [11, 11], iconAnchor: [5.5, 5.5],
+  });
+  const secondaryIcon = L.divIcon({
+    html: `<div style="width:8px;height:8px;border-radius:50%;background:${region.color};border:2px solid rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.22);opacity:.78"></div>`,
+    className: '', iconSize: [8, 8], iconAnchor: [4, 4],
   });
 
-  const hub = L.marker([region.hub.lat, region.hub.lng], { icon: hubIcon })
-    .bindTooltip(`${region.hub.label} · ${HUB_TYPES[region.hub.type]}`, { direction: 'top', offset: [0, -8] });
+  const markers = region.hubs.map((hubEntry, index) => L.marker([index === 0 ? region.hub.lat : region.hub.lat + ((index * 0.09) - 0.09), index === 0 ? region.hub.lng : region.hub.lng + ((index * 0.12) - 0.12)], {
+    icon: index === 0 ? primaryIcon : secondaryIcon,
+  }).bindTooltip(`${hubEntry.name} · ${HUB_TYPE_META[hubEntry.type]?.label || hubEntry.type}`, { direction: 'top', offset: [0, -8] }));
 
-  const group = L.featureGroup([circle, hub]).addTo(map);
+  const group = L.featureGroup([circle, ...markers]).addTo(map);
   circle.on('click', () => selectRegion(region.id, true));
-  hub.on('click', () => selectRegion(region.id, true));
-  mapLayers[region.id] = { group, circle, hub };
+  markers.forEach((marker) => marker.on('click', () => selectRegion(region.id, true)));
+  mapLayers[region.id] = { group, circle };
 });
 
 function filteredRegions() {
@@ -917,39 +823,34 @@ function renderRegionSwitcher() {
     chip.onclick = () => selectRegion(region.id, true);
     el.appendChild(chip);
   });
-
   const active = el.querySelector('.active');
   if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
 }
 
 function updateMapVisibility() {
   const visibleIds = new Set(filteredRegions().map((region) => region.id));
-  Object.entries(mapLayers).forEach(([id, { group }]) => {
-    if (visibleIds.has(id)) group.addTo(map);
-    else group.remove();
-  });
+  Object.entries(mapLayers).forEach(([id, { group }]) => visibleIds.has(id) ? group.addTo(map) : group.remove());
 }
 
 function renderMeta(region) {
+  const primaryHubType = HUB_TYPE_META[region.hub.type]?.label || region.hub.type;
   const meta = [
     { label: 'Commute lane', value: region.commute.pattern },
-    { label: 'Hub', value: `${region.hub.label} · ${region.stats.hubType}` },
-    { label: 'Door to desk', value: region.commute.doorToDesk, subtle: /placeholder/i.test(region.commute.doorToDesk) },
-    { label: 'Town set', value: `${region.stats.townCount} candidate ${region.stats.townCount === 1 ? 'town' : 'towns'}` },
+    { label: 'Primary hub', value: `${region.hub.label} · ${primaryHubType}` },
+    { label: 'Door to desk', value: region.commute.doorToDesk },
+    { label: 'Coverage', value: `${region.towns.length} towns · ${region.hubs.length} hubs` },
   ];
-
   document.getElementById('detailMeta').innerHTML = meta.map((item) => `
     <div class="meta-card">
       <span class="meta-label">${item.label}</span>
-      <span class="meta-value${item.subtle ? ' subtle' : ''}">${item.value}</span>
+      <span class="meta-value">${item.value}</span>
     </div>
   `).join('');
 }
 
 function renderActions(region) {
   document.getElementById('detailActions').innerHTML = region.links.map((link, index) => `
-    <a class="action-btn ${index === 0 ? 'primary' : 'secondary'}"
-       href="${link.url}" target="_blank" rel="noopener noreferrer">
+    <a class="action-btn ${index === 0 ? 'primary' : 'secondary'}" href="${link.url}" target="_blank" rel="noopener noreferrer">
       <span class="action-icon">${index === 0 ? '🏠' : '🔍'}</span>
       <span class="action-label">${link.label}</span>
       <span class="action-sub">${link.note}</span>
@@ -958,14 +859,23 @@ function renderActions(region) {
 }
 
 function renderFacts(region) {
-  const rows = [
-    ['Hub notes', region.commute.notes],
-    ...region.facts,
-  ];
+  const rows = [['Door-to-desk', `${region.commute.doorToDesk} · ${region.commute.notes}`], ...region.facts];
   document.getElementById('detailFacts').innerHTML = rows.map(([key, val]) => `
     <div class="fact-row">
       <span class="fact-key">${key}</span>
       <span class="fact-val">${val}</span>
+    </div>
+  `).join('');
+}
+
+function renderHubs(region) {
+  document.getElementById('detailHubs').innerHTML = region.hubs.map((hub) => `
+    <div class="hub-card">
+      <div class="hub-top">
+        <span class="hub-name">${hub.name}</span>
+        <span class="hub-tag">${hub.role} · ${HUB_TYPE_META[hub.type]?.label || hub.type}</span>
+      </div>
+      <p class="hub-note">${hub.note}</p>
     </div>
   `).join('');
 }
@@ -977,6 +887,7 @@ function renderTowns(region) {
         <span class="town-name">${town.name}</span>
         <span class="town-tag">${town.tag}</span>
       </div>
+      <span class="town-commute">${town.commute} door-to-desk</span>
       <p class="town-note">${town.note}</p>
     </div>
   `).join('');
@@ -986,30 +897,21 @@ function selectRegion(id, fitMap = false) {
   const region = REGIONS.find((entry) => entry.id === id);
   if (!region) return;
   activeId = id;
-
   renderRegionSwitcher();
-
   Object.entries(mapLayers).forEach(([regionId, { circle }]) => {
-    circle.setStyle(regionId === id
-      ? { fillOpacity: .22, weight: 2.5, opacity: .8 }
-      : { fillOpacity: .10, weight: 1.5, opacity: .4 });
+    circle.setStyle(regionId === id ? { fillOpacity: .18, weight: 2.2, opacity: .75 } : { fillOpacity: .08, weight: 1.4, opacity: .34 });
   });
-
-  if (fitMap) {
-    map.fitBounds(mapLayers[id].group.getBounds(), { padding: [60, 60], maxZoom: 10 });
-  }
-
+  if (fitMap) map.fitBounds(mapLayers[id].group.getBounds(), { padding: [60, 60], maxZoom: 10 });
   const tierEl = document.getElementById('detailTier');
   tierEl.textContent = region.tier;
   tierEl.style.color = region.color;
   document.getElementById('detailName').textContent = region.name;
   document.getElementById('detailSummary').textContent = region.summary;
   renderMeta(region);
-  document.getElementById('detailSignals').innerHTML = region.signals
-    .map((signal) => `<span class="signal ${signal.cls}">${signal.text}</span>`)
-    .join('');
+  document.getElementById('detailSignals').innerHTML = region.signals.map((signal) => `<span class="signal ${signal.cls}">${signal.text}</span>`).join('');
   renderActions(region);
   renderFacts(region);
+  renderHubs(region);
   renderTowns(region);
   document.getElementById('detailWhy').innerHTML = region.why.map((item) => `<li>${item}</li>`).join('');
 }
