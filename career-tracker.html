@@ -6,168 +6,169 @@
   <title>Brad Career Tracker</title>
   <style>
     :root {
-      --bg: #f4f7fb;
-      --panel: rgba(255,255,255,0.9);
-      --panel-strong: #ffffff;
-      --text: #152033;
-      --muted: #5f6f89;
-      --line: #d9e2f0;
-      --accent: #2f6fed;
-      --accent-soft: #e9f0ff;
-      --good: #157347;
-      --good-soft: #e8f7ef;
-      --warn: #8a5a00;
-      --warn-soft: #fff3db;
-      --bad: #a93a32;
-      --bad-soft: #fdeceb;
+      --bg: #f5f7fb;
+      --surface: rgba(255,255,255,0.92);
+      --line: #dde5f0;
+      --text: #172033;
+      --muted: #617089;
+      --accent: #2563eb;
+      --good: #147a47;
+      --good-bg: #eaf8f0;
+      --warn: #946200;
+      --warn-bg: #fff4dc;
+      --bad: #b13b34;
+      --bad-bg: #fdeeed;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      background: linear-gradient(180deg, #f8fafe 0%, #eff4fa 100%);
       color: var(--text);
       line-height: 1.45;
     }
     .wrap {
-      max-width: 1100px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 20px 14px 72px;
+      padding: 18px 14px 64px;
     }
-    .hero, .section, .job {
-      background: var(--panel);
+    .hero, .section {
+      background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: 0 12px 30px rgba(35, 56, 95, 0.08);
-      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(29, 44, 76, 0.08);
+      backdrop-filter: blur(12px);
     }
     .hero {
       padding: 20px;
       margin-bottom: 14px;
     }
-    h1, h2, h3, h4, p { margin: 0; }
-    h1 { font-size: 28px; margin-bottom: 8px; }
-    h2 { font-size: 20px; }
-    h3 { font-size: 19px; }
-    h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .section {
+      padding: 10px 0;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 28px; margin-bottom: 6px; }
+    h2 { font-size: 18px; padding: 0 16px 8px; }
     p { color: var(--muted); }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .meta, .nav, .badges, .actions, .contact-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .meta, .nav, .chips, .links { display: flex; flex-wrap: wrap; gap: 8px; }
     .meta, .nav { margin-top: 12px; }
-    .pill, .nav a, .badge {
+    .pill, .nav a, .chip {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      padding: 7px 11px;
       border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
       border: 1px solid var(--line);
       background: #fff;
       color: var(--muted);
+      font-size: 13px;
     }
     .nav a { color: var(--text); }
-    .section {
-      margin-top: 14px;
-      padding: 16px;
-    }
     .section-head {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .jobs {
-      display: grid;
-      gap: 14px;
-    }
-    .job {
-      padding: 16px;
-      background: var(--panel-strong);
-    }
-    .job-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-    .rank {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .badge.good { background: var(--good-soft); color: var(--good); border-color: #cfe9da; }
-    .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: #f0ddb2; }
-    .badge.bad { background: var(--bad-soft); color: var(--bad); border-color: #f3cbc7; }
-    .summary {
-      margin: 8px 0 12px;
-      color: var(--text);
-    }
-    .grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .cell {
-      padding: 12px;
-      border-radius: 14px;
-      background: #f8fbff;
-      border: 1px solid #e5edf8;
-    }
-    .cell p { margin-top: 4px; font-size: 14px; }
-    .actions { margin-top: 12px; }
-    .action-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
-      border: 1px solid #d9e6ff;
-    }
-    .contacts {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-    }
-    .contact-list a {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #fff;
-      font-size: 13px;
-    }
-    .rules {
-      display: grid;
       gap: 10px;
-      margin-top: 12px;
-    }
-    .rule {
-      padding: 12px;
-      border-radius: 14px;
-      background: #f8fbff;
-      border: 1px solid #e5edf8;
-      color: var(--muted);
-      font-size: 14px;
+      padding: 4px 16px 10px;
     }
     .small { font-size: 13px; color: var(--muted); }
+    .table-head, details {
+      border-top: 1px solid var(--line);
+    }
+    .table-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.5fr) 120px;
+      gap: 12px;
+      padding: 10px 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    details {
+      background: transparent;
+    }
+    summary {
+      list-style: none;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.5fr) 120px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover { background: rgba(37, 99, 235, 0.035); }
+    .company { font-weight: 600; }
+    .role { color: var(--text); }
+    .status {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .status.good { background: var(--good-bg); color: var(--good); }
+    .status.warn { background: var(--warn-bg); color: var(--warn); }
+    .status.bad { background: var(--bad-bg); color: var(--bad); }
+    .detail {
+      padding: 0 16px 16px;
+      color: var(--muted);
+    }
+    .detail p {
+      margin-bottom: 10px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .detail-block {
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+    .detail-block strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    .links {
+      margin-top: 12px;
+    }
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: #eef4ff;
+      border: 1px solid #dbe7ff;
+      font-weight: 600;
+    }
+    .workflow {
+      padding: 0 16px 8px;
+      color: var(--muted);
+    }
+    .workflow ol {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+    .workflow li { margin: 6px 0; }
     @media (max-width: 760px) {
-      .grid { grid-template-columns: 1fr; }
-      .job-top { flex-direction: column; }
       h1 { font-size: 24px; }
+      .table-head { display: none; }
+      summary {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .detail-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -175,15 +176,15 @@
   <div class="wrap">
     <section class="hero">
       <h1>Brad Career Tracker</h1>
-      <p>Remote first, verified only. Every job here should have either a real live application link on the company site, or it gets labeled as contact-only and does not pretend to be a live posting.</p>
+      <p>Compact master list first. Expand a row only when you want the details, apply link, or follow-up people.</p>
       <div class="meta">
         <span class="pill">Updated: 2026-05-10</span>
-        <span class="pill">Default sort: remote first</span>
-        <span class="pill">Standard: verify before sharing</span>
+        <span class="pill">Remote first</span>
+        <span class="pill">Verified before shared</span>
       </div>
       <div class="nav">
-        <a href="#workflow">Verification workflow</a>
-        <a href="#remote">Remote first</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#remote">Verified live</a>
         <a href="#contact-only">Contact only</a>
         <a href="#regional">Regional</a>
       </div>
@@ -192,155 +193,133 @@
     <section class="section" id="workflow">
       <div class="section-head">
         <h2>Verification workflow</h2>
-        <span class="small">the process I should have been using</span>
+        <span class="small">the stricter process</span>
       </div>
-      <div class="rules">
-        <div class="rule"><strong>1.</strong> Search can suggest a lead, but it is never enough on its own.</div>
-        <div class="rule"><strong>2.</strong> I must click through to the company careers site or official ATS page and confirm the role is actually live.</div>
-        <div class="rule"><strong>3.</strong> If I cannot confirm a live posting, I can still keep the company, but only as <strong>contact-only</strong> with recruiter or hiring-team outreach targets.</div>
-        <div class="rule"><strong>4.</strong> Every item on this page needs a tap-ready link, either <strong>Apply</strong> or <strong>LinkedIn follow-up</strong>, ideally both.</div>
-        <div class="rule"><strong>5.</strong> I should stop sending you stale search-result ghosts as if they are real openings.</div>
+      <div class="workflow">
+        <ol>
+          <li>Search can suggest leads, but it never counts as proof.</li>
+          <li>I must confirm the role on the official company site or ATS before calling it live.</li>
+          <li>If I cannot confirm it, it becomes contact-only, not a fake active listing.</li>
+          <li>Each row should include a real apply link, follow-up people, or both.</li>
+        </ol>
       </div>
     </section>
 
     <section class="section" id="remote">
       <div class="section-head">
-        <h2>Remote first, verified live postings</h2>
-        <span class="small">only official links belong here</span>
+        <h2>Verified live postings</h2>
+        <span class="small">official links only</span>
       </div>
-      <div class="jobs">
-        <article class="job">
-          <div class="job-top">
-            <div>
-              <div class="rank">Verified live role</div>
-              <h3>Palantir, Product Designer, US Government</h3>
-            </div>
-            <div class="badges">
-              <span class="badge good">Official job link verified</span>
-              <span class="badge warn">Onsite / travel likely</span>
-            </div>
-          </div>
-          <p class="summary">Real operator-tooling and mission-systems fit. Bigger-company lane, but one of the more believable ones for Brad if the pitch is systems, operators, and high-consequence workflows.</p>
-          <div class="grid">
-            <div class="cell">
-              <h4>Why it fits</h4>
-              <p>Operator-facing tools, messy real-world workflows, technical product judgment, and high-consequence environments.</p>
-            </div>
-            <div class="cell">
-              <h4>Reality check</h4>
-              <p>Not remote-friendly in the casual sense. Likely intense, likely government-heavy, but it is a real live target.</p>
-            </div>
-          </div>
-          <div class="actions">
-            <a class="action-link" href="https://jobs.lever.co/palantir/dc02f308-bbcc-4163-b4fb-3f68efb2ce24">Apply on official posting</a>
-          </div>
-          <div class="contacts">
-            <h4>Follow-up people</h4>
-            <div class="contact-list">
-              <a href="https://www.linkedin.com/in/emily-su-69215775/">Emily Su</a>
-              <a href="https://www.linkedin.com/in/delorali/">Delora Li</a>
-              <a href="https://www.linkedin.com/in/blake-birns/">Blake Birns</a>
-            </div>
-          </div>
-        </article>
+      <div class="table-head">
+        <div>Company</div>
+        <div>Position</div>
+        <div>Status</div>
       </div>
+
+      <details open>
+        <summary>
+          <div class="company">Palantir</div>
+          <div class="role">Product Designer, US Government</div>
+          <div class="status good">Verified live</div>
+        </summary>
+        <div class="detail">
+          <p>One of the strongest bigger-company fits for operator tooling, mission workflows, and high-consequence product systems.</p>
+          <div class="detail-grid">
+            <div class="detail-block">
+              <strong>Why it fits</strong>
+              Real operator-facing tools, technical product work, messy field workflows, and strong systems judgment.
+            </div>
+            <div class="detail-block">
+              <strong>Reality check</strong>
+              Likely travel-heavy, government-heavy, and not a chill remote role, but it is a real current target.
+            </div>
+          </div>
+          <div class="links">
+            <a href="https://jobs.lever.co/palantir/dc02f308-bbcc-4163-b4fb-3f68efb2ce24">Apply</a>
+            <a href="https://www.linkedin.com/in/emily-su-69215775/">Emily Su</a>
+            <a href="https://www.linkedin.com/in/delorali/">Delora Li</a>
+            <a href="https://www.linkedin.com/in/blake-birns/">Blake Birns</a>
+          </div>
+        </div>
+      </details>
     </section>
 
     <section class="section" id="contact-only">
       <div class="section-head">
-        <h2>Contact-only, not yet verified as live postings</h2>
-        <span class="small">worth pursuing, but not pretending there is an active apply link yet</span>
+        <h2>Contact-only targets</h2>
+        <span class="small">good targets, but not yet confirmed as live postings</span>
       </div>
-      <div class="jobs">
-        <article class="job">
-          <div class="job-top">
-            <div>
-              <div class="rank">Contact-only lead</div>
-              <h3>Skydio</h3>
-            </div>
-            <div class="badges">
-              <span class="badge bad">No current official role confirmed yet</span>
-              <span class="badge good">Still strategically strong</span>
-            </div>
-          </div>
-          <p class="summary">This stays on the board because the company still fits hard, not because an old search-result listing should be trusted. Until I confirm a live posting on Skydio’s own careers flow, it belongs here.</p>
-          <div class="grid">
-            <div class="cell">
-              <h4>Why it stays interesting</h4>
-              <p>Autonomy, drones, operator UX, hardware plus software, real mission/public safety context.</p>
-            </div>
-            <div class="cell">
-              <h4>What changes now</h4>
-              <p>No more treating an old February Ashby hit as a current opening unless the official job page still serves it.</p>
-            </div>
-          </div>
-          <div class="contacts">
-            <h4>Follow-up people</h4>
-            <div class="contact-list">
-              <a href="https://www.linkedin.com/in/txnor/">Tiff Nguyen</a>
-              <a href="https://www.linkedin.com/in/harrisondzhu/">Harrison Zhu</a>
-              <a href="https://www.linkedin.com/in/asavello/">Alex Savello</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="job">
-          <div class="job-top">
-            <div>
-              <div class="rank">Contact-only lead</div>
-              <h3>Anduril</h3>
-            </div>
-            <div class="badges">
-              <span class="badge bad">No clean verified design posting captured yet</span>
-              <span class="badge good">High-priority target account</span>
-            </div>
-          </div>
-          <p class="summary">Anduril is still one of the best thematic fits. But if I don’t have a current official posting link in hand, this should be handled as outreach and monitoring, not as a fake-live listing.</p>
-        </article>
-
-        <article class="job">
-          <div class="job-top">
-            <div>
-              <div class="rank">Contact-only lead</div>
-              <h3>Saronic</h3>
-            </div>
-            <div class="badges">
-              <span class="badge bad">Role needs official-site reconfirmation</span>
-              <span class="badge good">Great domain fit</span>
-            </div>
-          </div>
-          <p class="summary">Autonomous maritime systems and operator tooling still make this a strong target. For now it should be approached as a bend-the-role-upward conversation unless I reconfirm a live posting directly.</p>
-          <div class="contacts">
-            <h4>Follow-up people</h4>
-            <div class="contact-list">
-              <a href="https://www.linkedin.com/in/kathy-allen-b49b7b101/">Kathy Allen</a>
-              <a href="https://www.linkedin.com/in/stephen-mcquinn/">Stephen McQuinn</a>
-              <a href="https://www.linkedin.com/in/charles-floyd-jones-0a388751/">Charles Floyd-Jones</a>
-            </div>
-          </div>
-        </article>
+      <div class="table-head">
+        <div>Company</div>
+        <div>Position / lane</div>
+        <div>Status</div>
       </div>
+
+      <details>
+        <summary>
+          <div class="company">Skydio</div>
+          <div class="role">Senior product / operator UX lane</div>
+          <div class="status bad">Needs reconfirmation</div>
+        </summary>
+        <div class="detail">
+          <p>The company still fits extremely well. The problem was stale evidence, not bad fit. Until I verify a current official posting, this stays here.</p>
+          <div class="links">
+            <a href="https://www.linkedin.com/in/txnor/">Tiff Nguyen</a>
+            <a href="https://www.linkedin.com/in/harrisondzhu/">Harrison Zhu</a>
+            <a href="https://www.linkedin.com/in/asavello/">Alex Savello</a>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="company">Anduril</div>
+          <div class="role">Product design / mission systems lane</div>
+          <div class="status warn">High-priority watchlist</div>
+        </summary>
+        <div class="detail">
+          <p>Still one of the best thematic fits. Right now it belongs in outreach and monitoring unless I have a current official role link in hand.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="company">Saronic</div>
+          <div class="role">Product designer / senior design lead lane</div>
+          <div class="status warn">Role needs reconfirmation</div>
+        </summary>
+        <div class="detail">
+          <p>Very strong domain fit, especially for maritime autonomy and operator workflows. Best used as a proactive outreach target unless the official role is revalidated.</p>
+          <div class="links">
+            <a href="https://www.linkedin.com/in/kathy-allen-b49b7b101/">Kathy Allen</a>
+            <a href="https://www.linkedin.com/in/stephen-mcquinn/">Stephen McQuinn</a>
+            <a href="https://www.linkedin.com/in/charles-floyd-jones-0a388751/">Charles Floyd-Jones</a>
+          </div>
+        </div>
+      </details>
     </section>
 
     <section class="section" id="regional">
       <div class="section-head">
-        <h2>Regional / optional non-remote lanes</h2>
-        <span class="small">kept separate so remote-first stays clean</span>
+        <h2>Regional / optional non-remote</h2>
+        <span class="small">kept separate from the core remote-first list</span>
       </div>
-      <div class="jobs">
-        <article class="job">
-          <div class="job-top">
-            <div>
-              <div class="rank">Regional company target</div>
-              <h3>Universal Logic, Nashville</h3>
-            </div>
-            <div class="badges">
-              <span class="badge warn">Need tighter role verification</span>
-            </div>
-          </div>
-          <p class="summary">Probably the strongest local-ish robotics signal, but this lane should also follow the same rule: official role link or explicit contact-only status.</p>
-        </article>
+      <div class="table-head">
+        <div>Company</div>
+        <div>Position / lane</div>
+        <div>Status</div>
       </div>
+
+      <details>
+        <summary>
+          <div class="company">Universal Logic</div>
+          <div class="role">Robotics / systems / automation lane</div>
+          <div class="status warn">Needs tighter verification</div>
+        </summary>
+        <div class="detail">
+          <p>Strongest Nashville-ish robotics signal so far, but it still needs the same due diligence standard as everything else.</p>
+        </div>
+      </details>
     </section>
   </div>
 </body>
