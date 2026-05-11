@@ -28,9 +28,9 @@
       line-height: 1.45;
     }
     .wrap {
-      max-width: 980px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 18px 14px 64px;
+      padding: 10px 10px 48px;
     }
     .hero, .section {
       background: var(--surface);
@@ -40,8 +40,8 @@
       backdrop-filter: blur(12px);
     }
     .hero {
-      padding: 20px;
-      margin-bottom: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
     }
     .section {
       padding: 10px 0;
@@ -49,17 +49,17 @@
       overflow: hidden;
     }
     h1, h2, h3, p { margin: 0; }
-    h1 { font-size: 28px; margin-bottom: 6px; }
-    h2 { font-size: 18px; padding: 0 16px 8px; }
+    h1 { font-size: 24px; margin-bottom: 4px; }
+    h2 { font-size: 17px; padding: 0 12px 6px; }
     p { color: var(--muted); }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .meta, .nav, .chips, .links { display: flex; flex-wrap: wrap; gap: 8px; }
-    .meta, .nav { margin-top: 12px; }
+    .meta, .nav { margin-top: 8px; }
     .pill, .nav a, .chip {
       display: inline-flex;
       align-items: center;
-      padding: 7px 11px;
+      padding: 5px 9px;
       border-radius: 999px;
       border: 1px solid var(--line);
       background: #fff;
@@ -72,22 +72,26 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 10px;
-      padding: 4px 16px 10px;
+      padding: 2px 12px 8px;
     }
     .small { font-size: 13px; color: var(--muted); }
 
-    .table-wrap { overflow-x: auto; border-top: 1px solid var(--line); }
-    .jobs-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-    .jobs-table th, .jobs-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .table-note { color: var(--muted); font-size: 13px; padding: 0 12px 8px; }
+    .table-wrap { overflow-x: auto; border-top: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+    .jobs-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+    .jobs-table th, .jobs-table td { padding: 7px 9px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
     .jobs-table th { position: sticky; top: 0; background: #f8fbff; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; z-index: 1; }
     .jobs-table tr:hover { background: rgba(37, 99, 235, 0.045); }
     .jobs-table .rank { width: 34px; color: var(--muted); font-variant-numeric: tabular-nums; }
     .jobs-table th:nth-child(1), .jobs-table td:nth-child(1) { width: 42px; }
-    .jobs-table th:nth-child(2), .jobs-table td:nth-child(2) { width: 130px; }
-    .jobs-table th:nth-child(4), .jobs-table td:nth-child(4) { width: 118px; }
-    .jobs-table th:nth-child(5), .jobs-table td:nth-child(5) { width: 72px; }
-    .jobs-table th:nth-child(7), .jobs-table td:nth-child(7) { width: 64px; }
+    .jobs-table th:nth-child(2), .jobs-table td:nth-child(2) { width: 132px; }
+    .jobs-table th:nth-child(3), .jobs-table td:nth-child(3) { width: 260px; }
+    .jobs-table th:nth-child(4), .jobs-table td:nth-child(4) { width: 124px; }
+    .jobs-table th:nth-child(5), .jobs-table td:nth-child(5) { width: 74px; }
+    .jobs-table th:nth-child(6), .jobs-table td:nth-child(6) { width: 330px; }
+    .jobs-table th:nth-child(7), .jobs-table td:nth-child(7) { width: 70px; }
     .jobs-table .note { color: var(--muted); line-height: 1.25; }
+    .jobs-table .status { white-space: nowrap; }
     .send-tag { color: var(--muted); font-size: 12px; }
     .compact-workflow { padding-top: 0; padding-bottom: 10px; }
     .compact-workflow ol { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding-left: 32px; }
@@ -186,38 +190,50 @@
       }
       .detail-grid { grid-template-columns: 1fr; }
     }
+
+    @media (max-width: 720px) {
+      .wrap { padding: 6px 6px 36px; }
+      .hero { padding: 10px; border-radius: 12px; margin-bottom: 8px; }
+      h1 { font-size: 20px; }
+      .hero p { font-size: 13px; line-height: 1.25; }
+      .meta { gap: 5px; }
+      .pill, .nav a, .chip { font-size: 11px; padding: 4px 7px; }
+      .section { border-radius: 12px; margin-top: 8px; padding: 8px 0; }
+      .section-head { padding: 0 10px 6px; }
+      .section-head h2 { padding: 0; font-size: 16px; }
+      .small { font-size: 11px; }
+      .table-note { padding: 0 10px 6px; font-size: 12px; }
+      .jobs-table { min-width: 760px; font-size: 12px; }
+      .jobs-table th, .jobs-table td { padding: 6px 7px; }
+      .jobs-table th:nth-child(1), .jobs-table td:nth-child(1) { width: 34px; }
+      .jobs-table th:nth-child(2), .jobs-table td:nth-child(2) { width: 112px; }
+      .jobs-table th:nth-child(3), .jobs-table td:nth-child(3) { width: 220px; }
+      .jobs-table th:nth-child(4), .jobs-table td:nth-child(4) { width: 112px; }
+      .jobs-table th:nth-child(5), .jobs-table td:nth-child(5) { width: 58px; }
+      .jobs-table th:nth-child(6), .jobs-table td:nth-child(6) { width: 180px; }
+      .jobs-table th:nth-child(7), .jobs-table td:nth-child(7) { width: 44px; }
+      .jobs-table a { font-size: 0; }
+      .jobs-table a::after { content: "↗"; font-size: 14px; }
+      .status { font-size: 10px; padding: 4px 6px; }
+      .send-tag { font-size: 11px; }
+      .workflow, .detail { padding: 10px; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
       <h1>Brad Career Tracker</h1>
-      <p>Compact master list first. Expand a row only when you want the details, apply link, or follow-up people.</p>
+      <p>Master openings table. New finds get added here first; repeats stay suppressed.</p>
       <div class="meta">
-        <span class="pill">Updated: 2026-05-11 10:41 CT</span>
+        <span class="pill">Updated: 2026-05-11 10:51 CT</span>
         <span class="pill">Remote first</span>
         <span class="pill">Verified before shared</span>
       </div>
-      <div class="nav">
-        <a href="#workflow">Workflow</a>
-        <a href="#remote">Master list</a>
-        <a href="#contact-only">Contact only</a>
+      <div class="nav compact-nav">
+        <a href="#remote">Openings</a>
+        <a href="#contact-only">Contacts</a>
         <a href="#regional">Regional</a>
-      </div>
-    </section>
-
-    <section class="section" id="workflow">
-      <div class="section-head">
-        <h2>Verification workflow</h2>
-        <span class="small">the stricter process</span>
-      </div>
-      <div class="workflow">
-        <ol>
-          <li>Search can suggest leads, but it never counts as proof.</li>
-          <li>I must confirm the role on the official company site or ATS before calling it live.</li>
-          <li>If I cannot confirm it, it becomes contact-only, not a fake active listing.</li>
-          <li>Each row should include a real apply link, follow-up people, or both.</li>
-        </ol>
       </div>
     </section>
 
@@ -226,13 +242,7 @@
         <h2>Master job/opening list</h2>
         <span class="small">30 rows · dense table · send-new-only</span>
       </div>
-      <div class="workflow compact-workflow">
-        <ol>
-          <li>Full backlog is visible in one dense table.</li>
-          <li>Send only NEW openings or material status changes.</li>
-          <li>Scouts must update this table + sent ledger before pushing anything.</li>
-        </ol>
-      </div>
+      <div class="table-note">Dense master list. Scouts send only new openings or material status changes.</div>
       <div class="table-wrap">
         <table class="jobs-table">
           <thead>
