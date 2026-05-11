@@ -95,6 +95,23 @@
     .send-tag { color: var(--muted); font-size: 12px; }
     .compact-workflow { padding-top: 0; padding-bottom: 10px; }
     .compact-workflow ol { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding-left: 32px; }
+
+    .company-groups { border-top: 1px solid var(--line); }
+    .company-group { border-top: 0; border-bottom: 1px solid var(--line); }
+    .company-group summary { min-height: 44px; display: grid; grid-template-columns: 16px 1.1fr auto 1.4fr; gap: 8px; align-items: center; padding: 9px 12px; cursor: pointer; list-style: none; }
+    .company-group summary::-webkit-details-marker { display: none; }
+    .company-group summary::before { content: "▸"; color: var(--muted); width: 16px; }
+    .company-group[open] summary::before { content: "▾"; }
+    .company-name { font-weight: 700; }
+    .company-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .company-summary { color: var(--muted); font-size: 12px; text-align: right; }
+    .company-table-wrap { border-top: 1px solid var(--line); }
+    .company-jobs-table { min-width: 820px; }
+    .company-jobs-table th:nth-child(1), .company-jobs-table td:nth-child(1) { width: 260px; }
+    .company-jobs-table th:nth-child(2), .company-jobs-table td:nth-child(2) { width: 124px; }
+    .company-jobs-table th:nth-child(3), .company-jobs-table td:nth-child(3) { width: 74px; }
+    .company-jobs-table th:nth-child(4), .company-jobs-table td:nth-child(4) { width: 320px; }
+    .company-jobs-table th:nth-child(5), .company-jobs-table td:nth-child(5) { width: 70px; }
     .table-head, details {
       border-top: 1px solid var(--line);
     }
@@ -216,6 +233,16 @@
       .jobs-table a::after { content: "↗"; font-size: 14px; }
       .status { font-size: 10px; padding: 4px 6px; }
       .send-tag { font-size: 11px; }
+
+      .company-group summary { grid-template-columns: 14px 1fr auto; gap: 4px 8px; padding: 8px 10px; }
+      .company-summary { grid-column: 2 / -1; text-align: left; font-size: 11px; }
+      .company-count { font-size: 11px; }
+      .company-jobs-table { min-width: 700px; }
+      .company-jobs-table th:nth-child(1), .company-jobs-table td:nth-child(1) { width: 210px; }
+      .company-jobs-table th:nth-child(2), .company-jobs-table td:nth-child(2) { width: 108px; }
+      .company-jobs-table th:nth-child(3), .company-jobs-table td:nth-child(3) { width: 56px; }
+      .company-jobs-table th:nth-child(4), .company-jobs-table td:nth-child(4) { width: 230px; }
+      .company-jobs-table th:nth-child(5), .company-jobs-table td:nth-child(5) { width: 44px; }
       .workflow, .detail { padding: 10px; }
     }
   </style>
@@ -226,7 +253,7 @@
       <h1>Brad Career Tracker</h1>
       <p>Master openings table. New finds get added here first; repeats stay suppressed.</p>
       <div class="meta">
-        <span class="pill">Updated: 2026-05-11 10:51 CT</span>
+        <span class="pill">Updated: 2026-05-11 10:57 CT</span>
         <span class="pill">Remote first</span>
         <span class="pill">Verified before shared</span>
       </div>
@@ -240,295 +267,572 @@
     <section class="section" id="remote">
       <div class="section-head">
         <h2>Master job/opening list</h2>
-        <span class="small">30 rows · dense table · send-new-only</span>
+        <span class="small">16 companies · 30 openings · grouped</span>
       </div>
-      <div class="table-note">Dense master list. Scouts send only new openings or material status changes.</div>
-      <div class="table-wrap">
-        <table class="jobs-table">
-          <thead>
+      <div class="table-note">Grouped by company. Expand a company to see roles. Scouts send only new openings or material status changes.</div>
+      <div class="company-groups">
+        <details class="company-group" open>
+          <summary>
+            <span class="company-name">Palantir</span>
+            <span class="company-count">5 openings</span>
+            <span class="company-summary">5 verified</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
             <tr>
-              <th>#</th>
-              <th>Company</th>
-              <th>Position / lane</th>
-              <th>Status</th>
-              <th>Send</th>
-              <th>Fit / note</th>
-              <th>Link</th>
+              <td class="role">Product Concept Designer, Defense</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">High-fit operator/defense concept work. Do not resend unless materially changed.</td>
+              <td><a href="https://jobs.lever.co/palantir">Source</a></td>
             </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td class="rank">1</td>
-            <td class="company">Palantir</td>
-            <td class="role">Product Concept Designer, Defense</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">High-fit operator/defense concept work. Do not resend unless materially changed.</td>
-            <td><a href="https://jobs.lever.co/palantir">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">2</td>
-            <td class="company">Palantir</td>
-            <td class="role">Deployment Strategist</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Strategic operator workflow role; adjacent fit if design title is less important.</td>
-            <td><a href="https://jobs.lever.co/palantir">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">3</td>
-            <td class="company">Palantir</td>
-            <td class="role">Deployment Strategist, Defense Industrial Base</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Defense industrial/operator systems lane.</td>
-            <td><a href="https://jobs.lever.co/palantir">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">4</td>
-            <td class="company">Palantir</td>
-            <td class="role">Product Designer, Developer Experience</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Technical product design; less hardware, still strong systems fit.</td>
-            <td><a href="https://jobs.lever.co/palantir">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">5</td>
-            <td class="company">Palantir</td>
-            <td class="role">Product Designer, US Government</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Strongest confirmed Palantir design fit.</td>
-            <td><a href="https://jobs.lever.co/palantir/dc02f308-bbcc-4163-b4fb-3f68efb2ce24">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">6</td>
-            <td class="company">Anduril</td>
-            <td class="role">Product Designer, Forge</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Excellent mission/operator-systems fit.</td>
-            <td><a href="https://www.anduril.com/careers/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">7</td>
-            <td class="company">Anduril</td>
-            <td class="role">Senior Product Designer, Tactical Reconnaissance & Strike</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">High fit, but must revalidate official posting before pushing again.</td>
-            <td><a href="https://www.anduril.com/careers/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">8</td>
-            <td class="company">Anduril</td>
-            <td class="role">Product Designer, Platform</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">Relevant lane; official posting must be checked.</td>
-            <td><a href="https://www.anduril.com/careers/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">9</td>
-            <td class="company">Lockheed Martin</td>
-            <td class="role">Senior UX Designer, LAIC / STAR.OS</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Skunk Works-adjacent AI/mission systems lane.</td>
-            <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">10</td>
-            <td class="company">Lockheed Martin</td>
-            <td class="role">Human Factors User Experience Designer</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Human factors + UX is relevant if tied to real systems.</td>
-            <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">11</td>
-            <td class="company">Lockheed Martin</td>
-            <td class="role">Human Factors Design Engineer</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">More engineering/human-factors; track as secondary.</td>
-            <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">12</td>
-            <td class="company">Google</td>
-            <td class="role">Staff UX Designer, Google Hardware</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Premium fallback; hardware org is the relevant reason.</td>
-            <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">13</td>
-            <td class="company">Google</td>
-            <td class="role">Staff UX Designer, Spatial UX, Google Hardware</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Best Google fit because spatial/hardware maps to Reality Labs.</td>
-            <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">14</td>
-            <td class="company">Google</td>
-            <td class="role">Staff UX Engineer, Spatial Experiences, Google Hardware</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Prototype/UX engineering angle; maybe fit depending hands-on coding expectations.</td>
-            <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">15</td>
-            <td class="company">Apple</td>
-            <td class="role">Prototyping Designer</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Hardware/spatial/prototyping lane; strong craft fit.</td>
-            <td><a href="https://jobs.apple.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">16</td>
-            <td class="company">Apple</td>
-            <td class="role">Prototyping Designer, second listing</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Separate Apple req previously surfaced; keep distinct until exact IDs are logged.</td>
-            <td><a href="https://jobs.apple.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">17</td>
-            <td class="company">Apple</td>
-            <td class="role">Design Tools Engineer, Human Interface Design</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Tooling + HID; relevant if technical expectations are reasonable.</td>
-            <td><a href="https://jobs.apple.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">18</td>
-            <td class="company">Apple</td>
-            <td class="role">Human Interface Designer</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Classic Apple design lane; premium fallback.</td>
-            <td><a href="https://jobs.apple.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">19</td>
-            <td class="company">Apple</td>
-            <td class="role">Hardware Design & Prototyping Engineer</td>
-            <td><span class="status good">Verified live</span></td>
-            <td><span class="send-tag">Sent</span></td>
-            <td class="note">Could be too engineering-heavy, but tracks Brad’s hardware curiosity.</td>
-            <td><a href="https://jobs.apple.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">20</td>
-            <td class="company">Skydio</td>
-            <td class="role">Senior product / operator UX lane</td>
-            <td><span class="status bad">Contact only</span></td>
-            <td><span class="send-tag">Watch</span></td>
-            <td class="note">Company fit remains excellent; no confirmed live design posting in hand.</td>
-            <td><a href="https://www.skydio.com/careers">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">21</td>
-            <td class="company">Shield AI</td>
-            <td class="role">Mission software / Hivemind / simulation design lane</td>
-            <td><span class="status bad">Contact only</span></td>
-            <td><span class="send-tag">Watch</span></td>
-            <td class="note">Excellent autonomy/operator tooling target.</td>
-            <td><a href="https://shield.ai/careers/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">22</td>
-            <td class="company">Saronic</td>
-            <td class="role">Product designer / senior design lead lane</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">Maritime autonomy and C2 workflows are highly aligned.</td>
-            <td><a href="https://saronic.com/careers">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">23</td>
-            <td class="company">Swarm Aero</td>
-            <td class="role">Product Designer</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">Human-centered swarm UI language is very aligned.</td>
-            <td><a href="https://swarm.aero/careers">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">24</td>
-            <td class="company">Nominal</td>
-            <td class="role">Product Designer</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">Defense/industrial data/product lane; confirm exact posting.</td>
-            <td><a href="https://www.nominal.io/careers">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">25</td>
-            <td class="company">Picogrid</td>
-            <td class="role">Product Designer</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">Defense command/control systems target; confirm current role.</td>
-            <td><a href="https://www.picogrid.com/careers">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">26</td>
-            <td class="company">Burro</td>
-            <td class="role">Product Designer</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Hold</span></td>
-            <td class="note">Field robotics/agriculture autonomy lane.</td>
-            <td><a href="https://burro.ai/careers/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">27</td>
-            <td class="company">Universal Logic</td>
-            <td class="role">Application Engineer / robotics systems lane</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Regional</span></td>
-            <td class="note">Robotics systems target; likely not classic design role.</td>
-            <td><a href="https://www.universallogic.com/careers/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">28</td>
-            <td class="company">BlueBay Automation</td>
-            <td class="role">Automation systems / advisory outreach lane</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Regional</span></td>
-            <td class="note">Regional automation/industrial target; likely outreach/advisory.</td>
-            <td><a href="https://www.bluebayautomation.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">29</td>
-            <td class="company">One-Off Robotics</td>
-            <td class="role">Advanced manufacturing / robotics product lane</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Regional</span></td>
-            <td class="note">Robotics/manufacturing lane; role needs validation.</td>
-            <td><a href="https://www.oneoffrobotics.com/">Source</a></td>
-          </tr>
-          <tr>
-            <td class="rank">30</td>
-            <td class="company">RTT</td>
-            <td class="role">Robotics startup / welding cobot outreach lane</td>
-            <td><span class="status warn">Needs re-check</span></td>
-            <td><span class="send-tag">Regional</span></td>
-            <td class="note">Regional robotics/welding automation target; role needs validation.</td>
-            <td><a href="https://rttus.com/">Source</a></td>
-          </tr>
-          </tbody>
-        </table>
+            <tr>
+              <td class="role">Deployment Strategist</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Strategic operator workflow role; adjacent fit if design title is less important.</td>
+              <td><a href="https://jobs.lever.co/palantir">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Deployment Strategist, Defense Industrial Base</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Defense industrial/operator systems lane.</td>
+              <td><a href="https://jobs.lever.co/palantir">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Product Designer, Developer Experience</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Technical product design; less hardware, still strong systems fit.</td>
+              <td><a href="https://jobs.lever.co/palantir">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Product Designer, US Government</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Strongest confirmed Palantir design fit.</td>
+              <td><a href="https://jobs.lever.co/palantir/dc02f308-bbcc-4163-b4fb-3f68efb2ce24">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group" open>
+          <summary>
+            <span class="company-name">Anduril</span>
+            <span class="company-count">3 openings</span>
+            <span class="company-summary">1 verified · 2 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Product Designer, Forge</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Excellent mission/operator-systems fit.</td>
+              <td><a href="https://www.anduril.com/careers/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Senior Product Designer, Tactical Reconnaissance & Strike</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">High fit, but must revalidate official posting before pushing again.</td>
+              <td><a href="https://www.anduril.com/careers/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Product Designer, Platform</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">Relevant lane; official posting must be checked.</td>
+              <td><a href="https://www.anduril.com/careers/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group" open>
+          <summary>
+            <span class="company-name">Lockheed Martin</span>
+            <span class="company-count">3 openings</span>
+            <span class="company-summary">3 verified</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Senior UX Designer, LAIC / STAR.OS</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Skunk Works-adjacent AI/mission systems lane.</td>
+              <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Human Factors User Experience Designer</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Human factors + UX is relevant if tied to real systems.</td>
+              <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Human Factors Design Engineer</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">More engineering/human-factors; track as secondary.</td>
+              <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group" open>
+          <summary>
+            <span class="company-name">Google</span>
+            <span class="company-count">3 openings</span>
+            <span class="company-summary">3 verified</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Staff UX Designer, Google Hardware</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Premium fallback; hardware org is the relevant reason.</td>
+              <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Staff UX Designer, Spatial UX, Google Hardware</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Best Google fit because spatial/hardware maps to Reality Labs.</td>
+              <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Staff UX Engineer, Spatial Experiences, Google Hardware</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Prototype/UX engineering angle; maybe fit depending hands-on coding expectations.</td>
+              <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Apple</span>
+            <span class="company-count">5 openings</span>
+            <span class="company-summary">5 verified</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Prototyping Designer</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Hardware/spatial/prototyping lane; strong craft fit.</td>
+              <td><a href="https://jobs.apple.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Prototyping Designer, second listing</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Separate Apple req previously surfaced; keep distinct until exact IDs are logged.</td>
+              <td><a href="https://jobs.apple.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Design Tools Engineer, Human Interface Design</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Tooling + HID; relevant if technical expectations are reasonable.</td>
+              <td><a href="https://jobs.apple.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Human Interface Designer</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Classic Apple design lane; premium fallback.</td>
+              <td><a href="https://jobs.apple.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Hardware Design & Prototyping Engineer</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td class="note">Could be too engineering-heavy, but tracks Brad’s hardware curiosity.</td>
+              <td><a href="https://jobs.apple.com/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Skydio</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 contact-only</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Senior product / operator UX lane</td>
+              <td><span class="status bad">Contact only</span></td>
+              <td><span class="send-tag">Watch</span></td>
+              <td class="note">Company fit remains excellent; no confirmed live design posting in hand.</td>
+              <td><a href="https://www.skydio.com/careers">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Shield AI</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 contact-only</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Mission software / Hivemind / simulation design lane</td>
+              <td><span class="status bad">Contact only</span></td>
+              <td><span class="send-tag">Watch</span></td>
+              <td class="note">Excellent autonomy/operator tooling target.</td>
+              <td><a href="https://shield.ai/careers/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Saronic</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Product designer / senior design lead lane</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">Maritime autonomy and C2 workflows are highly aligned.</td>
+              <td><a href="https://saronic.com/careers">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Swarm Aero</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Product Designer</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">Human-centered swarm UI language is very aligned.</td>
+              <td><a href="https://swarm.aero/careers">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Nominal</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Product Designer</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">Defense/industrial data/product lane; confirm exact posting.</td>
+              <td><a href="https://www.nominal.io/careers">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Picogrid</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Product Designer</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">Defense command/control systems target; confirm current role.</td>
+              <td><a href="https://www.picogrid.com/careers">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Burro</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Product Designer</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Hold</span></td>
+              <td class="note">Field robotics/agriculture autonomy lane.</td>
+              <td><a href="https://burro.ai/careers/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">Universal Logic</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Application Engineer / robotics systems lane</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Regional</span></td>
+              <td class="note">Robotics systems target; likely not classic design role.</td>
+              <td><a href="https://www.universallogic.com/careers/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">BlueBay Automation</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Automation systems / advisory outreach lane</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Regional</span></td>
+              <td class="note">Regional automation/industrial target; likely outreach/advisory.</td>
+              <td><a href="https://www.bluebayautomation.com/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">One-Off Robotics</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Advanced manufacturing / robotics product lane</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Regional</span></td>
+              <td class="note">Robotics/manufacturing lane; role needs validation.</td>
+              <td><a href="https://www.oneoffrobotics.com/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group">
+          <summary>
+            <span class="company-name">RTT</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 re-check</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Fit / note</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Robotics startup / welding cobot outreach lane</td>
+              <td><span class="status warn">Needs re-check</span></td>
+              <td><span class="send-tag">Regional</span></td>
+              <td class="note">Regional robotics/welding automation target; role needs validation.</td>
+              <td><a href="https://rttus.com/">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
       </div>
     </section>
 
