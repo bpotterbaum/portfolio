@@ -106,12 +106,18 @@
     .company-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
     .company-summary { color: var(--muted); font-size: 12px; text-align: right; }
     .company-table-wrap { border-top: 1px solid var(--line); }
-    .company-jobs-table { min-width: 820px; }
-    .company-jobs-table th:nth-child(1), .company-jobs-table td:nth-child(1) { width: 260px; }
-    .company-jobs-table th:nth-child(2), .company-jobs-table td:nth-child(2) { width: 124px; }
-    .company-jobs-table th:nth-child(3), .company-jobs-table td:nth-child(3) { width: 74px; }
-    .company-jobs-table th:nth-child(4), .company-jobs-table td:nth-child(4) { width: 320px; }
-    .company-jobs-table th:nth-child(5), .company-jobs-table td:nth-child(5) { width: 70px; }
+    .company-jobs-table { min-width: 860px; }
+    .company-jobs-table th:nth-child(1), .company-jobs-table td:nth-child(1) { width: 250px; }
+    .company-jobs-table th:nth-child(2), .company-jobs-table td:nth-child(2) { width: 150px; }
+    .company-jobs-table th:nth-child(3), .company-jobs-table td:nth-child(3) { width: 110px; }
+    .company-jobs-table th:nth-child(4), .company-jobs-table td:nth-child(4) { width: 110px; }
+    .company-jobs-table th:nth-child(5), .company-jobs-table td:nth-child(5) { width: 60px; }
+    .company-jobs-table th:nth-child(6), .company-jobs-table td:nth-child(6) { width: 56px; }
+    .loc { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .loc-remote { color: var(--good); }
+    .loc-onsite { color: var(--text); }
+    .sal { font-size: 12px; font-variant-numeric: tabular-nums; }
+    .sal-listed { color: var(--text); font-weight: 600; }
     .table-head, details {
       border-top: 1px solid var(--line);
     }
@@ -237,12 +243,13 @@
       .company-group summary { grid-template-columns: 14px 1fr auto; gap: 4px 8px; padding: 8px 10px; }
       .company-summary { grid-column: 2 / -1; text-align: left; font-size: 11px; }
       .company-count { font-size: 11px; }
-      .company-jobs-table { min-width: 700px; }
-      .company-jobs-table th:nth-child(1), .company-jobs-table td:nth-child(1) { width: 210px; }
-      .company-jobs-table th:nth-child(2), .company-jobs-table td:nth-child(2) { width: 108px; }
-      .company-jobs-table th:nth-child(3), .company-jobs-table td:nth-child(3) { width: 56px; }
-      .company-jobs-table th:nth-child(4), .company-jobs-table td:nth-child(4) { width: 230px; }
-      .company-jobs-table th:nth-child(5), .company-jobs-table td:nth-child(5) { width: 44px; }
+      .company-jobs-table { min-width: 720px; }
+      .company-jobs-table th:nth-child(1), .company-jobs-table td:nth-child(1) { width: 200px; }
+      .company-jobs-table th:nth-child(2), .company-jobs-table td:nth-child(2) { width: 120px; }
+      .company-jobs-table th:nth-child(3), .company-jobs-table td:nth-child(3) { width: 90px; }
+      .company-jobs-table th:nth-child(4), .company-jobs-table td:nth-child(4) { width: 100px; }
+      .company-jobs-table th:nth-child(5), .company-jobs-table td:nth-child(5) { width: 50px; }
+      .company-jobs-table th:nth-child(6), .company-jobs-table td:nth-child(6) { width: 40px; }
       .workflow, .detail { padding: 10px; }
     }
   </style>
@@ -253,7 +260,7 @@
       <h1>Brad Career Tracker</h1>
       <p>Master openings table. New finds get added here first; repeats stay suppressed.</p>
       <div class="meta">
-        <span class="pill">Updated: 2026-05-11 10:57 CT</span>
+        <span class="pill">Updated: 2026-05-11 22:00 CT</span>
         <span class="pill">Remote first</span>
         <span class="pill">Verified before shared</span>
       </div>
@@ -267,7 +274,7 @@
     <section class="section" id="remote">
       <div class="section-head">
         <h2>Master job/opening list</h2>
-        <span class="small">16 companies · 30 openings · grouped</span>
+        <span class="small">18 companies · 34 openings · grouped</span>
       </div>
       <div class="table-note">Grouped by company. Expand a company to see roles. Scouts send only new openings or material status changes.</div>
       <div class="company-groups">
@@ -282,46 +289,52 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Product Concept Designer, Defense</td>
+              <td class="loc ">Hybrid · US offices</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">High-fit operator/defense concept work. Do not resend unless materially changed.</td>
               <td><a href="https://jobs.lever.co/palantir">Source</a></td>
             </tr>
             <tr>
               <td class="role">Deployment Strategist</td>
+              <td class="loc ">Hybrid · US offices</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Strategic operator workflow role; adjacent fit if design title is less important.</td>
               <td><a href="https://jobs.lever.co/palantir">Source</a></td>
             </tr>
             <tr>
               <td class="role">Deployment Strategist, Defense Industrial Base</td>
+              <td class="loc ">Hybrid · US offices</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Defense industrial/operator systems lane.</td>
               <td><a href="https://jobs.lever.co/palantir">Source</a></td>
             </tr>
             <tr>
               <td class="role">Product Designer, Developer Experience</td>
+              <td class="loc ">Hybrid · US offices</td>
+              <td class="sal sal-listed">$105K–$175K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Technical product design; less hardware, still strong systems fit.</td>
               <td><a href="https://jobs.lever.co/palantir">Source</a></td>
             </tr>
             <tr>
               <td class="role">Product Designer, US Government</td>
+              <td class="loc ">Hybrid · US offices</td>
+              <td class="sal sal-listed">$105K–$175K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Strongest confirmed Palantir design fit.</td>
               <td><a href="https://jobs.lever.co/palantir/dc02f308-bbcc-4163-b4fb-3f68efb2ce24">Source</a></td>
             </tr>
               </tbody>
@@ -332,40 +345,106 @@
           <summary>
             <span class="company-name">Anduril</span>
             <span class="company-count">3 openings</span>
-            <span class="company-summary">1 verified · 2 re-check</span>
+            <span class="company-summary">3 verified</span>
           </summary>
           <div class="table-wrap company-table-wrap">
             <table class="jobs-table company-jobs-table">
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
-              <td class="role">Product Designer, Forge</td>
+              <td class="role">Product Designer, Forge / ProductionOS</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Excellent mission/operator-systems fit.</td>
-              <td><a href="https://www.anduril.com/careers/">Source</a></td>
+              <td><a href="https://boards.greenhouse.io/andurilindustries/jobs/5084955007?gh_jid=5084955007">Source</a></td>
             </tr>
             <tr>
               <td class="role">Senior Product Designer, Tactical Reconnaissance & Strike</td>
-              <td><span class="status warn">Needs re-check</span></td>
-              <td><span class="send-tag">Hold</span></td>
-              <td class="note">High fit, but must revalidate official posting before pushing again.</td>
-              <td><a href="https://www.anduril.com/careers/">Source</a></td>
+              <td class="loc ">Hybrid · Costa Mesa CA</td>
+              <td class="sal ">Not listed</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Status update sent</span></td>
+              <td><a href="https://boards.greenhouse.io/andurilindustries/jobs/5039604007?gh_jid=5039604007">Source</a></td>
             </tr>
             <tr>
-              <td class="role">Product Designer, Platform</td>
-              <td><span class="status warn">Needs re-check</span></td>
-              <td><span class="send-tag">Hold</span></td>
-              <td class="note">Relevant lane; official posting must be checked.</td>
-              <td><a href="https://www.anduril.com/careers/">Source</a></td>
+              <td class="role">Senior Product Designer, Platform</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent</span></td>
+              <td><a href="https://boards.greenhouse.io/andurilindustries/jobs/4597735007?gh_jid=4597735007">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group" open>
+          <summary>
+            <span class="company-name">NODA AI</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 verified current</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">Senior to Lead Product Designer / Product Designer</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
+              <td><span class="status good">Verified current</span></td>
+              <td><span class="send-tag">Sent 2026-05-11</span></td>
+              <td><a href="https://simplify.jobs/p/f22c35b4-6c1b-4b72-b274-c1b1505243a8/Product-Designer">Source</a></td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="company-group" open>
+          <summary>
+            <span class="company-name">Harmattan AI</span>
+            <span class="company-count">1 opening</span>
+            <span class="company-summary">1 verified live</span>
+          </summary>
+          <div class="table-wrap company-table-wrap">
+            <table class="jobs-table company-jobs-table">
+              <thead>
+                <tr>
+                  <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
+                  <th>Status</th>
+                  <th>Send</th>
+                  <th>Link</th>
+                </tr>
+              </thead>
+              <tbody>
+            <tr>
+              <td class="role">UX Product Designer</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent 2026-05-11</span></td>
+              <td><a href="https://jobs.ashbyhq.com/harmattan-ai/185b5d8c-6987-49ba-b713-514d32e767c3">Source</a></td>
             </tr>
               </tbody>
             </table>
@@ -382,32 +461,36 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Senior UX Designer, LAIC / STAR.OS</td>
+              <td class="loc ">Hybrid · Fort Worth TX</td>
+              <td class="sal sal-listed">$89K–$158K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Skunk Works-adjacent AI/mission systems lane.</td>
               <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Human Factors User Experience Designer</td>
+              <td class="loc loc-onsite">On-site · Orlando FL</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Human factors + UX is relevant if tied to real systems.</td>
               <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Human Factors Design Engineer</td>
+              <td class="loc ">Hybrid · Fort Worth TX</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">More engineering/human-factors; track as secondary.</td>
               <td><a href="https://www.lockheedmartinjobs.com/">Source</a></td>
             </tr>
               </tbody>
@@ -425,32 +508,36 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Staff UX Designer, Google Hardware</td>
+              <td class="loc loc-onsite">On-site · Mountain View CA</td>
+              <td class="sal sal-listed">$178K–$265K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Premium fallback; hardware org is the relevant reason.</td>
               <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Staff UX Designer, Spatial UX, Google Hardware</td>
+              <td class="loc loc-onsite">On-site · Mountain View CA</td>
+              <td class="sal sal-listed">$178K–$265K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Best Google fit because spatial/hardware maps to Reality Labs.</td>
               <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Staff UX Engineer, Spatial Experiences, Google Hardware</td>
+              <td class="loc loc-onsite">On-site · San Diego CA</td>
+              <td class="sal sal-listed">$178K–$265K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Prototype/UX engineering angle; maybe fit depending hands-on coding expectations.</td>
               <td><a href="https://www.google.com/about/careers/applications/jobs/results/">Source</a></td>
             </tr>
               </tbody>
@@ -460,55 +547,77 @@
         <details class="company-group">
           <summary>
             <span class="company-name">Apple</span>
-            <span class="company-count">5 openings</span>
-            <span class="company-summary">5 verified</span>
+            <span class="company-count">7 openings</span>
+            <span class="company-summary">7 verified</span>
           </summary>
           <div class="table-wrap company-table-wrap">
             <table class="jobs-table company-jobs-table">
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Prototyping Designer</td>
+              <td class="loc loc-onsite">On-site · Cupertino CA</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Hardware/spatial/prototyping lane; strong craft fit.</td>
               <td><a href="https://jobs.apple.com/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Prototyping Designer, second listing</td>
+              <td class="loc loc-onsite">On-site · Cupertino CA</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Separate Apple req previously surfaced; keep distinct until exact IDs are logged.</td>
               <td><a href="https://jobs.apple.com/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Design Tools Engineer, Human Interface Design</td>
+              <td class="loc loc-onsite">On-site · Cupertino CA</td>
+              <td class="sal sal-listed">$181K–$318K</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Tooling + HID; relevant if technical expectations are reasonable.</td>
               <td><a href="https://jobs.apple.com/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Human Interface Designer</td>
+              <td class="loc loc-onsite">On-site · Cupertino CA</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Classic Apple design lane; premium fallback.</td>
               <td><a href="https://jobs.apple.com/">Source</a></td>
             </tr>
             <tr>
               <td class="role">Hardware Design & Prototyping Engineer</td>
+              <td class="loc loc-onsite">On-site · Cupertino CA</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status good">Verified live</span></td>
               <td><span class="send-tag">Sent</span></td>
-              <td class="note">Could be too engineering-heavy, but tracks Brad’s hardware curiosity.</td>
               <td><a href="https://jobs.apple.com/">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Product Design Engineer - Apple Vision Pro</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent 2026-05-11</span></td>
+              <td><a href="https://jobs.apple.com/en-us/details/200633140-3956/product-design-engineer-apple-vision-pro?team=HRDWR">Source</a></td>
+            </tr>
+            <tr>
+              <td class="role">Apple Vision Pro Product Design Engineering Program Manager</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
+              <td><span class="status good">Verified live</span></td>
+              <td><span class="send-tag">Sent 2026-05-11</span></td>
+              <td><a href="https://jobs.apple.com/en-us/details/200662191-3749/apple-vision-pro-product-design-engineering-program-manager">Source</a></td>
             </tr>
               </tbody>
             </table>
@@ -525,18 +634,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Senior product / operator UX lane</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status bad">Contact only</span></td>
               <td><span class="send-tag">Watch</span></td>
-              <td class="note">Company fit remains excellent; no confirmed live design posting in hand.</td>
               <td><a href="https://www.skydio.com/careers">Source</a></td>
             </tr>
               </tbody>
@@ -554,18 +665,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Mission software / Hivemind / simulation design lane</td>
+              <td class="loc ">San Diego CA</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status bad">Contact only</span></td>
               <td><span class="send-tag">Watch</span></td>
-              <td class="note">Excellent autonomy/operator tooling target.</td>
               <td><a href="https://shield.ai/careers/">Source</a></td>
             </tr>
               </tbody>
@@ -583,18 +696,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Product designer / senior design lead lane</td>
+              <td class="loc ">Austin TX</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Hold</span></td>
-              <td class="note">Maritime autonomy and C2 workflows are highly aligned.</td>
               <td><a href="https://saronic.com/careers">Source</a></td>
             </tr>
               </tbody>
@@ -612,18 +727,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Product Designer</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Hold</span></td>
-              <td class="note">Human-centered swarm UI language is very aligned.</td>
               <td><a href="https://swarm.aero/careers">Source</a></td>
             </tr>
               </tbody>
@@ -641,18 +758,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Product Designer</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Hold</span></td>
-              <td class="note">Defense/industrial data/product lane; confirm exact posting.</td>
               <td><a href="https://www.nominal.io/careers">Source</a></td>
             </tr>
               </tbody>
@@ -670,18 +789,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Product Designer</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Hold</span></td>
-              <td class="note">Defense command/control systems target; confirm current role.</td>
               <td><a href="https://www.picogrid.com/careers">Source</a></td>
             </tr>
               </tbody>
@@ -699,18 +820,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Product Designer</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Hold</span></td>
-              <td class="note">Field robotics/agriculture autonomy lane.</td>
               <td><a href="https://burro.ai/careers/">Source</a></td>
             </tr>
               </tbody>
@@ -728,18 +851,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Application Engineer / robotics systems lane</td>
+              <td class="loc ">Nashville TN area</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Regional</span></td>
-              <td class="note">Robotics systems target; likely not classic design role.</td>
               <td><a href="https://www.universallogic.com/careers/">Source</a></td>
             </tr>
               </tbody>
@@ -757,18 +882,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Automation systems / advisory outreach lane</td>
+              <td class="loc ">Nashville TN area</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Regional</span></td>
-              <td class="note">Regional automation/industrial target; likely outreach/advisory.</td>
               <td><a href="https://www.bluebayautomation.com/">Source</a></td>
             </tr>
               </tbody>
@@ -786,18 +913,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Advanced manufacturing / robotics product lane</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Regional</span></td>
-              <td class="note">Robotics/manufacturing lane; role needs validation.</td>
               <td><a href="https://www.oneoffrobotics.com/">Source</a></td>
             </tr>
               </tbody>
@@ -815,18 +944,20 @@
               <thead>
                 <tr>
                   <th>Position / lane</th>
+                  <th>Location</th>
+                  <th>Salary</th>
                   <th>Status</th>
                   <th>Send</th>
-                  <th>Fit / note</th>
                   <th>Link</th>
                 </tr>
               </thead>
               <tbody>
             <tr>
               <td class="role">Robotics startup / welding cobot outreach lane</td>
+              <td class="loc ">Unknown</td>
+              <td class="sal ">Not listed</td>
               <td><span class="status warn">Needs re-check</span></td>
               <td><span class="send-tag">Regional</span></td>
-              <td class="note">Regional robotics/welding automation target; role needs validation.</td>
               <td><a href="https://rttus.com/">Source</a></td>
             </tr>
               </tbody>
@@ -848,6 +979,7 @@
           <li>Skydio: Tiff Nguyen, Harrison Zhu, Alex Savello, Adam Bry.</li>
           <li>Saronic: Kathy Allen, Stephen McQuinn, Charles Floyd-Jones.</li>
           <li>Palantir: Emily Su, Delora Li, Jane Hayashi / Blake Birns.</li>
+          <li>Apple: use official application plus VPG / Product Design Engineering referral path; no named recruiter verified on these postings.</li>
         </ol>
       </div>
     </section>
