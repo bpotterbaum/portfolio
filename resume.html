@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Brad Potterbaum — Résumé</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Résumé for Brad Potterbaum — Principal Product Designer, Meta Reality Labs." />
+    <style>
+        :root {
+            --bg: #ffffff;
+            --ink-1: #1d1d1f;
+            --ink-2: #515154;
+            --ink-3: #86868b;
+            --line: #d2d2d7;
+            --line-soft: #ececec;
+            --radius: 22px;
+            --gutter: clamp(18px, 4vw, 32px);
+            --rail: 220px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink-1);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+            font-size: 14px;
+            line-height: 1.45;
+            font-weight: 400;
+            letter-spacing: -0.003em;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+            transition: border-color 0.15s ease, color 0.15s ease;
+        }
+
+        a:hover {
+            color: var(--ink-2);
+            border-bottom-color: var(--ink-1);
+        }
+
+        .print-hint {
+            position: fixed;
+            top: max(16px, env(safe-area-inset-top));
+            right: max(16px, env(safe-area-inset-right));
+            z-index: 10;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink-3);
+            letter-spacing: -0.003em;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line-soft);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .print-hint:hover {
+            color: var(--ink-1);
+            border-color: var(--line);
+        }
+
+        .wrap {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 48px var(--gutter) 40px;
+        }
+
+        .doc {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 28px;
+        }
+
+        @media (min-width: 720px) {
+            .doc {
+                grid-template-columns: var(--rail) 1fr;
+                gap: 36px 40px;
+                align-items: start;
+            }
+        }
+
+        .rail {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .avatar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        @media (min-width: 720px) {
+            .avatar-wrap {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+        }
+
+        .avatar {
+            width: 108px;
+            height: 108px;
+            border-radius: 999px;
+            object-fit: cover;
+            object-position: center 38%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.06);
+            flex-shrink: 0;
+        }
+
+        .identity h1 {
+            margin: 0;
+            font-size: 26px;
+            line-height: 1.08;
+            letter-spacing: -0.022em;
+            font-weight: 600;
+            color: var(--ink-1);
+        }
+
+        .identity .eyebrow {
+            margin: 8px 0 0;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+            line-height: 1.35;
+        }
+
+        .identity .loc {
+            margin: 10px 0 0;
+            font-size: 13px;
+            color: var(--ink-2);
+            letter-spacing: -0.003em;
+        }
+
+        .contact {
+            padding-top: 4px;
+            border-top: 1px solid var(--line-soft);
+        }
+
+        .contact-list {
+            list-style: none;
+            margin: 0;
+            padding: 14px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-list li {
+            font-size: 12.5px;
+            color: var(--ink-2);
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .contact-list a {
+            border-bottom: 0;
+            font-weight: 500;
+            color: var(--ink-1);
+        }
+
+        .contact-list a:hover {
+            border-bottom: 1px solid var(--ink-1);
+        }
+
+        .section-label {
+            margin: 0 0 10px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+        }
+
+        .skills-block {
+            padding-top: 4px;
+            border-top: 1px solid var(--line-soft);
+        }
+
+        .skill-cluster {
+            margin-bottom: 14px;
+        }
+
+        .skill-cluster:last-child {
+            margin-bottom: 0;
+        }
+
+        .skill-cluster h3 {
+            margin: 0 0 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-1);
+            letter-spacing: -0.01em;
+        }
+
+        .skill-cluster p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.42;
+            color: var(--ink-2);
+        }
+
+        .extras {
+            padding-top: 4px;
+            border-top: 1px solid var(--line-soft);
+        }
+
+        .extras ul {
+            margin: 0;
+            padding: 10px 0 0 18px;
+            font-size: 12px;
+            color: var(--ink-2);
+            line-height: 1.42;
+        }
+
+        .extras li {
+            margin-bottom: 6px;
+        }
+
+        .extras li:last-child {
+            margin-bottom: 0;
+        }
+
+        .main {
+            min-width: 0;
+        }
+
+        .summary {
+            margin: 0 0 22px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--ink-2);
+        }
+
+        .experience {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .job {
+            padding: 16px 0 14px;
+            border-top: 1px solid var(--line-soft);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .job:first-of-type {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .job-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .job-title {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.012em;
+            color: var(--ink-1);
+        }
+
+        .job-meta {
+            margin: 0;
+            font-size: 12px;
+            color: var(--ink-3);
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .job-meta {
+                white-space: normal;
+                width: 100%;
+            }
+        }
+
+        .job ul {
+            margin: 10px 0 0;
+            padding-left: 18px;
+            color: var(--ink-2);
+            font-size: 13px;
+            line-height: 1.42;
+        }
+
+        .job li {
+            margin-bottom: 5px;
+        }
+
+        .job li:last-child {
+            margin-bottom: 0;
+        }
+
+        .job--plain .job-body {
+            margin: 8px 0 0;
+            font-size: 13px;
+            line-height: 1.42;
+            color: var(--ink-2);
+        }
+
+        .projects {
+            margin-top: 8px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line-soft);
+        }
+
+        .projects ul {
+            margin: 8px 0 0;
+            padding-left: 18px;
+            font-size: 12.5px;
+            line-height: 1.42;
+            color: var(--ink-2);
+        }
+
+        .projects li {
+            margin-bottom: 5px;
+        }
+
+        .projects a {
+            font-weight: 500;
+            color: var(--ink-1);
+        }
+
+        .earlier {
+            margin-top: 12px;
+            font-size: 11.5px;
+            line-height: 1.4;
+            color: var(--ink-3);
+            font-style: italic;
+        }
+
+        .doc-footer {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line-soft);
+            font-size: 11px;
+            color: var(--ink-3);
+        }
+
+        .local-open-hint {
+            margin: 0 0 20px;
+            max-width: 52ch;
+            font-size: 12px;
+            line-height: 1.45;
+            color: var(--ink-3);
+        }
+
+        .local-open-hint code {
+            font-size: 11px;
+            font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+            color: var(--ink-2);
+        }
+
+        .local-open-hint a {
+            font-weight: 500;
+            color: var(--ink-2);
+        }
+
+        @media print {
+            .print-hint,
+            .no-print {
+                display: none !important;
+            }
+
+            @page {
+                size: letter;
+                margin: 0.55in;
+            }
+
+            body {
+                font-size: 12.5px;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .wrap {
+                max-width: none;
+                padding: 0;
+            }
+
+            a {
+                border-bottom: 0;
+                color: var(--ink-1);
+            }
+
+            .avatar {
+                box-shadow: none;
+            }
+
+            .job {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .summary,
+            .skill-cluster p,
+            .job ul,
+            .job--plain .job-body {
+                font-size: 12px;
+            }
+
+            .identity h1 {
+                font-size: 22px;
+            }
+
+            .doc {
+                gap: 28px 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button type="button" class="print-hint no-print" onclick="window.print()">Print / Save as PDF</button>
+
+    <div class="wrap">
+        <p class="local-open-hint no-print">
+            If a <code>file://</code> link from chat will not open, double-click <strong>resume.html</strong> in Finder,
+            or open <strong>index.html</strong> in a browser and choose <strong>Résumé</strong> in the header.
+            After you deploy the site, this page also lives at
+            <a href="https://bradpotterbaum.com/resume.html" target="_blank" rel="noreferrer">bradpotterbaum.com/resume.html</a>.
+        </p>
+        <div class="doc">
+            <aside class="rail">
+                <div class="avatar-wrap">
+                    <img class="avatar" src="assets/brad-resume-headshot.png" alt="Brad Potterbaum" width="108" height="108" />
+                    <div class="identity">
+                        <h1>Brad Potterbaum</h1>
+                        <p class="eyebrow">Principal Product Designer — AI-Native Creative Director</p>
+                        <p class="loc">College Grove, Tennessee</p>
+                    </div>
+                </div>
+
+                <div class="contact">
+                    <p class="section-label">Contact</p>
+                    <ul class="contact-list">
+                        <li><a href="tel:+12194658492">219-465-8492</a></li>
+                        <li><a href="mailto:bpotterbaum@gmail.com">bpotterbaum@gmail.com</a></li>
+                        <li><a href="https://www.linkedin.com/in/bradleypotterbaum/" target="_blank" rel="noreferrer">LinkedIn</a></li>
+                        <li><a href="https://bradpotterbaum.com" target="_blank" rel="noreferrer">Portfolio</a></li>
+                        <li><a href="https://github.com/bpotterbaum" target="_blank" rel="noreferrer">GitHub</a></li>
+                    </ul>
+                </div>
+
+                <div class="skills-block">
+                    <p class="section-label">Skills</p>
+                    <div class="skill-cluster">
+                        <h3>AI-native operating model</h3>
+                        <p>Multi-agent orchestration, autonomous agent fleets, AI-assisted research and validation, generative ideation, prompt and eval design, AI-assisted prototyping, model routing and tool integration.</p>
+                    </div>
+                    <div class="skill-cluster">
+                        <h3>Craft &amp; direction</h3>
+                        <p>Creative direction, visual design, interaction design, typography, motion, prototyping, design systems, spatial and XR UI, accessibility.</p>
+                    </div>
+                    <div class="skill-cluster">
+                        <h3>Product &amp; strategy</h3>
+                        <p>Product strategy, 0→1 and 1→N, cross-functional leadership, research synthesis, roadmap shaping, hiring and mentorship.</p>
+                    </div>
+                    <div class="skill-cluster">
+                        <h3>Tools</h3>
+                        <p>Figma, FigJam, Cursor, Claude / GPT / Gemini, agent orchestration suites, After Effects, Blender and 3D basics, Unity (familiarity), HTML/CSS/JS, Git.</p>
+                    </div>
+                </div>
+
+                <div class="extras">
+                    <p class="section-label">Recognition</p>
+                    <ul>
+                        <li>Featured in Meta Connect 2025 keynote (Home in the Metaverse)</li>
+                        <li>Backed by Tony Hsieh&rsquo;s Downtown Project (Fluencr)</li>
+                        <li>Board Member, MTAG (since 2013)</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="main">
+                <p class="summary">
+                    Fifteen-plus years shipping consumer products used by millions. Principal-level IC at Meta Reality Labs on Horizon OS, spatial computing, and Quest &mdash; including work shown in the Meta Connect 2025 keynote. Runs an AI-native practice: a fleet of full-time autonomous agents plus on-demand orchestration for research, validation, brainstorming, and execution, so senior time stays on taste, direction, and craft. Pairs strategic product thinking with hands-on visual polish and prototyping fluency.
+                </p>
+
+                <p class="section-label" style="margin-bottom: 2px;">Experience</p>
+                <div class="experience">
+                    <article class="job">
+                        <div class="job-head">
+                            <h2 class="job-title">Meta &mdash; Staff / Principal Product Designer</h2>
+                            <p class="job-meta">Jan 2019 &mdash; Present &middot; Menlo Park, CA (remote from Tennessee)</p>
+                        </div>
+                        <ul>
+                            <li>Principal IC on Reality Labs (Horizon OS, Quest, Home in the Metaverse). Contributed to work presented in Mark Zuckerberg&rsquo;s Meta Connect 2025 keynote.</li>
+                            <li>Lead creative direction and design craft across spatial computing surfaces: multi-user, parental controls, marketplace, and ambient and system-level experiences.</li>
+                            <li>Operate an AI-native design practice: four full-time autonomous agents plus on-demand orchestration suites for research, competitive analysis, validation, copy, prototyping scaffolds, and design-system housekeeping, preserving senior judgment for taste, direction, and craft.</li>
+                            <li>Set the visual and interaction bar for spatial UI: typography, motion, depth, input affordances, and accessibility in immersive environments.</li>
+                            <li>Mentor and grow ICs, partner with PM, engineering, and research, and own end-to-end shipping cycles.</li>
+                        </ul>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Lonely Planet &mdash; Head of Design</h2>
+                            <p class="job-meta">Nov 2017 &mdash; Jan 2019 &middot; New York, NY</p>
+                        </div>
+                        <p class="job-body">Led the UX and Product Design team for a global travel brand. Set design vision and operating principles across product surfaces. Lead by example; hold strong opinions and low ego; ship great products; raise the bar; measure impact.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Lonely Planet &mdash; Principal Product Designer</h2>
+                            <p class="job-meta">Jul 2014 &mdash; Nov 2017 &middot; New York, NY</p>
+                        </div>
+                        <p class="job-body">Owned design for lonelyplanet.com end to end; partnered with PM, engineering, editorial, and marketing to execute company strategy.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Fluencr &mdash; Co-Founder &amp; Head of Design</h2>
+                            <p class="job-meta">Oct 2013 &mdash; Jul 2014 &middot; Las Vegas, NV</p>
+                        </div>
+                        <p class="job-body">Co-founded a social influence platform funded by Tony Hsieh (Downtown Project / Zappos). Took the product from zero to market; later pivoted to #FLSHTAG, a hashtag-driven photo flash-mob voting experience.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Communication Service for the Deaf (CSD) &mdash; Lead Product Designer &amp; UI Engineer</h2>
+                            <p class="job-meta">Jun 2012 &mdash; Oct 2013 &middot; Austin, TX</p>
+                        </div>
+                        <p class="job-body">First hire on a new tech initiative; helped CSD transition into a product company by designing and building a national interpreter marketplace (which became Vineya).</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Golden Tech &mdash; Web Designer</h2>
+                            <p class="job-meta">Apr 2011 &mdash; Jul 2012 &middot; Valparaiso, IN</p>
+                        </div>
+                        <p class="job-body">5-person engineering team shipping e-commerce and campaign sites; owned UX, wireframes, prototypes, and hand-coded production front ends.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">FanFound &mdash; Art Director</h2>
+                            <p class="job-meta">Feb 2011 &mdash; Jul 2012 &middot; Chicago, IL</p>
+                        </div>
+                        <p class="job-body">Owned the presentation layer and managed creative resources end to end.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Sears Holdings &mdash; Web Designer (Lead UX / Front-End)</h2>
+                            <p class="job-meta">May 2010 &mdash; Jun 2011 &middot; Chicago, IL</p>
+                        </div>
+                        <p class="job-body">Lead UX and front-end developer on GAME ON, a gamified associate rewards initiative; built game-like front-end components in a complex .NET system.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Livemercial &mdash; Senior Web Designer / Developer</h2>
+                            <p class="job-meta">Sep 2008 &mdash; May 2010 &middot; Miami, FL</p>
+                        </div>
+                        <p class="job-body">Designed and built direct-response landing pages and marketing materials; brand and visual design.</p>
+                    </article>
+
+                    <article class="job job--plain">
+                        <div class="job-head">
+                            <h2 class="job-title">Excite Productions (Endis Ltd) &mdash; Developer &amp; Graphic Designer</h2>
+                            <p class="job-meta">Aug 2006 &mdash; Sep 2008 &middot; Caldecote, Cambridge, GB</p>
+                        </div>
+                        <p class="job-body">Graphic design, Flash development, and website programming for clients while based in the UK.</p>
+                    </article>
+                </div>
+
+                <div class="projects">
+                    <p class="section-label">Selected projects</p>
+                    <ul>
+                        <li>Home in the Metaverse &mdash; contributor, Meta Connect 2025 keynote feature</li>
+                        <li><a href="https://bradpotterbaum.com/#quest-multi-user" target="_blank" rel="noreferrer">Quest Multi-User</a> &mdash; case study</li>
+                        <li><a href="https://bradpotterbaum.com/#quest-parental-controls" target="_blank" rel="noreferrer">Quest Parental Controls</a> &mdash; case study</li>
+                        <li><a href="https://bradpotterbaum.com/#marketplace-video" target="_blank" rel="noreferrer">Marketplace Video</a> &mdash; case study</li>
+                        <li><a href="https://govineya.com" target="_blank" rel="noreferrer">Vineya</a> &mdash; national ASL interpreter marketplace</li>
+                        <li><a href="https://bombvac.com" target="_blank" rel="noreferrer">bombvac</a> &mdash; multiplayer Minesweeper experiment</li>
+                    </ul>
+                    <p class="earlier">Earlier: Photographer (Michaela Photo), VFX/3D (Evermore Pictures), Freelance Graphic Designer.</p>
+                </div>
+
+                <p class="doc-footer">Updated May 2026</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
