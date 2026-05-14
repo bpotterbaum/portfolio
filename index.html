@@ -118,6 +118,16 @@
             color: var(--ink-1);
         }
 
+        .hero .title {
+            font-size: clamp(17px, 2vw, 21px);
+            line-height: 1.35;
+            font-weight: 500;
+            color: var(--ink-2);
+            margin: 0;
+            max-width: 42ch;
+            letter-spacing: -0.01em;
+        }
+
         .hero .lede {
             font-size: clamp(19px, 2.1vw, 23px);
             line-height: 1.45;
@@ -126,6 +136,10 @@
             margin: 0;
             max-width: 54ch;
             letter-spacing: -0.005em;
+        }
+
+        .hero .lede + .lede {
+            margin-top: 0.85em;
         }
 
         .hero-links {
@@ -250,15 +264,15 @@
         }
 
         .case-media--marketplace img {
-            width: 114%;
+            width: 130%;
             max-width: none;
-            margin-left: -7%;
+            margin-left: -15%;
         }
 
         @media (max-width: 879px) {
             .case-media--marketplace img {
-                width: 112%;
-                margin-left: -6%;
+                width: 120%;
+                margin-left: -10%;
             }
         }
 
@@ -398,14 +412,12 @@
             height: 20px;
         }
 
-        .case-press-logo--verge-chip {
-            background: #1d1d1f;
-            padding: 4px 8px;
-            border-radius: 5px;
+        .case-press-logo-img--mashable {
+            height: 22px;
         }
 
-        .case-press-logo--verge-chip svg {
-            height: 16px;
+        .case-press-logo-img--verge {
+            height: 18px;
         }
 
         @media (max-width: 600px) {
@@ -437,8 +449,12 @@
                 height: 18px;
             }
 
-            .case-press-logo--verge-chip svg {
-                height: 14px;
+            .case-press-logo-img--mashable {
+                height: 20px;
+            }
+
+            .case-press-logo-img--verge {
+                height: 16px;
             }
         }
 
@@ -541,11 +557,18 @@
     <header class="hero">
         <div class="container hero-inner">
             <img class="avatar" src="assets/brad-headshot.png" alt="Brad Potterbaum" />
-            <h1>Designing the foundational systems behind some of Meta's most-used consumer products.</h1>
+            <h1>Brad Potterbaum</h1>
+            <p class="title">Principal Designer, Human Interface Design, Meta Reality Labs</p>
             <p class="lede">
-                I'm Brad Potterbaum, a principal designer at Meta Reality Labs. I lead the multi-user,
-                supervision, and onboarding systems every Quest user touches, and bring fifteen years of
-                consumer product work to a modern, AI-augmented operating model.
+                I lead design for the Human Interface Design team at Meta Reality Labs. My focus is
+                onboarding end to end across Wearables, VR, and Horizon: the flows and surfaces where
+                someone sets up a device, learns the basics, and takes a first real step inside our
+                products.
+            </p>
+            <p class="lede">
+                I own how those first launches, setups, and early impressions read to each person. It is
+                careful, cross-functional product work, built on clear language, resilient patterns, and
+                more than a decade shipping consumer hardware and software.
             </p>
             <div class="hero-links">
                 <a class="btn" href="mailto:bpotterbaum@gmail.com">Email</a>
@@ -611,20 +634,14 @@
                                 <a class="case-press-logo"
                                     href="https://about.fb.com/news/2022/03/vr-parental-supervision-tools-on-quest/"
                                     target="_blank" rel="noreferrer" aria-label="Meta Newsroom">
-                                    <img src="assets/logos/meta.png" alt="Meta"
+                                    <img src="assets/logos/meta.svg" alt="Meta"
                                         class="case-press-logo-img case-press-logo-img--meta" />
                                 </a>
                                 <a class="case-press-logo"
                                     href="https://mashable.com/article/meta-quest-virtual-reality-parental-controls"
                                     target="_blank" rel="noreferrer" aria-label="Mashable">
-                                    <svg width="116" height="22" viewBox="0 0 116 22" role="img"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <title>Mashable</title>
-                                        <text x="0" y="17.5"
-                                            font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif"
-                                            font-size="19" font-weight="800" letter-spacing="-0.025em"
-                                            fill="#D8242C">mashable</text>
-                                    </svg>
+                                    <img src="assets/logos/mashable.png" alt="Mashable"
+                                        class="case-press-logo-img case-press-logo-img--mashable" />
                                 </a>
                                 <a class="case-press-logo"
                                     href="https://www.npr.org/2022/06/14/1104893416/parental-controls-instagram-quest"
@@ -641,7 +658,7 @@
                                 <a class="case-press-logo"
                                     href="https://techcrunch.com/2022/06/14/meta-parental-controls-instagram-quest-vr-headsets/"
                                     target="_blank" rel="noreferrer" aria-label="TechCrunch">
-                                    <img src="assets/logos/techcrunch.png" alt="TechCrunch"
+                                    <img src="assets/logos/techcrunch.svg" alt="TechCrunch"
                                         class="case-press-logo-img case-press-logo-img--techcrunch" />
                                 </a>
                             </div>
@@ -698,37 +715,25 @@
                                 <a class="case-press-logo"
                                     href="https://about.fb.com/news/2021/02/share-your-oculus-quest/"
                                     target="_blank" rel="noreferrer" aria-label="Meta Newsroom">
-                                    <img src="assets/logos/meta.png" alt="Meta"
+                                    <img src="assets/logos/meta.svg" alt="Meta"
                                         class="case-press-logo-img case-press-logo-img--meta" />
                                 </a>
                                 <a class="case-press-logo"
                                     href="https://mashable.com/article/oculus-quest-2-multiple-user-accounts-app-sharing"
                                     target="_blank" rel="noreferrer" aria-label="Mashable">
-                                    <svg width="116" height="22" viewBox="0 0 116 22" role="img"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <title>Mashable</title>
-                                        <text x="0" y="17.5"
-                                            font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif"
-                                            font-size="19" font-weight="800" letter-spacing="-0.025em"
-                                            fill="#D8242C">mashable</text>
-                                    </svg>
+                                    <img src="assets/logos/mashable.png" alt="Mashable"
+                                        class="case-press-logo-img case-press-logo-img--mashable" />
                                 </a>
-                                <a class="case-press-logo case-press-logo--verge-chip"
+                                <a class="case-press-logo"
                                     href="https://www.theverge.com/2021/1/14/22230506/oculus-quest-multi-user-support-release-date"
                                     target="_blank" rel="noreferrer" aria-label="The Verge">
-                                    <svg width="100" height="22" viewBox="0 0 100 22" role="img"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <title>The Verge</title>
-                                        <text x="0" y="17.5"
-                                            font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif"
-                                            font-size="19" font-weight="800" font-style="italic"
-                                            letter-spacing="-0.035em" fill="#FBE000">The Verge</text>
-                                    </svg>
+                                    <img src="assets/logos/the-verge.png" alt="The Verge"
+                                        class="case-press-logo-img case-press-logo-img--verge" />
                                 </a>
                                 <a class="case-press-logo"
                                     href="https://www.cnet.com/tech/gaming/the-oculus-quest-now-works-with-multiple-accounts-and-app-sharing/"
                                     target="_blank" rel="noreferrer" aria-label="CNET">
-                                    <img src="assets/logos/cnet.png" alt="CNET"
+                                    <img src="assets/logos/cnet.svg" alt="CNET"
                                         class="case-press-logo-img case-press-logo-img--cnet" />
                                 </a>
                             </div>
@@ -743,9 +748,10 @@
             <div class="container">
                 <div class="case-grid">
                     <div class="case-media case-media--marketplace">
-                        <!-- Primary is PNG; if you add assets/marketplace-video-case.gif, switch src to the gif for motion. -->
-                        <img src="assets/marketplace-video-case.png"
-                            alt="Meta Marketplace list view and listing detail with video" />
+                        <!-- GIF animates when present; PNG works until you add assets/marketplace-video-case.gif. -->
+                        <img src="assets/marketplace-video-case.gif"
+                            alt="Meta Marketplace list view and listing detail with video"
+                            onerror="this.onerror=null;this.src='assets/marketplace-video-case.png'" />
                     </div>
                     <div class="case-text">
                         <span class="case-kicker">Meta · Marketplace</span>
