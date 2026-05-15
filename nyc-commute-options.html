@@ -554,9 +554,9 @@ const REGIONS = [
     summary: 'Direct Penn access with a much deeper North Shore cluster, including both practical and charm-led towns.',
     signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'Rail-native', cls: 'info' }, { text: 'Water upside', cls: 'info' }],
     facts: [
-      ['Schools', 'Manhasset remains the sharpest school signal, but Roslyn and nearby towns deepen the board materially.'],
+      ['Schools', 'Manhasset remains the sharpest school signal, and Port Washington still reads as a solid family-safe district rather than a reach.'],
       ['Commute', 'One of the best Penn-oriented structures on the board.'],
-      ['Housing', 'Still expensive, but the cluster now looks genuinely broad instead of symbolic.'],
+      ['Housing', 'Still expensive, and live 2026 data suggests Port Washington has moved up materially rather than staying an easy value pocket.'],
       ['Lifestyle', 'Harbor towns and village charm give this more emotional pull than inland NJ.'],
     ],
     why: ['Direct-Penn practicality without giving up all the charm.', 'One of the best balance points between commute and family feel.', 'Now visibly reads like a real region, not a stub.'],
@@ -570,7 +570,7 @@ const REGIONS = [
       { name: 'Great Neck LIRR', type: 'rail', role: 'Backup', note: 'Another strong Penn-oriented option if the search slides west.' },
     ],
     towns: [
-      { name: 'Port Washington', tag: 'Most realistic entry', commute: '62 to 72 min', note: 'Likeliest practical harbor-town entry point.' },
+      { name: 'Port Washington', tag: 'Harbor favorite', commute: '62 to 72 min', note: 'Still compelling, but less of a bargain now that live 2026 median pricing has jumped meaningfully.' },
       { name: 'Manhasset', tag: 'Premium school signal', commute: '57 to 66 min', note: 'Fast and polished, with premium pricing.' },
       { name: 'Roslyn', tag: 'Village charm', commute: '63 to 73 min', note: 'Stronger old-village feel than the mainline picks.' },
       { name: 'Glen Head', tag: 'Value pocket', commute: '66 to 76 min', note: 'A practical North Shore add with more breathing room.' },
@@ -614,10 +614,10 @@ const REGIONS = [
     summary: 'Excellent family towns and schools, now shown as a wider central plus Sound Shore Westchester cluster with real timing ranges.',
     signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'GCT tax', cls: 'caution' }, { text: 'Rail-native', cls: 'info' }],
     facts: [
-      ['Schools', 'Elite school quality is not the issue here, and the deeper cluster makes that obvious.'],
-      ['Commute', 'Good Metro-North access, but still not Penn-native.'],
-      ['Housing', 'High to very high, with more variation than Scarsdale alone suggests.'],
-      ['Lifestyle', 'A serious family region, especially if you want Sound Shore polish.'],
+      ['Schools', 'Bronxville, Rye, Larchmont, and Pelham still screen as high-confidence public-school towns; this remains a strength, not a gamble.'],
+      ['Commute', 'Good Metro-North access, but still not Penn-native; office days usually mean Grand Central plus subway, taxi, or a 20-ish minute walk crosstown/down.'],
+      ['Housing', 'Still expensive, but 2026 pricing is less one-directional than last cycle: Rye remains around the low-$2M median while Pelham and some Bronxville trades have softened or become noisier.'],
+      ['Lifestyle', 'A serious family region, especially if you want Sound Shore polish without going full Connecticut premium.'],
     ],
     why: ['Needs to stay visible because the family case is real.', 'Now reads like a real cluster instead of two names.', 'Still secondary unless office cadence stays lighter than expected.'],
     links: [
@@ -630,11 +630,41 @@ const REGIONS = [
       { name: 'Rye Station', type: 'rail', role: 'Backup', note: 'Sound Shore version of the argument.' },
     ],
     towns: [
-      { name: 'Bronxville', tag: 'Fastest village rail', commute: '68 to 78 min', note: 'One of the strongest village products in the county.' },
+      { name: 'Bronxville', tag: 'Fastest village rail', commute: '68 to 78 min', note: 'One of the strongest village products in the county, though sale comps have been choppier in 2026 than the reputation suggests.' },
       { name: 'Scarsdale', tag: 'School premium', commute: '74 to 85 min', note: 'Elite schools, high cost, office mismatch.' },
-      { name: 'Rye', tag: 'Shoreline variant', commute: '77 to 88 min', note: 'Best water-adjacent Westchester lane.' },
-      { name: 'Larchmont', tag: 'Water plus train', commute: '73 to 83 min', note: 'Sound Shore feel with strong reputation.' },
-      { name: 'Harrison', tag: 'Broader inventory', commute: '75 to 86 min', note: 'Useful if you want more housing choice without breaking the cluster.' },
+      { name: 'Rye', tag: 'Shoreline variant', commute: '77 to 88 min', note: 'Best water-adjacent Westchester lane; still firmly premium on live pricing.' },
+      { name: 'Larchmont', tag: 'Water plus train', commute: '73 to 83 min', note: 'Sound Shore feel with strong reputation and less obvious discounting than inland comps.' },
+      { name: 'Pelham', tag: 'Fast + family', commute: '66 to 76 min', note: 'Should be on the board before Harrison for this office because the train geometry is cleaner and the family case is still strong.' },
+    ],
+  },
+  {
+    id: 'hudson-waterfront', shortName: 'Hudson Waterfront', name: 'Hoboken / Jersey City Waterfront', type: 'ground', tier: 'Best ultra-short office commute', color: '#14b8a6',
+    hub: { lat: 40.7362, lng: -74.0270, label: 'Hoboken Terminal', type: 'rail' }, radiusMiles: 4,
+    commute: { pattern: 'PATH / ferry / walk hybrid', doorToDesk: '22 to 42 min', notes: 'Hoboken Terminal to 33rd Street PATH is the cleanest raw geometry on the board; NY Waterway adds a real Midtown backup from Hoboken 14th St and Hoboken/NJ Transit.' },
+    summary: 'If pure office execution matters most, this is the missing region the old board underplayed: short commute, real water, and strong urban-family upside in the right submarkets.',
+    signals: [{ text: '5 towns loaded', cls: 'good' }, { text: 'PATH + ferry', cls: 'good' }, { text: 'Schools: mixed', cls: 'caution' }],
+    facts: [
+      ['Schools', 'This is not a simple suburban-public-schools win; Hoboken is improving, Jersey City is highly neighborhood- and school-specific, and charters/private options matter more here.'],
+      ['Commute', 'By far the best office geometry on the board if the tradeoff is urban density instead of classic suburbia.'],
+      ['Housing', 'Still expensive but not uniformly Northeast-suburb expensive; live 2026 pricing shows Hoboken running hotter than Jersey City overall.'],
+      ['Lifestyle', 'Real waterfront life, restaurants, parks, and family-capable neighborhoods if you are open to a more city-adjacent setup.'],
+    ],
+    why: ['It was a clear omission relative to the office location.', 'Useful if commute pain becomes the deciding factor.', 'Should sit near the top whenever urban family living is acceptable.'],
+    links: [
+      { label: 'Hoboken ferries', note: 'Midtown + Downtown service', url: 'https://www.nywaterway.com/HobokenFerries.aspx' },
+      { label: 'Jersey City market', note: 'Live pricing pulse', url: 'https://www.redfin.com/city/9168/NJ/Jersey-City/housing-market' },
+    ],
+    hubs: [
+      { name: 'Hoboken Terminal', type: 'rail', role: 'Primary', note: 'PATH, NJ Transit, and ferry stack in one node.' },
+      { name: 'Hoboken 14th St Ferry', type: 'ferry', role: 'Backup', note: 'Midtown ferry runs 7 days a week and strengthens resilience.' },
+      { name: 'Exchange Place', type: 'rail', role: 'Backup', note: 'Strong Jersey City access point if the search slides south.' },
+    ],
+    towns: [
+      { name: 'Hoboken', tag: 'Shortest commute', commute: '22 to 35 min', note: 'Best raw office execution, but the family-school story needs more selectivity than the suburban districts.' },
+      { name: 'Jersey City Waterfront', tag: 'Water + skyline', commute: '24 to 38 min', note: 'Best value relative to Hoboken if you stay in stronger submarkets.' },
+      { name: 'Hamilton Park', tag: 'Family pocket', commute: '28 to 40 min', note: 'One of the more obviously family-friendly Jersey City neighborhoods.' },
+      { name: 'Paulus Hook', tag: 'Premium urban', commute: '24 to 36 min', note: 'Beautiful but pricey; strongest if waterfront and charm both matter.' },
+      { name: 'The Heights', tag: 'Value wildcard', commute: '32 to 42 min', note: 'Less direct than the waterfront but worth keeping in view for space/value.' },
     ],
   },
   {
@@ -700,22 +730,22 @@ const REGIONS = [
   {
     id: 'bna-home-base', shortName: 'Stay in TN', name: 'Stay in Tennessee, fly from BNA', type: 'flight', tier: 'Baseline fly-in scenario', color: '#059669',
     hub: { lat: 36.1263, lng: -86.6774, label: 'BNA Airport', type: 'airport' }, radiusMiles: 26,
-    commute: { pattern: 'Nonstop fly-in baseline', doorToDesk: '2h15m to 2h40m', notes: 'This is still the control case, but now it visibly includes multiple Tennessee baseline towns.' },
-    summary: 'The control scenario now shows more than one Tennessee benchmark, so relocation clusters have to beat a fuller no-move case.',
-    signals: [{ text: '3 towns loaded', cls: 'good' }, { text: 'Airport hub', cls: 'info' }, { text: 'No move', cls: 'good' }],
+    commute: { pattern: 'Nonstop fly-in baseline', doorToDesk: '2h15m to 2h40m', notes: 'BNA still has true nonstop reach to all three core NYC airports: LGA on American, Delta, and Southwest; JFK on American, Delta, and JetBlue; EWR on Spirit and United.' },
+    summary: 'The control scenario now shows more than one Tennessee benchmark and a more precise nonstop menu, so relocation clusters have to beat a fuller no-move case.',
+    signals: [{ text: '3 NYC airports nonstop', cls: 'good' }, { text: 'Airport hub', cls: 'info' }, { text: 'No move', cls: 'good' }],
     facts: [
       ['Schools', 'No forced family disruption if this phase is temporary.'],
-      ['Commute', 'Still the longest day, but the cleanest control case against every relocation idea.'],
+      ['Commute', 'Still the longest day, but the cleanest control case against every relocation idea; flight time is roughly 2h15m before airport and ground legs.'],
       ['Housing', 'No new housing spend, and the expanded TN baseline keeps the comparison honest.'],
       ['Lifestyle', 'Best for family continuity, hardest on you personally.'],
     ],
     why: ['Must remain on the board as the floor every other option competes against.', 'Now compares against multiple Tennessee baselines instead of one abstract point.', 'Useful whenever a relocation premium starts to feel too theoretical.'],
     links: [
-      { label: 'BNA → NYC flights', note: 'Baseline route logic', url: 'https://www.google.com/travel/flights/flights-from-nashville-to-new-york.html?gl=US&hl=en-US' },
+      { label: 'BNA nonstop destinations', note: 'Official airport list', url: 'https://flynashville.com/flights/nonstop-destinations' },
       { label: 'Hotels near Penn', note: 'Mon/Tue overnight options', url: 'https://www.google.com/travel/hotels/New%20York%20Penn%20Station' },
     ],
     hubs: [
-      { name: 'BNA Airport', type: 'airport', role: 'Primary', note: 'Baseline nonstop business route.' },
+      { name: 'BNA Airport', type: 'airport', role: 'Primary', note: 'Baseline nonstop business route with JFK, LGA, and EWR all currently in play.' },
     ],
     towns: [
       { name: 'Nashville core', tag: 'No move', commute: '2h15m to 2h25m', note: 'Pure baseline if you stay closest to the airport spine.' },
@@ -960,14 +990,14 @@ function renderBoardBanner() {
   const visible = filteredRegions();
   const regionCount = visible.length;
   const townCount = visible.reduce((sum, region) => sum + region.towns.length, 0);
-  const newestRegion = REGIONS.find((region) => region.id === 'rdu-triangle');
-  const mention = visible.some((region) => region.id === 'rdu-triangle') && newestRegion
-    ? `Now includes ${newestRegion.shortName} and ${newestRegion.towns.length} Triangle towns.`
-    : 'Expanded coverage stays visible across every region chip and town stack.';
+  const newestRegion = REGIONS.find((region) => region.id === 'hudson-waterfront');
+  const mention = visible.some((region) => region.id === 'hudson-waterfront') && newestRegion
+    ? `Now includes ${newestRegion.shortName} and ${newestRegion.towns.length} short-commute urban options.`
+    : 'Refreshed coverage stays visible across every region chip and town stack.';
   document.getElementById('boardBanner').innerHTML = `
     <div class="board-banner-top">
       <span class="board-banner-label">Live board</span>
-      <span class="board-banner-stamp">Expanded</span>
+      <span class="board-banner-stamp">Refreshed May 2026</span>
     </div>
     <p class="board-banner-title">${regionCount} regions · ${townCount} visible towns</p>
     <p class="board-banner-copy">${mention}</p>
