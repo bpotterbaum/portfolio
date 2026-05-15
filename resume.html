@@ -319,10 +319,9 @@
 
         .job-head {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px 12px;
-            justify-content: space-between;
-            align-items: baseline;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-start;
         }
 
         .job-title {
@@ -339,20 +338,17 @@
             color: var(--ink-3);
             letter-spacing: -0.002em;
             line-height: 1.35;
-            text-align: right;
-            max-width: 42ch;
+            text-align: left;
         }
 
         .duration {
-            color: var(--ink-2);
-            font-weight: 500;
+            color: inherit;
+            font-weight: inherit;
         }
 
         @media (max-width: 640px) {
             .job-meta {
                 width: 100%;
-                max-width: none;
-                text-align: left;
             }
         }
 
@@ -569,7 +565,7 @@
                     <article class="job">
                         <div class="job-head">
                             <h2 class="job-title">Meta &mdash; Principal Designer, Human Interface Design</h2>
-                            <p class="job-meta">Jan 2019 &mdash; Present &middot; <span class="duration" data-duration-from="2019-01">7.4 yrs</span> &middot; Menlo Park, CA (remote from Tennessee) &middot; IC7</p>
+                            <p class="job-meta">Jan 2019 &mdash; Present &middot; <span class="duration" data-duration-from="2019-01">7.4 yrs</span> &middot; Menlo Park, CA (remote from Tennessee)</p>
                         </div>
                         <ul>
                             <li>Principal IC7 in Reality Labs, working one step below director level as a senior individual contributor on whole-product systems rather than isolated features.</li>
