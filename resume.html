@@ -355,13 +355,21 @@
             font-size: 12px;
             color: var(--ink-3);
             letter-spacing: -0.002em;
-            white-space: nowrap;
+            line-height: 1.35;
+            text-align: right;
+            max-width: 42ch;
+        }
+
+        .duration {
+            color: var(--ink-2);
+            font-weight: 500;
         }
 
         @media (max-width: 640px) {
             .job-meta {
-                white-space: normal;
                 width: 100%;
+                max-width: none;
+                text-align: left;
             }
         }
 
@@ -582,7 +590,7 @@
                     <article class="job">
                         <div class="job-head">
                             <h2 class="job-title">Meta &mdash; Principal Designer, Human Interface Design</h2>
-                            <p class="job-meta">Jan 2019 &mdash; Present &middot; Menlo Park, CA (remote from Tennessee) &middot; IC7</p>
+                            <p class="job-meta">Jan 2019 &mdash; Present &middot; <span class="duration" data-duration-from="2019-01">7 yrs 5 mos</span> &middot; Menlo Park, CA (remote from Tennessee) &middot; IC7</p>
                         </div>
                         <ul>
                             <li>Principal IC7 in Reality Labs, working one step below director level as a senior individual contributor on whole-product systems rather than isolated features.</li>
@@ -598,7 +606,7 @@
                     <article class="job">
                         <div class="job-head">
                             <h2 class="job-title">Lonely Planet &mdash; Head of Design</h2>
-                            <p class="job-meta">Jul 2014 &mdash; Jan 2019 &middot; Nashville, TN</p>
+                            <p class="job-meta">Jul 2014 &mdash; Jan 2019 &middot; <span class="duration">4 yrs 7 mos</span> &middot; Nashville, TN</p>
                         </div>
                         <ul>
                             <li>Led the reimagining of Lonely Planet's flagship digital product, including continents, countries, cities, home, and core trip-planning surfaces. User research and Usabilla feedback showed people struggling to find essential information; the redesign balanced editorial inspiration with faster paths to useful answers.</li>
@@ -612,7 +620,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">Fluencr &mdash; Co-Founder &amp; Head of Design</h2>
-                            <p class="job-meta">Oct 2013 &mdash; Jul 2014 &middot; Las Vegas, NV</p>
+                            <p class="job-meta">Oct 2013 &mdash; Jul 2014 &middot; <span class="duration">10 mos</span> &middot; Las Vegas, NV</p>
                         </div>
                         <p class="job-body">Co-founded a social influence platform funded by Tony Hsieh (Downtown Project / Zappos); shipped from zero to market, then pivoted to #FLSHTAG, a hashtag-driven photo flash-mob voting experience.</p>
                     </article>
@@ -620,7 +628,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">Communication Service for the Deaf &mdash; Senior Product Designer</h2>
-                            <p class="job-meta">Jun 2012 &mdash; Oct 2013 &middot; Austin, TX</p>
+                            <p class="job-meta">Jun 2012 &mdash; Oct 2013 &middot; <span class="duration">1 yr 5 mos</span> &middot; Austin, TX</p>
                         </div>
                         <p class="job-body">First hire on a new tech initiative; designed and built the national interpreter marketplace that became Vineya as the organization moved into product.</p>
                     </article>
@@ -628,7 +636,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">FanFound &mdash; Senior Web Designer</h2>
-                            <p class="job-meta">Feb 2011 &mdash; Jul 2012 &middot; Chicago, IL</p>
+                            <p class="job-meta">Feb 2011 &mdash; Jul 2012 &middot; <span class="duration">1 yr 6 mos</span> &middot; Chicago, IL</p>
                         </div>
                         <p class="job-body">Owned the presentation layer and creative resourcing end to end.</p>
                     </article>
@@ -636,7 +644,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">Golden Tech &mdash; Senior Web Designer</h2>
-                            <p class="job-meta">Apr 2011 &mdash; Jul 2012 &middot; Valparaiso, IN</p>
+                            <p class="job-meta">Apr 2011 &mdash; Jul 2012 &middot; <span class="duration">1 yr 4 mos</span> &middot; Valparaiso, IN</p>
                         </div>
                         <p class="job-body">Five-person engineering team shipping e-commerce and campaign sites; owned UX, wireframes, prototypes, and hand-coded production HTML/CSS.</p>
                     </article>
@@ -644,7 +652,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">Sears Holdings &mdash; Web Designer and Front-End Developer</h2>
-                            <p class="job-meta">May 2010 &mdash; Jun 2011 &middot; Chicago, IL</p>
+                            <p class="job-meta">May 2010 &mdash; Jun 2011 &middot; <span class="duration">1 yr 2 mos</span> &middot; Chicago, IL</p>
                         </div>
                         <p class="job-body">Led UX and front-end development on GAME ON, a gamified associate rewards initiative; built game-like front-end components in a complex .NET system.</p>
                     </article>
@@ -652,7 +660,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">Livemercial &mdash; Web Designer and Front-End Developer</h2>
-                            <p class="job-meta">Sep 2008 &mdash; May 2010 &middot; Miami, FL</p>
+                            <p class="job-meta">Sep 2008 &mdash; May 2010 &middot; <span class="duration">1 yr 9 mos</span> &middot; Miami, FL</p>
                         </div>
                         <p class="job-body">Designed and built direct-response landing pages and marketing materials; brand and visual design.</p>
                     </article>
@@ -660,7 +668,7 @@
                     <article class="job job--plain">
                         <div class="job-head">
                             <h2 class="job-title">Excite Productions (Endis Ltd) &mdash; Web Designer and Front-End Developer</h2>
-                            <p class="job-meta">Aug 2006 &mdash; Sep 2008 &middot; Caldecote, Cambridge, GB</p>
+                            <p class="job-meta">Aug 2006 &mdash; Sep 2008 &middot; <span class="duration">2 yrs 2 mos</span> &middot; Caldecote, Cambridge, GB</p>
                         </div>
                         <p class="job-body">Graphic design, Flash development, and website programming for clients while based in the UK.</p>
                     </article>
@@ -687,5 +695,31 @@
             </div>
         </div>
     </div>
+    <script>
+        (() => {
+            const formatDuration = (months) => {
+                const years = Math.floor(months / 12);
+                const remainingMonths = months % 12;
+                const parts = [];
+
+                if (years) {
+                    parts.push(`${years} yr${years === 1 ? "" : "s"}`);
+                }
+
+                if (remainingMonths) {
+                    parts.push(`${remainingMonths} mo${remainingMonths === 1 ? "" : "s"}`);
+                }
+
+                return parts.join(" ") || "1 mo";
+            };
+
+            document.querySelectorAll("[data-duration-from]").forEach((node) => {
+                const [startYear, startMonth] = node.dataset.durationFrom.split("-").map(Number);
+                const now = new Date();
+                const months = ((now.getFullYear() - startYear) * 12) + ((now.getMonth() + 1) - startMonth) + 1;
+                node.textContent = formatDuration(Math.max(months, 1));
+            });
+        })();
+    </script>
 </body>
 </html>
