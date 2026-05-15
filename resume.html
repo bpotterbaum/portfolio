@@ -284,11 +284,13 @@
         }
 
         .summary {
-            margin: 0 0 28px;
+            margin: 0 0 30px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line-soft);
             display: flex;
             flex-direction: column;
-            gap: 11px;
-            max-width: 62ch;
+            gap: 12px;
+            max-width: 64ch;
         }
 
         .summary p {
@@ -297,6 +299,21 @@
             line-height: 1.52;
             color: var(--ink-2);
             letter-spacing: -0.004em;
+        }
+
+        .summary .summary-lead {
+            max-width: 54ch;
+            font-size: clamp(17px, 2vw, 20px);
+            line-height: 1.34;
+            font-weight: 550;
+            letter-spacing: -0.018em;
+            color: var(--ink-1);
+        }
+
+        .summary .summary-note {
+            max-width: 58ch;
+            font-size: 13px;
+            color: var(--ink-3);
         }
 
         .experience {
@@ -460,6 +477,10 @@
                 font-size: 12px;
             }
 
+            .summary .summary-lead {
+                font-size: 13.5px;
+            }
+
             .identity h1 {
                 font-size: 22px;
             }
@@ -511,12 +532,16 @@
                         <p>Creative direction, interaction design, visual systems, typography, motion, prototyping, spatial and XR UI, accessibility, and design quality at launch.</p>
                     </div>
                     <div class="skill-cluster">
+                        <h3>Production fluency</h3>
+                        <p>HTML, CSS, JavaScript, Git, code review, prototyping, and shipping small production diffs or fixes when that is the clearest path to quality.</p>
+                    </div>
+                    <div class="skill-cluster">
                         <h3>AI-enabled practice</h3>
                         <p>AI-assisted research, critique, validation, copy, prototyping, code exploration, prompt design, and model/tool orchestration to move faster without outsourcing taste.</p>
                     </div>
                     <div class="skill-cluster">
                         <h3>Tools</h3>
-                        <p>Figma, FigJam, After Effects, Cinema 4D, Blender, Unity, Xcode, Android Studio, Visual Studio Code, Cursor, Git, Claude, GPT, Gemini, and prototyping stacks as needed.</p>
+                        <p>Figma, FigJam, After Effects, Cinema 4D, Blender, Unity, Xcode, Android Studio, Visual Studio Code, Cursor, Claude, GPT, Gemini, and prototyping stacks as needed.</p>
                     </div>
                 </div>
 
@@ -547,9 +572,9 @@
 
             <div class="main">
                 <div class="summary">
-                    <p>I am a product builder and Principal Designer (IC7) in Human Interface Design at Meta Reality Labs. My current work is the first experience people have with our products: onboarding, account creation, profile setup, device pairing, first-run setup, and the trust moments that make new hardware feel understandable.</p>
-                    <p>At this level, the work is broader than feature design. I frame the product problem, shape direction, align leadership and partner teams, then stay close enough to the details to hold the interaction model, craft, and launch decisions.</p>
-                    <p>Much of my current work is under NDA, so the public work below focuses on shipped systems I can discuss: Quest parental supervision, multi-user and app sharing, Facebook Marketplace video, and earlier web and app products for Lonely Planet.</p>
+                    <p class="summary-lead">Nearly two decades into building consumer software, I am now a product builder and Principal Designer (IC7) in Human Interface Design at Meta Reality Labs, trusted with the first experience people have with new hardware and software.</p>
+                    <p>That work spans onboarding, account creation, profile setup, device pairing, first-run setup, and the trust moments that make a new product feel understandable. I frame product problems, shape direction, align leadership and partner teams, then stay close enough to the details to hold the interaction model, craft, and launch decisions.</p>
+                    <p class="summary-note">Much of my current work is under NDA, so the public work below focuses on shipped systems I can discuss.</p>
                 </div>
 
                 <p class="section-label">Experience</p>
@@ -562,11 +587,11 @@
                         <ul>
                             <li>Principal IC7 in Reality Labs, working one step below director level as a senior individual contributor on whole-product systems rather than isolated features.</li>
                             <li>Currently responsible for first-run and onboarding work across Meta Reality Labs products: account creation, profile setup, device pairing, first-run setup, agreements, trust checks, and the handoff from hardware setup into the product. Most current work remains under NDA.</li>
-                            <li>Lead product and design direction by framing the problem, aligning PM, engineering, research, policy, legal, privacy, integrity, and design partners, and holding the experience quality from strategy through launch.</li>
+                            <li>Lead product and design direction by framing the problem, aligning PM, engineering, research, policy, legal, privacy, integrity, and design partners, and holding the experience quality from strategy through launch. I stay close to production, including writing and pushing code diffs for fixes and prototypes when that is the fastest path to quality.</li>
+                            <li>Helped bring Home in the Metaverse to the Meta Connect 2025 keynote, contributing spatial interface craft across layout, motion, typography, input, accessibility, and the feel of immersive UI at hardware scale.</li>
                             <li>Designed and launched Quest parental supervision as design DRI: teen-initiated linking, parent consent, Ask to Buy, app and browser blocking, time-in-VR visibility, friend list visibility, push notifications, payments, IARC ratings, accounts, profiles, and integrity systems. The system remains live and is used by millions of households monthly.</li>
                             <li>Designed and launched Quest multi-user and app sharing: separate profiles, saves, social graphs, entitlements, purchase rules, lock patterns, mobile setup, and fast in-VR switching so households could share a headset without losing progress or buying the same game twice.</li>
                             <li>Unlocked video on Facebook Marketplace, a public marketplace with more than a billion monthly users, by reframing video posting as an earned privilege and taking the model through Integrity, Privacy, and Policy. The solution combined account reputation, audio transcription review, and frame-level video sampling.</li>
-                            <li>Contributed to Home in the Metaverse for Meta Connect 2025; ongoing craft includes spatial layout, motion, typography, input, accessibility, and the feel of immersive UI at hardware scale.</li>
                         </ul>
                     </article>
 
@@ -645,7 +670,7 @@
                     <p class="section-label">Selected projects</p>
                     <ul>
                         <li>Reality Labs first-run and onboarding &mdash; current product surface across onboarding, accounts, profiles, pairing, setup, identity, and trust; much remains under NDA</li>
-                        <li>Home in the Metaverse &mdash; contributor, Meta Connect 2025 keynote feature</li>
+                        <li>Home in the Metaverse &mdash; spatial interface contribution, Meta Connect 2025 keynote feature</li>
                         <li><a href="https://bradpotterbaum.com/#parental-supervision" target="_blank" rel="noreferrer">Quest parental supervision</a> &mdash; shipped product system</li>
                         <li><a href="https://bradpotterbaum.com/#app-sharing" target="_blank" rel="noreferrer">Quest multi-user and app sharing</a> &mdash; shipped product system</li>
                         <li><a href="https://bradpotterbaum.com/#marketplace-video" target="_blank" rel="noreferrer">Facebook Marketplace video</a> &mdash; shipped product capability</li>
