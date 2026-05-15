@@ -284,11 +284,13 @@
         }
 
         .summary {
-            margin: 0 0 28px;
+            margin: 0 0 30px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line-soft);
             display: flex;
             flex-direction: column;
-            gap: 11px;
-            max-width: 62ch;
+            gap: 12px;
+            max-width: 64ch;
         }
 
         .summary p {
@@ -297,6 +299,21 @@
             line-height: 1.52;
             color: var(--ink-2);
             letter-spacing: -0.004em;
+        }
+
+        .summary .summary-lead {
+            max-width: 54ch;
+            font-size: clamp(17px, 2vw, 20px);
+            line-height: 1.34;
+            font-weight: 550;
+            letter-spacing: -0.018em;
+            color: var(--ink-1);
+        }
+
+        .summary .summary-note {
+            max-width: 58ch;
+            font-size: 13px;
+            color: var(--ink-3);
         }
 
         .experience {
@@ -464,6 +481,10 @@
                 font-size: 12px;
             }
 
+            .summary .summary-lead {
+                font-size: 13.5px;
+            }
+
             .identity h1 {
                 font-size: 22px;
             }
@@ -555,9 +576,9 @@
 
             <div class="main">
                 <div class="summary">
-                    <p>Nearly two decades into building consumer software, I am now a product builder and Principal Product Designer (IC7) in Human Interface Design at Meta Reality Labs, trusted with the first experience people have with new hardware and software.</p>
+                    <p class="summary-lead">Nearly two decades into building consumer software, I am now a product builder and Principal Product Designer (IC7) in Human Interface Design at Meta Reality Labs, trusted with the first experience people have with new hardware and software.</p>
                     <p>That work spans onboarding, account creation, profile setup, device pairing, first-run setup, and the trust moments that make a new product feel understandable. I frame product problems, shape direction, align leadership and partner teams, then stay close enough to the details to hold the interaction model, craft, and launch decisions.</p>
-                    <p>Much of my current work is under NDA, so the public work below focuses on shipped systems I can discuss.</p>
+                    <p class="summary-note">Much of my current work is under NDA, so the public work below focuses on shipped systems I can discuss.</p>
                 </div>
 
                 <p class="section-label">Experience</p>
