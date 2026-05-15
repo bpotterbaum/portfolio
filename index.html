@@ -217,6 +217,10 @@
             border-top: 1px solid var(--line-soft);
         }
 
+        .case .container {
+            max-width: 1320px;
+        }
+
         .chapter+.case {
             border-top: 0;
             padding-top: clamp(20px, 3vw, 40px);
@@ -231,8 +235,13 @@
 
         @media (min-width: 880px) {
             .case--media .case-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: clamp(48px, 6vw, 88px);
+                grid-template-columns: minmax(0, 1.45fr) minmax(380px, 0.95fr);
+                gap: clamp(56px, 6vw, 96px);
+                align-items: start;
+            }
+
+            .case--media.case--reverse .case-grid {
+                grid-template-columns: minmax(380px, 0.95fr) minmax(0, 1.45fr);
             }
 
             .case--reverse .case-media {
@@ -242,6 +251,13 @@
 
         .case-media {
             width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .case-text {
+            position: relative;
+            z-index: 2;
         }
 
         .case-media img {
@@ -249,30 +265,22 @@
             width: 100%;
             height: auto;
             border-radius: var(--radius);
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .case--media:hover .case-media img {
-            transform: scale(1.012);
-        }
-
-        /* Marketplace image has a thick built-in shadow, so the inner phone
-           content reads small at column width. Let it overflow the column to
-           visually match Multi-User and Parental Controls. */
         .case-media--marketplace {
             overflow: visible;
         }
 
         .case-media--marketplace img {
-            width: 130%;
+            width: 134%;
             max-width: none;
-            margin-left: -15%;
+            margin-left: -17%;
         }
 
         @media (max-width: 879px) {
             .case-media--marketplace img {
-                width: 120%;
-                margin-left: -10%;
+                width: 124%;
+                margin-left: -12%;
             }
         }
 
@@ -316,36 +324,7 @@
             margin-bottom: 0;
         }
 
-        .case-meta {
-            margin-top: 32px;
-            padding-top: 20px;
-            border-top: 1px solid var(--line-soft);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 28px;
-            font-size: 14px;
-            color: var(--ink-3);
-            letter-spacing: -0.003em;
-        }
-
-        .case-meta strong {
-            color: var(--ink-1);
-            font-weight: 600;
-            margin-right: 8px;
-        }
-
-        .case-meta a {
-            color: var(--ink-1);
-            font-weight: 500;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.15s ease;
-        }
-
-        .case-meta a:hover {
-            border-bottom-color: var(--ink-1);
-        }
-
-        /* PRESS STRIP, reusable below .case-meta */
+        /* PRESS STRIP */
         .case-press {
             margin-top: 22px;
             display: flex;
@@ -394,11 +373,14 @@
         }
 
         .case-press-logo-img--meta {
-            height: 20px;
+            height: 30px;
         }
 
         .case-press-logo-img--mashable {
-            height: 32px;
+            width: 156px;
+            height: 21px;
+            object-fit: cover;
+            object-position: center;
         }
 
         .case-press-logo-img--npr {
@@ -406,15 +388,15 @@
         }
 
         .case-press-logo-img--techcrunch {
-            height: 22px;
+            height: 44px;
         }
 
         .case-press-logo-img--verge {
-            height: 19px;
+            height: 42px;
         }
 
         .case-press-logo-img--cnet {
-            height: 22px;
+            height: 53px;
         }
 
         @media (max-width: 600px) {
@@ -431,11 +413,12 @@
             }
 
             .case-press-logo-img--meta {
-                height: 17px;
+                height: 24px;
             }
 
             .case-press-logo-img--mashable {
-                height: 26px;
+                width: 135px;
+                height: 18px;
             }
 
             .case-press-logo-img--npr {
@@ -443,16 +426,17 @@
             }
 
             .case-press-logo-img--techcrunch {
-                height: 19px;
+                height: 38px;
             }
 
             .case-press-logo-img--verge {
-                height: 17px;
+                height: 37px;
             }
 
             .case-press-logo-img--cnet {
-                height: 19px;
+                height: 46px;
             }
+
         }
 
         /* FOOTER */
@@ -481,19 +465,14 @@
             letter-spacing: -0.022em;
             font-weight: 600;
             margin: 0;
-            max-width: 18ch;
+            max-width: 24ch;
             color: var(--ink-1);
         }
 
-        .footer-cta a {
+        .footer-cta span {
+            display: inline-block;
             color: var(--ink-1);
-            border-bottom: 2px solid var(--ink-1);
-            padding-bottom: 4px;
-            transition: opacity 0.15s ease;
-        }
-
-        .footer-cta a:hover {
-            opacity: 0.6;
+            overflow-wrap: anywhere;
         }
 
         .footer-meta {
@@ -519,10 +498,6 @@
                 gap: 22px;
             }
 
-            .case-meta {
-                gap: 4px 24px;
-                font-size: 13px;
-            }
         }
 
         @media (max-width: 600px) {
@@ -555,17 +530,18 @@
         <div class="container hero-inner">
             <img class="avatar" src="assets/brad-headshot.png" alt="Brad Potterbaum" />
             <h1>Brad Potterbaum</h1>
-            <p class="title">Principal Designer, Human Interface Design, Meta Reality Labs</p>
+            <p class="title">Product builder and Principal Designer, Human Interface Design at Meta Reality Labs</p>
             <p class="lede">
-                I lead design for the Human Interface Design team at Meta Reality Labs. My focus is
-                onboarding end to end across Wearables, VR, and Horizon: the flows and surfaces where
-                someone sets up a device, learns the basics, and takes a first real step inside our
-                products.
+                At Meta Reality Labs, I am responsible for the first experience people have with our products:
+                onboarding, account creation, profile setup, device pairing, and setup across
+                Wearables, VR, and Horizon. That first impression reaches millions of people, and
+                Meta trusts my judgment, taste, and craft to make it feel clear, considered, and
+                worthy of the hardware.
             </p>
             <p class="lede">
-                I own how those first launches, setups, and early impressions read to each person. It is
-                careful, cross-functional product work, built on clear language, resilient patterns, and
-                more than a decade shipping consumer hardware and software.
+                The projects below are public examples from earlier work I am able to show:
+                products and systems where I was the design DRI, shaped the direction, and led the
+                experience from problem framing through launch.
             </p>
             <div class="hero-links">
                 <a class="btn" href="mailto:bpotterbaum@gmail.com">Email</a>
@@ -585,44 +561,38 @@
                             alt="iPhone showing parental supervision leaned against Quest 2 with Touch controllers on a wooden desk blurred plant lamp and wall art" />
                     </div>
                     <div class="case-text">
-                        <span class="case-kicker">Meta Reality Labs · Family safety</span>
-                        <h2 class="case-title">Real-time approvals across a phone and a headset</h2>
+                        <span class="case-kicker">Meta Reality Labs · Quest</span>
+                        <h2 class="case-title">Parental supervision on Meta Quest</h2>
                         <div class="case-body">
                             <p>
-                                A teen pulls up a game inside a Quest. Their parent, on a phone in
-                                another room, gets a notification. A tap, an approval, a purchase,
-                                and the game launches. Two surfaces, one decision, all in seconds.
+                                A teen is inside a headset. Their parent is on a phone. The product
+                                has to help them make decisions together without either side feeling
+                                confused, exposed, or stuck. Can this app be purchased? Should this
+                                browser be blocked? How much time have they spent in VR? Who are
+                                they connected to?
                             </p>
                             <p>
-                                Underneath that moment is one of the most cross-cutting problems on
-                                Quest. The parent lives in a mobile app. The teen is wearing a
-                                headset they can't see out of. Between them, in real time: purchase
-                                approvals tied to live transactions, automatic blocks on age-rated
-                                apps, parent-set blocks on specific apps and browsers, time-in-VR
-                                visibility, a friends list, and a linking handshake the teen has to
-                                start and both sides have to consent to. Every flow had to touch
-                                IARC ratings, payments, push notifications, account graphs, and
-                                integrity policy. If the round-trip was slow, a sale evaporated, and
-                                a parent's trust with it.
+                                Today, Quest parental supervision is a full system: teen-initiated
+                                linking, parent consent, Ask to Buy, age-rated app blocking,
+                                parent-set app and browser blocks, time-in-VR visibility, and
+                                friend list visibility. It lives across headset, mobile, push
+                                notifications, payments, IARC ratings, accounts, profiles, and
+                                integrity systems.
                             </p>
                             <p>
-                                I owned the system end-to-end as design DRI. The trust and revenue
-                                stakes were high enough that the company put a senior IC on it
-                                rather than split it across teams. I led alignment with product,
-                                policy, legal, privacy, and integrity, and held the bar that every
-                                interaction had to feel clear, fast, and respectful to both teen and
-                                parent, without softening a single safeguard.
+                                I was the design DRI for the end-to-end product. I set the
+                                experience strategy, aligned product, policy, legal, privacy,
+                                integrity, and engineering, and held the interaction model across
+                                surfaces so parents could manage supervision from mobile while
+                                teens stayed inside VR.
                             </p>
                             <p>
-                                The first piece, app locking through the unlock pattern, shipped in
-                                spring 2022. The full Parent Dashboard followed in June with Ask to
-                                Buy, app and browser blocking, screen-time visibility, and friend
-                                lists. Press covered the launch alongside Instagram's expanded
-                                parental controls as the first time Meta gave families a real handle
-                                on the headset. The work seeded Family Center, the cross-platform
-                                safety hub I helped pitch early on, now spanning Instagram,
-                                Facebook, Messenger, and Quest, with millions of households relying
-                                on it daily.
+                                App locking through the unlock pattern shipped first in spring 2022.
+                                The full Parent Dashboard followed in June alongside Meta's broader
+                                supervision work across Instagram, Facebook, Messenger, and Quest.
+                                Press covered the launch as the moment Meta gave families real
+                                controls for VR. The system is still live today, and millions of
+                                households use it monthly.
                             </p>
                         </div>
                         <div class="case-press">
@@ -660,43 +630,44 @@
         </section>
 
         <!-- Multi-User on Quest -->
-        <section class="case case--media case--reverse">
+        <section id="app-sharing" class="case case--media case--reverse">
             <div class="container">
                 <div class="case-grid">
                     <div class="case-media">
-                        <img src="assets/quest-multi-user.png"
-                            alt="A product photograph of the Meta Quest 3 headset with Touch Plus controllers on a white background." />
+                        <img src="assets/quest-app-sharing-multi-user.png?v=3"
+                            alt="Meta Quest headset with a grid of shared VR apps and games." />
                     </div>
                     <div class="case-text">
                         <span class="case-kicker">Meta Reality Labs · Quest</span>
-                        <h2 class="case-title">We made Quest a real shared device</h2>
+                        <h2 class="case-title">Multi-user and app sharing for Quest</h2>
                         <div class="case-body">
                             <p>
                                 A Quest rarely belongs to one person. It gets passed around. A
-                                partner trying VR for the first time. A kid asking for another turn.
-                                A friend who wants to see Beat Saber for themselves. Until 2021, all
-                                of them shared one account.
+                                partner trying VR for the first time. Someone taking another turn.
+                                A friend who wants to play Beat Saber for themselves. Until 2021,
+                                everyone shared one account, which meant shared saves, shared
+                                privacy, shared social graphs, and lost game progress.
                             </p>
                             <p>
-                                Every Quest account is its own world. Apps, saves, friends,
-                                payments, privacy. None of it can blur across users, and none of it
-                                can feel slow. Underneath the simple act of passing a headset sits
-                                account isolation, entitlements, sharing rules, lock patterns,
-                                mobile setup, and a fast in-VR switch.
+                                Multi-user solved the identity problem. App sharing solved the
+                                economic one: people should not have to buy the same game twice just
+                                to have separate profiles. Under that simple expectation sat account
+                                isolation, entitlements, purchase rules, save data, privacy, lock
+                                patterns, mobile setup, and a fast in-VR account switch.
                             </p>
                             <p>
-                                I led design end-to-end. Research, competitive work, the full
-                                system, and a team of designers taking it through to launch.
-                                Multi-User accounts and App Sharing covered an admin and up to three
-                                additional users, distinct game progress and social graphs, and a
-                                shared library on a single device. It had to feel obvious the first
-                                time anyone touched it.
+                                I led design for the end-to-end system, from research and
+                                competitive analysis through product definition and launch. The
+                                final product supported an admin, up to three additional users,
+                                separate game progress and social graphs, and a shared app library
+                                on one headset.
                             </p>
                             <p>
                                 It launched in February 2021 as one of the most-requested features
-                                on the platform, and the press framed it as the long-overdue piece
-                                that made Quest a real shared device. Millions of households use it
-                                every month. Years later, it's still one of the highest-loved
+                                on the platform. Press framed it as the long-overdue unlock for
+                                sharing Quest at home. More people could play without losing
+                                progress or buying everything twice. It is still live today, used by
+                                millions of households, and remains one of the highest-loved
                                 features on Quest.
                             </p>
                         </div>
@@ -745,34 +716,34 @@
                             onerror="this.onerror=null;this.src='assets/marketplace-video-case.png'" />
                     </div>
                     <div class="case-text">
-                        <span class="case-kicker">Meta · Marketplace</span>
-                        <h2 class="case-title">Video on Marketplace, finally</h2>
+                        <span class="case-kicker">Meta · Facebook Marketplace</span>
+                        <h2 class="case-title">Unlocking video on Facebook Marketplace</h2>
                         <div class="case-body">
                             <p>
                                 Some things need to move. An engine turning over. A record player
-                                coming to life. A video shows a buyer in seconds what a dozen photos
-                                can't.
+                                coming to life. A video can tell a buyer in seconds what a dozen
+                                photos cannot.
                             </p>
                             <p>
-                                Video on Marketplace had been pitched and shelved more than once.
-                                The blocker was always the same. Any account can post a listing, so
-                                any account could post inappropriate video, and no one had a clean
-                                answer to the integrity risk. Marketplace serves more than a billion
-                                people each month.
+                                On Marketplace, that simple idea becomes a major integrity problem.
+                                More than a billion people use it each month, and listings are
+                                public by default. If any account can post a listing, any account
+                                can post a video. Prior attempts had stalled because no one had a
+                                clean answer for the abuse risk.
                             </p>
                             <p>
-                                I took the problem on individually. The reframe that opened it up:
-                                posting video isn't a right, it's an earned privilege. New accounts
-                                couldn't post video at all. Sellers earned access by building a
-                                track record of clean static listings. From there, audio ran through
-                                Meta's moderation pipeline for transcription review, and the video
-                                itself was sampled at the frame level for inappropriate imagery.
+                                I reframed the product around trust: posting video was not a default
+                                right, it was an earned privilege. New accounts could not post video.
+                                Sellers earned access through a clean history of static listings.
+                                Audio ran through Meta's moderation pipeline for transcription
+                                review, and video was sampled frame by frame for inappropriate
+                                imagery.
                             </p>
                             <p>
-                                I took it through Integrity, Privacy, and Policy. Those three
-                                approvals had stopped every prior attempt. The work turned a
-                                long-blocked initiative into a foundational capability that
-                                Marketplace teams have been building on ever since.
+                                I led the design strategy and took the model through Integrity,
+                                Privacy, and Policy, the approvals that had stopped every prior
+                                attempt. The result turned a long-blocked idea into a foundational
+                                Marketplace capability that teams have been building on ever since.
                             </p>
                         </div>
                     </div>
@@ -789,25 +760,24 @@
                             alt="Lonely Planet Destinations design by Brad Potterbaum" />
                     </div>
                     <div class="case-text">
-                        <span class="case-kicker">Lonely Planet · Destinations</span>
-                        <h2 class="case-title">Discovering the heart of a place</h2>
+                        <span class="case-kicker">Lonely Planet · Web</span>
+                        <h2 class="case-title">Reimagining Lonely Planet online</h2>
                         <div class="case-body">
                             <p>
-                                Destinations are the front door of lonelyplanet.com. Most inbound
-                                traffic lands on continents, countries, and cities. Passive feedback
-                                through Usabilla showed users were getting frustrated trying to find
-                                core information like top things to do and best hotels.
+                                Lonelyplanet.com needed to become more than a library of travel
+                                content. Destinations were the front door: continents, countries,
+                                and cities where most inbound traffic landed. Passive feedback
+                                through Usabilla showed people were getting frustrated trying to find
+                                core trip-planning information like top things to do, places to
+                                stay, and the best reasons to visit.
                             </p>
                             <p>
-                                I led a redesign focused on inspiration first and helpful
-                                information close behind. We talked to users, tested several
-                                layouts, and landed on a new aesthetic that hit our goals.
-                                Engagement jumped immediately after shipping, and the work went on
-                                to win a People's Voice Webby Award.
+                                I led the product and design work across the new web experience,
+                                balancing editorial inspiration with faster paths to useful
+                                information. We talked to users, tested layouts, and shipped a
+                                system that lifted engagement immediately and went on to win a
+                                People's Voice Webby Award.
                             </p>
-                        </div>
-                        <div class="case-meta">
-                            <span><strong>Recognition</strong>People's Voice Webby</span>
                         </div>
                     </div>
                 </div>
@@ -824,24 +794,31 @@
                     </div>
                     <div class="case-text">
                         <span class="case-kicker">Lonely Planet · Trips</span>
-                        <h2 class="case-title">Trips: a simpler way to share the road</h2>
+                        <h2 class="case-title">The Lonely Planet Trips app</h2>
                         <div class="case-body">
                             <p>
-                                Trips by Lonely Planet started with a simple idea. Make it almost
-                                effortless to share a travel experience. The whole strategy hinged
-                                on lowering the barrier to entry, so adoption depended on how easy
-                                it was to publish.
+                                Trips by Lonely Planet started with a simple product bet: sharing a
+                                travel experience should feel almost effortless. Adoption depended
+                                on lowering the barrier to publishing, not asking people to write a
+                                perfect travel story from scratch.
                             </p>
                             <p>
-                                We built an experience where users upload photos and videos, and the
-                                trip is composed for them using location data. It became a place
-                                where travelers share, discover, and get inspired by the Lonely
-                                Planet community.
+                                We built an experience where people could upload photos and videos,
+                                and the app composed the trip for them using location data. It became
+                                a place for travelers to share, discover, and get inspired by the
+                                Lonely Planet community.
                             </p>
                         </div>
-                        <div class="case-meta">
-                            <span><a href="https://www.lonelyplanet.com/trips" target="_blank"
-                                    rel="noreferrer">lonelyplanet.com/trips</a></span>
+                        <div class="case-press">
+                            <span class="case-press-label">Featured in</span>
+                            <div class="case-press-logos">
+                                <a class="case-press-logo"
+                                    href="https://mashable.com/article/download-this-lonely-planet-trips-app"
+                                    target="_blank" rel="noreferrer" aria-label="Mashable">
+                                    <img class="case-press-logo-img case-press-logo-img--mashable"
+                                        src="assets/logos/mashable.png" alt="Mashable" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -858,22 +835,19 @@
                     </div>
                     <div class="case-text">
                         <span class="case-kicker">Lonely Planet · Guides</span>
-                        <h2 class="case-title">Guides: a confident companion on the ground</h2>
+                        <h2 class="case-title">The Lonely Planet Guides app</h2>
                         <div class="case-body">
                             <p>
-                                Guides by Lonely Planet is for the moment you arrive somewhere new
-                                and need fast, trusted help making decisions. The design had to feel
-                                like a confident companion you could pull out anywhere.
+                                Guides by Lonely Planet was built for the moment you arrive
+                                somewhere new and need fast, trusted help making decisions. The
+                                product had to feel calm, portable, and useful when someone was
+                                already on the ground.
                             </p>
                             <p>
-                                With features like offline maps and currency conversion, Guides
-                                earned an Editor's Choice Award and was repeatedly featured on the
-                                App Store and Google Play.
+                                With offline maps, currency conversion, and city guidance designed
+                                for real travel moments, Guides earned an Editor's Choice Award and
+                                was repeatedly featured on the App Store and Google Play.
                             </p>
-                        </div>
-                        <div class="case-meta">
-                            <span><a href="https://www.gearpatrol.com/briefings/a207048/lonely-planet-guides-app/"
-                                    target="_blank" rel="noreferrer">Gear Patrol · Lonely Planet Guides app</a></span>
                         </div>
                     </div>
                 </div>
@@ -885,7 +859,7 @@
         <div class="container footer-grid">
             <p class="footer-cta">
                 Working on something interesting?
-                <a href="mailto:bpotterbaum@gmail.com">Let's talk →</a>
+                <span>bpotterbaum@gmail.com</span>
             </p>
             <div class="footer-meta">
                 <span>© Brad Potterbaum</span>
